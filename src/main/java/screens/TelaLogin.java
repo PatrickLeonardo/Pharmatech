@@ -1,3 +1,5 @@
+package screens;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -12,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import orm.DatabaseConnection;
-import screens.TelaCadastro;
 
 public class TelaLogin {
 

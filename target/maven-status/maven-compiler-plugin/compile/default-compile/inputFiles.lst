@@ -1,3 +1,5 @@
-/home/patrick/Desktop/Pharmatech/src/main/java/DatabaseConnection.java
 /home/patrick/Desktop/Pharmatech/src/main/java/Main.java
 /home/patrick/Desktop/Pharmatech/src/main/java/TelaLogin.java
+/home/patrick/Desktop/Pharmatech/src/main/java/orm/DatabaseConnection.java
+/home/patrick/Desktop/Pharmatech/src/main/java/screens/TelaCadastro.java
+/home/patrick/Desktop/Pharmatech/src/main/java/screens/TelaLogin.java

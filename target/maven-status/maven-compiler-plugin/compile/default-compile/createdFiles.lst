@@ -1,3 +1,5 @@
-TelaLogin.class
+screens/TelaLogin.class
 Main.class
-DatabaseConnection.class
+orm/DatabaseConnection.class
+TelaLogin.class
+screens/TelaCadastro.class

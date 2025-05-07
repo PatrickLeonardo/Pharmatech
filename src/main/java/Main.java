@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) throws SQLException {
 
         SwingUtilities.invokeLater(() -> {
-            new TelaLogin().criarTela();
+            new TelaLogin();
         });
 
     }
