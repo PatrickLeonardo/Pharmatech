@@ -2,5 +2,4 @@ screens/TelaLogin.class
 Main.class
 orm/DatabaseConnection.class
 screens/JFrameComponent.class
-TelaLogin.class
 screens/TelaCadastro.class
