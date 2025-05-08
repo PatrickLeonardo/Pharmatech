@@ -22,6 +22,7 @@ public class TelaLogin {
     
     public TelaLogin() {
         
+        System.out.println("TesteCommit Apaga isso depois");
         final JFrame tela = new JFrame("Pharmatech Login");
 
         final JLabel labelCPF = new JLabel("Insira seu CPF: ");
