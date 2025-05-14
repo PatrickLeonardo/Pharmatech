@@ -1,5 +1,3 @@
 Main.class
-screens\TelaCadastro.class
-screens\TelaLogin.class
-orm\DatabaseConnection.class
-screens\JFrameComponent.class
+screens/JFrameTelaPrincipalCliente.class
+screens/TelaPrincipalCliente.class
