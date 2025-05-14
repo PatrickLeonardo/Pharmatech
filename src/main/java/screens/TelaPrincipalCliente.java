@@ -10,24 +10,22 @@ public class TelaPrincipalCliente {
 
         final JFrame tela = new JFrame(" ");
 
-        final JLabel labelBemVindo = new JLabel("Bem-vindo ao Pharmatech!");
+        final JLabel msgPesquisa = new JLabel("Bem-vindo ao Pharmatech!");
         final JButton botaoCarrinho= new JButton("Carrinho");
         final JButton botaoConsultarPedido = new JButton("Consultar Pedido");
         final JButton botaoPerfil = new JButton("Acessar Perfil");
-
-        final ArrayList<JComponent> componentsList = new ArrayList<JComponent>(); 
-        Collections.addAll(
-            componentsList,
-            labelBemVindo,
-            botaoCarrinho,
-            botaoConsultarPedido,
-            botaoPerfil
-        );
+        final JTextField barraPesquisa = new JTextField("Pesquisar produtos...");
 
          final Container container = tela.getContentPane(); 
         container.setLayout(null); 
+        container.setBackground(Color.WHITE);
 
-        JFrameComponent.dump(container, componentsList); 
+        msgPesquisa.setFont(new Font("Arial", Font.PLAIN, 20));
+        container.add(msgPesquisa);
+        msgPesquisa.setBounds(50, 0, 300, 50);
+
+        barraPesquisa.setBounds(50, 25, 300, 50);
+        container.add(barraPesquisa);
 
         botaoCarrinho.setBounds(1300, 25, 150, 50);
         container.add(botaoCarrinho);
