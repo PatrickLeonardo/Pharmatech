@@ -1,5 +1,5 @@
-screens/TelaLogin.class
 Main.class
-orm/DatabaseConnection.class
-screens/JFrameComponent.class
-screens/TelaCadastro.class
+screens\TelaCadastro.class
+screens\TelaLogin.class
+orm\DatabaseConnection.class
+screens\JFrameComponent.class
