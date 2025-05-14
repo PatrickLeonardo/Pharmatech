@@ -11,7 +11,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-//testando commit 2 Miron daafafa
 public class JFrameComponent {
 
     public static void setProperty(final JLabel jLabel) {
