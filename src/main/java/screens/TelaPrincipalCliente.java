@@ -29,20 +29,20 @@ public class TelaPrincipalCliente {
 
         JFrameComponent.dump(container, componentsList); 
 
-        botaoCarrinho.setBounds(100, 100, 150, 50);
+        botaoCarrinho.setBounds(1300, 25, 150, 50);
         container.add(botaoCarrinho);
 
-        botaoConsultarPedido.setBounds(150, 200, 150, 50);
+        botaoConsultarPedido.setBounds(1100, 25, 150, 50);
         container.add(botaoConsultarPedido);
 
-        botaoPerfil.setBounds(200, 300, 150, 50);
+        botaoPerfil.setBounds(900, 25, 150, 50);
         container.add(botaoPerfil);
 
+
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setLayout(new FlowLayout());
         tela.setContentPane(container);
         tela.pack();
-        tela.setSize(500, 500);
+        tela.setSize(1500, 800);
         tela.setLocationRelativeTo(null);
         tela.setVisible(true);
 
