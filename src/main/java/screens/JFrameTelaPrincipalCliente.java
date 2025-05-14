@@ -14,13 +14,13 @@ public class JFrameTelaPrincipalCliente {
 
     public static void mudarPropriedade(final JTextField jTextField) {
 
-        jTextField.setPreferredSize(new Dimension(15, 3));
+        jTextField.setPreferredSize(new Dimension(150, 30));
 
     }
 
     public static void mudarPropriedade(final JButton jButton) {
 
-        jButton.setPreferredSize(new Dimension(15, 5));
+        jButton.setPreferredSize(new Dimension(150, 50));
 
     }
 

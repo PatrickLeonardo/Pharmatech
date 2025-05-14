@@ -23,19 +23,20 @@ public class TelaPrincipalCliente {
             botaoConsultarPedido,
             botaoPerfil
         );
-        
-        for(final JComponent component : componentsList){
-
-            if(component instanceof JLabel) JFrameTelaPrincipalCliente.mudarPropriedade((JLabel) component);
-            else if(component instanceof JTextField) JFrameTelaPrincipalCliente.mudarPropriedade((JTextField) component);
-            else if(component instanceof JButton) JFrameTelaPrincipalCliente.mudarPropriedade((JButton) component);
-            
-        }
 
          final Container container = tela.getContentPane(); 
-        container.setLayout(new GridLayout(5, 10)); 
+        container.setLayout(null); 
 
         JFrameComponent.dump(container, componentsList); 
+
+        botaoCarrinho.setBounds(100, 100, 150, 50);
+        container.add(botaoCarrinho);
+
+        botaoConsultarPedido.setBounds(150, 200, 150, 50);
+        container.add(botaoConsultarPedido);
+
+        botaoPerfil.setBounds(200, 300, 150, 50);
+        container.add(botaoPerfil);
 
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tela.setLayout(new FlowLayout());
