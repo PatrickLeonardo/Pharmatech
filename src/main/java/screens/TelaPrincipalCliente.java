@@ -47,15 +47,12 @@ public class TelaPrincipalCliente {
         container.add(barraPesquisa);
 
         botaoCarrinho.setBounds(1300, 25, 150, 50);
-        botaoCarrinho.setBackground(Color.white);
         container.add(botaoCarrinho);
 
         botaoCadastrar.setBounds(1100, 25, 150, 50);
-        botaoCadastrar.setBackground(Color.white);
         container.add(botaoCadastrar);
 
         botaoLogar.setBounds(900, 25, 150, 50);
-        botaoLogar.setBackground(Color.white);
         container.add(botaoLogar);
 
         botaoLogar.addActionListener((event) -> {

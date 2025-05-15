@@ -23,7 +23,6 @@ public class TelaLogin {
     public TelaLogin() {
         
         final JFrame tela = new JFrame("Pharmatech Login");
-
         final JButton telaPrincipal = new JButton("Tela Principal");
         final JLabel labelCPF = new JLabel("Insira seu CPF: ");
         final JTextField textoCPF = new JTextField(30);         
