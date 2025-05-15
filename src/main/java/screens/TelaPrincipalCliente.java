@@ -24,7 +24,7 @@ public class TelaPrincipalCliente {
 
         final JFrame tela = new JFrame("Tela Principal");
         final JLabel labelLogo = new JLabel(logo);
-        final JLabel msgPesquisa = new JLabel("Pharmatech");
+        final JLabel msgPharmatech = new JLabel("Pharmatech");
         final JButton botaoCarrinho= new JButton("Carrinho");
         final JButton botaoCadastrar = new JButton("Cadastrar");
         final JButton botaoLogar = new JButton("Logar");
@@ -37,10 +37,10 @@ public class TelaPrincipalCliente {
         labelLogo.setBounds(20, 35, 30, 30);
         container.add(labelLogo);
 
-        msgPesquisa.setBounds(50, 25, 500, 50);
-        msgPesquisa.setFont(new Font("Arial", Font.PLAIN, 30));
-        msgPesquisa.setForeground(azulPharmatech);
-        container.add(msgPesquisa);
+        msgPharmatech.setBounds(50, 25, 500, 50);
+        msgPharmatech.setFont(new Font("Arial", Font.PLAIN, 30));
+        msgPharmatech.setForeground(azulPharmatech);
+        container.add(msgPharmatech);
 
         barraPesquisa.setBounds(250, 25, 500, 50);
         barraPesquisa.setFont(new Font("Arial", Font.PLAIN, 40));

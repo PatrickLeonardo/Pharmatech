@@ -1,13 +1,9 @@
 package screens;
 
 import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.awt.Font;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -30,30 +26,56 @@ public class TelaCadastro {
         final JTextField textoSenha = new JTextField(30);
         final JButton botaoCadastro = new JButton("Criar Conta");
         final JButton botaoLinkTelaLogin = new JButton("Retornar");
-        
-        final ArrayList<JComponent> componentsList = new ArrayList<JComponent>();
-        Collections.addAll(
-            componentsList,
-            labelCPF, textoCPF,
-            labelNome, textoNome,
-            labelTelefone, textoTelefone,
-            labelEndereco, textoEndereco,
-            labelSenha, textoSenha,
-            botaoCadastro, botaoLinkTelaLogin
-        );
-
-        for(final JComponent component : componentsList){
-
-            if(component instanceof JLabel) JFrameComponent.setProperty((JLabel) component);
-            else if(component instanceof JTextField) JFrameComponent.setProperty((JTextField) component); 
-            else if(component instanceof JButton) JFrameComponent.setProperty((JButton) component);
-
-        }
-
         final Container container = tela.getContentPane();
-        container.setLayout(new GridLayout(14, 10));
 
-        JFrameComponent.dump(container, componentsList);
+        container.setLayout(null);
+        container.setBackground(new java.awt.Color(207, 206, 206));
+        
+        //PARTE DO CPF
+        labelCPF.setBounds(100, 60, 300, 25);
+        labelCPF.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelCPF);
+        textoCPF.setBounds(100, 90, 300, 35);
+        textoCPF.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoCPF);
+
+        //PARTE DO NOME
+        labelNome.setBounds(100, 160, 300, 25);
+        labelNome.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelNome);
+        textoNome.setBounds(100, 190, 300, 35);
+        textoNome.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoNome);
+
+        //PARTE DO TELEFONE
+        labelTelefone.setBounds(100, 260, 300, 25);
+        labelTelefone.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelTelefone);
+        textoTelefone.setBounds(100, 290, 300, 35);
+        textoTelefone.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoTelefone);
+
+        //PARTE DO ENDEREÇO
+        labelEndereco.setBounds(100, 360, 300, 25);
+        labelEndereco.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelEndereco);   
+        textoEndereco.setBounds(100, 390, 300, 35);
+        textoEndereco.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoEndereco);
+
+        //PARTE DA SENHA
+        labelSenha.setBounds(100, 460, 300, 25);
+        labelSenha.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelSenha);
+        textoSenha.setBounds(100, 490, 300, 35);
+        textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoSenha);
+
+        botaoCadastro.setBounds(100, 590, 120, 60);
+        container.add(botaoCadastro);
+
+        botaoLinkTelaLogin.setBounds(270, 590, 120, 60);
+        container.add(botaoLinkTelaLogin);
 
         botaoCadastro.addActionListener((event) -> { 
 
@@ -80,7 +102,6 @@ public class TelaCadastro {
         });
         
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setLayout(new FlowLayout());
         tela.setContentPane(container);
         tela.pack();
         tela.setSize(500, 800);

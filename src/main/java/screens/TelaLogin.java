@@ -1,14 +1,10 @@
 package screens;
 
 import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 
+import java.awt.Font;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -23,35 +19,39 @@ public class TelaLogin {
     public TelaLogin() {
         
         final JFrame tela = new JFrame("Pharmatech Login");
-        final JButton telaPrincipal = new JButton("Tela Principal");
         final JLabel labelCPF = new JLabel("Insira seu CPF: ");
         final JTextField textoCPF = new JTextField(30);         
         final JLabel labelSenha = new JLabel("Insira sua Senha: ");
         final JTextField textoSenha = new JTextField(30);
         final JButton botaoLogin = new JButton("Realizar Login");
         final JButton botaoLinkTelaDeCadastro = new JButton("Criar Conta");
-        
-        final ArrayList<JComponent> componentsList = new ArrayList<JComponent>(); 
-        Collections.addAll(
-            componentsList,
-            labelCPF, textoCPF,
-            labelSenha, textoSenha,
-            botaoLogin, botaoLinkTelaDeCadastro,
-            telaPrincipal
-        );
-        
-        for(final JComponent component : componentsList){
-
-            if(component instanceof JLabel) JFrameComponent.setProperty((JLabel) component);
-            else if(component instanceof JTextField) JFrameComponent.setProperty((JTextField) component);
-            else if(component instanceof JButton) JFrameComponent.setProperty((JButton) component);
-            
-        }
-
+        final JButton telaPrincipal = new JButton("Tela Principal");
         final Container container = tela.getContentPane(); 
-        container.setLayout(new GridLayout(5, 10)); 
 
-        JFrameComponent.dump(container, componentsList);        
+        container.setBackground(new java.awt.Color(207, 206, 206));
+        container.setLayout(null); 
+        
+        labelCPF.setBounds(150, 60, 300, 25);
+        labelCPF.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelCPF);
+        
+        textoCPF.setBounds(90, 90, 300, 35);
+        textoCPF.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoCPF);
+
+        labelSenha.setBounds(150, 160, 300, 25);
+        labelSenha.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(labelSenha);
+
+        textoSenha.setBounds(90, 190, 300, 35);
+        textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
+        container.add(textoSenha);
+
+        botaoLogin.setBounds(140, 280, 200, 35);
+        container.add(botaoLogin);
+
+        botaoLinkTelaDeCadastro.setBounds(140, 330, 200, 35);
+        container.add(botaoLinkTelaDeCadastro);
 
         botaoLogin.addActionListener((event) -> {
 
@@ -82,7 +82,6 @@ public class TelaLogin {
         });
         
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setLayout(new FlowLayout());
         tela.setContentPane(container);
         tela.pack();
         tela.setSize(500, 500);
