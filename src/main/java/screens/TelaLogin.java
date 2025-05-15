@@ -47,11 +47,14 @@ public class TelaLogin {
         textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
         container.add(textoSenha);
 
-        botaoLogin.setBounds(140, 280, 200, 35);
+        botaoLogin.setBounds(110, 280, 120, 35);
         container.add(botaoLogin);
 
-        botaoLinkTelaDeCadastro.setBounds(140, 330, 200, 35);
+        botaoLinkTelaDeCadastro.setBounds(250, 280, 120, 35);
         container.add(botaoLinkTelaDeCadastro);
+
+        telaPrincipal.setBounds(180, 333, 120, 35);
+        container.add(telaPrincipal);
 
         botaoLogin.addActionListener((event) -> {
 
