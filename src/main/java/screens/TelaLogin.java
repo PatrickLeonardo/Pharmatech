@@ -24,6 +24,7 @@ public class TelaLogin {
         
         final JFrame tela = new JFrame("Pharmatech Login");
 
+        final JButton telaPrincipal = new JButton("Tela Principal");
         final JLabel labelCPF = new JLabel("Insira seu CPF: ");
         final JTextField textoCPF = new JTextField(30);         
         final JLabel labelSenha = new JLabel("Insira sua Senha: ");
@@ -36,7 +37,8 @@ public class TelaLogin {
             componentsList,
             labelCPF, textoCPF,
             labelSenha, textoSenha,
-            botaoLogin, botaoLinkTelaDeCadastro
+            botaoLogin, botaoLinkTelaDeCadastro,
+            telaPrincipal
         );
         
         for(final JComponent component : componentsList){
@@ -73,6 +75,11 @@ public class TelaLogin {
             tela.setVisible(false);
             new TelaCadastro();
 
+        });
+
+        telaPrincipal.addActionListener(event -> {
+            tela.setVisible(false);
+            new TelaPrincipalCliente();
         });
         
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

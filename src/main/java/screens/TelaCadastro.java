@@ -17,7 +17,7 @@ public class TelaCadastro {
     public TelaCadastro() {
 
         final JFrame tela = new JFrame("Tela Cadastro");
-        
+        final JButton botaoTelaPrincipal = new JButton("Tela Principal");
         final JLabel labelCPF = new JLabel("Insira seu CPF: ");
         final JTextField textoCPF = new JTextField(30);
         final JLabel labelNome = new JLabel("Insira seu Nome: ");
@@ -39,7 +39,8 @@ public class TelaCadastro {
             labelTelefone, textoTelefone,
             labelEndereco, textoEndereco,
             labelSenha, textoSenha,
-            botaoCadastro, botaoLinkTelaLogin
+            botaoCadastro, botaoLinkTelaLogin,
+            botaoTelaPrincipal
         );
 
         for(final JComponent component : componentsList){
@@ -64,6 +65,11 @@ public class TelaCadastro {
             tela.setVisible(false);
             new TelaLogin();
 
+        });
+
+        botaoTelaPrincipal.addActionListener(event -> {
+            tela.setVisible(false);
+            new TelaPrincipalCliente();
         });
 
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

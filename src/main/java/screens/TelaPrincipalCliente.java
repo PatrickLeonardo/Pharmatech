@@ -1,28 +1,41 @@
 package screens;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class TelaPrincipalCliente {
 
     public TelaPrincipalCliente() {
 
-        final JFrame tela = new JFrame(" ");
-
-        final JLabel msgPesquisa = new JLabel("Pharmatech");
-        final JButton botaoCarrinho= new JButton("Carrinho");
-        final JButton botaoConsultarPedido = new JButton("Consultar Pedido");
-        final JButton botaoPerfil = new JButton("Acessar Perfil");
-        final JTextField barraPesquisa = new JTextField("");
-
         Color azulPharmatech = new Color(1, 0, 127);
         Color cinzaFundo = new Color (207, 206, 206);
 
-        
+        ImageIcon logo = new ImageIcon("C:\\Users\\oushe\\Downloads\\simboloFarmacia.jpeg");
+        Image imagemRedimensionada = logo.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        logo = new ImageIcon(imagemRedimensionada);
 
+        final JFrame tela = new JFrame(" ");
+        final JLabel labelLogo = new JLabel(logo);
+        final JLabel msgPesquisa = new JLabel("Pharmatech");
+        final JButton botaoCarrinho= new JButton("Carrinho");
+        final JButton botaoCadastrar = new JButton("Cadastrar");
+        final JButton botaoLogar = new JButton("Logar");
+        final JTextField barraPesquisa = new JTextField("");
         final Container container = tela.getContentPane(); 
+
         container.setLayout(null); 
         container.setBackground(cinzaFundo);
+
+        labelLogo.setBounds(20, 35, 30, 30);
+        container.add(labelLogo);
 
         msgPesquisa.setBounds(50, 25, 500, 50);
         msgPesquisa.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -34,17 +47,30 @@ public class TelaPrincipalCliente {
         container.add(barraPesquisa);
 
         botaoCarrinho.setBounds(1300, 25, 150, 50);
-        botaoCarrinho.setFont(new Font("Arial", Font.PLAIN, 22));
         botaoCarrinho.setBackground(Color.white);
         container.add(botaoCarrinho);
 
-        botaoConsultarPedido.setBounds(1100, 25, 150, 50);
-        botaoConsultarPedido.setBackground(Color.white);
-        container.add(botaoConsultarPedido);
+        botaoCadastrar.setBounds(1100, 25, 150, 50);
+        botaoCadastrar.setBackground(Color.white);
+        container.add(botaoCadastrar);
 
-        botaoPerfil.setBounds(900, 25, 150, 50);
-        botaoPerfil.setBackground(Color.white);
-        container.add(botaoPerfil);
+        botaoLogar.setBounds(900, 25, 150, 50);
+        botaoLogar.setBackground(Color.white);
+        container.add(botaoLogar);
+
+        botaoLogar.addActionListener((event) -> {
+            new TelaLogin();
+            tela.dispose();
+        });
+
+        botaoCadastrar.addActionListener((event) -> {
+            new TelaCadastro();
+            tela.dispose();
+        });
+        botaoCarrinho.addActionListener((event) -> {
+            new TelaCarrinho();
+            tela.dispose();
+        });
 
 
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
