@@ -72,13 +72,13 @@ public class TelaLogin {
 
         botaoLinkTelaDeCadastro.addActionListener((event) -> {
             
-            tela.setVisible(false);
+            tela.dispose();
             new TelaCadastro();
 
         });
 
         telaPrincipal.addActionListener(event -> {
-            tela.setVisible(false);
+            tela.dispose();
             new TelaPrincipalCliente();
         });
         

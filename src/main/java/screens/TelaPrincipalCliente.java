@@ -1,4 +1,4 @@
-package screens;
+package screens;//eu amo indaiatuba
 
 import java.awt.Color;
 import java.awt.Container;
@@ -22,7 +22,7 @@ public class TelaPrincipalCliente {
         Image imagemRedimensionada = logo.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         logo = new ImageIcon(imagemRedimensionada);
 
-        final JFrame tela = new JFrame(" ");
+        final JFrame tela = new JFrame("Tela Principal");
         final JLabel labelLogo = new JLabel(logo);
         final JLabel msgPesquisa = new JLabel("Pharmatech");
         final JButton botaoCarrinho= new JButton("Carrinho");
