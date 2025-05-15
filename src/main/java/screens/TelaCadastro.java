@@ -11,13 +11,13 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 public class TelaCadastro {
 
     public TelaCadastro() {
 
         final JFrame tela = new JFrame("Tela Cadastro");
-        final JButton botaoTelaPrincipal = new JButton("Tela Principal");
         final JLabel labelCPF = new JLabel("Insira seu CPF: ");
         final JTextField textoCPF = new JTextField(30);
         final JLabel labelNome = new JLabel("Insira seu Nome: ");
@@ -29,7 +29,7 @@ public class TelaCadastro {
         final JLabel labelSenha = new JLabel("Insira sua Senha: ");
         final JTextField textoSenha = new JTextField(30);
         final JButton botaoCadastro = new JButton("Criar Conta");
-        final JButton botaoLinkTelaLogin = new JButton("Realizar Login");
+        final JButton botaoLinkTelaLogin = new JButton("Retornar");
         
         final ArrayList<JComponent> componentsList = new ArrayList<JComponent>();
         Collections.addAll(
@@ -39,8 +39,7 @@ public class TelaCadastro {
             labelTelefone, textoTelefone,
             labelEndereco, textoEndereco,
             labelSenha, textoSenha,
-            botaoCadastro, botaoLinkTelaLogin,
-            botaoTelaPrincipal
+            botaoCadastro, botaoLinkTelaLogin
         );
 
         for(final JComponent component : componentsList){
@@ -58,20 +57,28 @@ public class TelaCadastro {
 
         botaoCadastro.addActionListener((event) -> { 
 
+            String cpf = textoCPF.getText();
+            String nome = textoNome.getText();
+            String telefone = textoTelefone.getText();
+            String endereco = textoEndereco.getText();
+            String senha = textoSenha.getText();
+
+            if (cpf.isEmpty() || nome.isEmpty() || telefone.isEmpty() || endereco.isEmpty() || senha.isEmpty()) {
+                JOptionPane.showMessageDialog(tela, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(tela, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                tela.dispose();
+                new TelaLogin();
+            }
         });
 
         botaoLinkTelaLogin.addActionListener((event) -> {
             
-            tela.setVisible(false);
+            tela.dispose();
             new TelaLogin();
 
         });
-
-        botaoTelaPrincipal.addActionListener(event -> {
-            tela.setVisible(false);
-            new TelaPrincipalCliente();
-        });
-
+        
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tela.setLayout(new FlowLayout());
         tela.setContentPane(container);
