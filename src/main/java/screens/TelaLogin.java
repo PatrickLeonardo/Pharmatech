@@ -1,5 +1,6 @@
 package screens;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.sql.SQLException;
 
@@ -8,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import orm.DatabaseConnection;
 
@@ -24,7 +26,7 @@ public class TelaLogin {
         final JLabel labelSenha = new JLabel("Insira sua Senha: ");
         final JTextField textoSenha = new JTextField(30);
         final JButton botaoLogin = new JButton("Realizar Login");
-        final JButton botaoLinkTelaDeCadastro = new JButton("Criar Conta");
+        final JButton botaoLinkTelaDeCadastro = new JButton("Cadastrar");
         final JButton telaPrincipal = new JButton("Tela Principal");
         final Container container = tela.getContentPane(); 
 
@@ -37,6 +39,7 @@ public class TelaLogin {
         
         textoCPF.setBounds(90, 90, 300, 35);
         textoCPF.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoCPF.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoCPF);
 
         labelSenha.setBounds(150, 160, 300, 25);
@@ -45,6 +48,7 @@ public class TelaLogin {
 
         textoSenha.setBounds(90, 190, 300, 35);
         textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoSenha.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoSenha);
 
         botaoLogin.setBounds(110, 280, 120, 35);

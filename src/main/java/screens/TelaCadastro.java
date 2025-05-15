@@ -2,11 +2,13 @@ package screens;
 
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Color;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.JOptionPane;
 
 public class TelaCadastro {
@@ -37,6 +39,7 @@ public class TelaCadastro {
         container.add(labelCPF);
         textoCPF.setBounds(100, 90, 300, 35);
         textoCPF.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoCPF.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoCPF);
 
         //PARTE DO NOME
@@ -45,6 +48,7 @@ public class TelaCadastro {
         container.add(labelNome);
         textoNome.setBounds(100, 190, 300, 35);
         textoNome.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoNome.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoNome);
 
         //PARTE DO TELEFONE
@@ -53,6 +57,7 @@ public class TelaCadastro {
         container.add(labelTelefone);
         textoTelefone.setBounds(100, 290, 300, 35);
         textoTelefone.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoTelefone.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoTelefone);
 
         //PARTE DO ENDEREÇO
@@ -61,6 +66,7 @@ public class TelaCadastro {
         container.add(labelEndereco);   
         textoEndereco.setBounds(100, 390, 300, 35);
         textoEndereco.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoEndereco.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoEndereco);
 
         //PARTE DA SENHA
@@ -69,12 +75,13 @@ public class TelaCadastro {
         container.add(labelSenha);
         textoSenha.setBounds(100, 490, 300, 35);
         textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
+        textoSenha.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoSenha);
 
-        botaoCadastro.setBounds(100, 590, 120, 60);
+        botaoCadastro.setBounds(100, 570, 120, 60);
         container.add(botaoCadastro);
 
-        botaoLinkTelaLogin.setBounds(270, 590, 120, 60);
+        botaoLinkTelaLogin.setBounds(270, 570, 120, 60);
         container.add(botaoLinkTelaLogin);
 
         botaoCadastro.addActionListener((event) -> { 
@@ -104,7 +111,7 @@ public class TelaCadastro {
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tela.setContentPane(container);
         tela.pack();
-        tela.setSize(500, 800);
+        tela.setSize(500, 700);
         tela.setLocationRelativeTo(null);
         tela.setVisible(true);
 
