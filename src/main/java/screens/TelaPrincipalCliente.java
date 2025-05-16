@@ -1,15 +1,24 @@
-package screens;//eu amo indaiatuba
+package screens;
 
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class TelaPrincipalCliente {
 
@@ -54,6 +63,44 @@ public class TelaPrincipalCliente {
 
         botaoLogar.setBounds(900, 25, 150, 50);
         container.add(botaoLogar);
+         
+        String text = "";
+
+        try {
+            
+            JSONArray jsonArray = new JSONArray(getMedicamentos());
+            
+            //Container containerMedicamento = new Container();
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            
+            Iterator<String> keys = jsonObject.keys();
+            
+            int i = 0;
+            
+            while (keys.hasNext()) {
+                 
+                String key = keys.next();
+                text = String.valueOf(jsonObject.get(key));
+                //new JLabel(text);
+                System.out.println(text);
+
+                //container.add(jLabel);
+                i++;
+
+            }
+
+            //container.add(containerMedicamento);
+
+        } catch(Exception exception) {
+            exception.printStackTrace();
+        }
+        
+        JLabel jLabel = new JLabel(text);
+        jLabel.setBounds(100, 200, 500, 50);
+        jLabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        jLabel.setForeground(azulPharmatech);
+        
+        container.add(jLabel);
 
         botaoLogar.addActionListener((event) -> {
             new TelaLogin();
@@ -67,8 +114,7 @@ public class TelaPrincipalCliente {
         botaoCarrinho.addActionListener((event) -> {
             new TelaCarrinho();
             tela.dispose();
-        });
-
+        }); 
 
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tela.setContentPane(container);
@@ -78,4 +124,21 @@ public class TelaPrincipalCliente {
         tela.setVisible(true);
 
     }
+
+    private String getMedicamentos() throws IOException, InterruptedException {
+
+        final HttpRequest request = HttpRequest.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .uri(URI.create("http://localhost:8080/medications"))
+            .GET()
+            .build();
+
+        final HttpClient httpClient = HttpClient.newHttpClient();
+
+        final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return clientHttpResponse.body();
+
+    }
+
 }

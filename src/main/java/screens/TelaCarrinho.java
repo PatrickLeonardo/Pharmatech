@@ -1,11 +1,22 @@
 package screens;
-import java.awt.*;
-import javax.swing.*;
+
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 public class TelaCarrinho {
 
     public TelaCarrinho() {
 
-        Color cinzaFundo = new Color (207, 206, 206);
+        Color cinzaFundo = new Color(207, 206, 206);
         Color azulPharmatech = new Color(1, 0, 127);
 
         ImageIcon logo = new ImageIcon("C:\\Users\\oushe\\Downloads\\simboloFarmacia.jpeg");

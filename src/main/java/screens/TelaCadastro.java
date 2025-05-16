@@ -1,15 +1,20 @@
 package screens;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
-import java.awt.Color;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.JOptionPane;
 
 public class TelaCadastro {
 
@@ -86,19 +91,31 @@ public class TelaCadastro {
 
         botaoCadastro.addActionListener((event) -> { 
 
-            String cpf = textoCPF.getText();
-            String nome = textoNome.getText();
-            String telefone = textoTelefone.getText();
-            String endereco = textoEndereco.getText();
-            String senha = textoSenha.getText();
-
-            if (cpf.isEmpty() || nome.isEmpty() || telefone.isEmpty() || endereco.isEmpty() || senha.isEmpty()) {
+            final String cpf = textoCPF.getText();
+            final String nome = textoNome.getText();
+            final String telefone = textoTelefone.getText();
+            final String endereco = textoEndereco.getText();
+            final String senha = textoSenha.getText();
+            
+            if(cpf.isEmpty() || nome.isEmpty() || telefone.isEmpty() || endereco.isEmpty() || senha.isEmpty()) {
                 JOptionPane.showMessageDialog(tela, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(tela, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                tela.dispose();
-                new TelaLogin();
+                
+                try {
+                     
+                    if(realizarCadastro(cpf, nome, telefone, endereco, senha)) {
+                        tela.dispose();
+                        new TelaPrincipalCliente();
+                        JOptionPane.showMessageDialog(tela, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(tela, "Login não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    
+                } catch(final Exception exception) {
+                    exception.printStackTrace();
+                }
             }
+
         });
 
         botaoLinkTelaLogin.addActionListener((event) -> {
@@ -114,6 +131,37 @@ public class TelaCadastro {
         tela.setSize(500, 700);
         tela.setLocationRelativeTo(null);
         tela.setVisible(true);
+
+    }
+
+    private boolean realizarCadastro(final String cpf, final String nome, final String telefone, final String endereco, final String senha) throws InterruptedException, IOException {
+
+        final String bodyPublisher = """
+        {
+            "cpf": "%s",
+            "nome": "%s",
+            "senha": "%s",
+            "telefone": "%s",
+            "endereco": "%s",
+            "tipoDeUsuario": ""
+        }
+        """.formatted(cpf, nome, senha, telefone, endereco);
+
+        final HttpRequest request = HttpRequest.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .header("Content-Type", "application/json")
+            .uri(URI.create("http://localhost:8080/client/newClient"))
+            .POST(HttpRequest.BodyPublishers.ofString(bodyPublisher))
+            .build();
+
+        final HttpClient httpClient = HttpClient.newHttpClient();
+
+        final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if(clientHttpResponse.statusCode() == 202) return true;
+        else if(clientHttpResponse.statusCode() == 408) return false;
+        
+        return false;
 
     }
 

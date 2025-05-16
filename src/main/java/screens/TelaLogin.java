@@ -2,16 +2,19 @@ package screens;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.sql.SQLException;
-
 import java.awt.Font;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-
-import orm.DatabaseConnection;
 
 public class TelaLogin {
 
@@ -61,17 +64,26 @@ public class TelaLogin {
         container.add(telaPrincipal);
 
         botaoLogin.addActionListener((event) -> {
-
-            this.cpf = textoCPF.getText();
-            this.senha = textoSenha.getText(); 
             
-            try {
-                final DatabaseConnection databaseConnection = new DatabaseConnection();
-                databaseConnection.consultLogin(this.cpf, this.senha);
-            } catch(final SQLException sqlException) {
-                sqlException.printStackTrace();
-            } catch(final ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
+            if (textoCPF.getText().isEmpty() || textoSenha.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(tela, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                
+                this.cpf = textoCPF.getText();
+                this.senha = textoSenha.getText();
+
+                try {
+                     
+                    if(realizarLogin(this.cpf, this.senha)) {
+                        tela.dispose();
+                        new TelaPrincipalCliente();
+                    } else {
+                        JOptionPane.showMessageDialog(tela, "Login não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    
+                } catch(final Exception exception) {
+                    exception.printStackTrace();
+                }
             }
 
         });
@@ -95,6 +107,25 @@ public class TelaLogin {
         tela.setLocationRelativeTo(null);
         tela.setVisible(true);
         
+    }
+
+    private boolean realizarLogin(final String cpf, final String senha) throws InterruptedException, IOException {
+        
+        final HttpRequest request = HttpRequest.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .uri(URI.create("http://localhost:8080/client/findUserByCPFAndPassword?CPF=" + this.cpf + "&password=" + this.senha))
+            .GET()
+            .build();
+
+        final HttpClient httpClient = HttpClient.newHttpClient();
+
+        final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if(clientHttpResponse.statusCode() == 302) return true;
+        else if(clientHttpResponse.statusCode() == 404) return false;
+        
+        return false;
+
     }
     
 }

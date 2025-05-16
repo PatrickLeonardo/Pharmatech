@@ -1,8 +1,8 @@
 import java.sql.SQLException;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
-import screens.*;
+import screens.TelaPrincipalCliente;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
