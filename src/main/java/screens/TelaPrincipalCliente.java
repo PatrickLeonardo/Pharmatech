@@ -1,7 +1,11 @@
 package screens;
 
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URI;
@@ -9,7 +13,6 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,43 +34,68 @@ public class TelaPrincipalCliente {
         final Color azulPharmatech = new Color(1, 0, 127);
         final Color cinzaFundo = new Color (207, 206, 206);
 
+        // TELA  
+        final JFrame tela = new JFrame("Tela Principal");
+        tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        tela.setSize(1500, 800);
+        tela.setLocationRelativeTo(null);
+
+        // CONTAINER PRINCIPAL
+        final JPanel container = new JPanel(); 
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setBackground(cinzaFundo);
+        
+        // CABECALHO
+        final JPanel cabecalho = new JPanel();
+        cabecalho.setLayout(null);
+        cabecalho.setPreferredSize(new Dimension(1500, 100));
+        cabecalho.setBackground(cinzaFundo);
+        
+        // LOGO
         ImageIcon logo = new ImageIcon("C:\\Users\\oushe\\Downloads\\simboloFarmacia.jpeg");
         final Image imagemRedimensionada = logo.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         logo = new ImageIcon(imagemRedimensionada);
-
-        final JFrame tela = new JFrame("Tela Principal");
         final JLabel labelLogo = new JLabel(logo);
-        final JLabel msgPharmatech = new JLabel("Pharmatech");
-        final JButton botaoCarrinho= new JButton("Carrinho");
-        final JButton botaoCadastrar = new JButton("Cadastrar");
-        final JButton botaoLogar = new JButton("Logar");
-        final JTextField barraPesquisa = new JTextField("");
-        final JPanel container = new JPanel(); 
-
-        container.setLayout(null); 
-        container.setBackground(cinzaFundo);
-
         labelLogo.setBounds(20, 35, 30, 30);
-        container.add(labelLogo);
+        cabecalho.add(labelLogo);
 
+        // TITULO
+        final JLabel msgPharmatech = new JLabel("Pharmatech");
         msgPharmatech.setBounds(50, 25, 500, 50);
         msgPharmatech.setFont(new Font("Arial", Font.PLAIN, 30));
         msgPharmatech.setForeground(azulPharmatech);
-        container.add(msgPharmatech);
+        cabecalho.add(msgPharmatech);
 
+        // BARRA DE PESQUISA
+        final JTextField barraPesquisa = new JTextField("");
         barraPesquisa.setBounds(250, 25, 500, 50);
         barraPesquisa.setFont(new Font("Arial", Font.PLAIN, 40));
-        container.add(barraPesquisa);
+        cabecalho.add(barraPesquisa);
 
+        // BOTAO CARRINHP
+        final JButton botaoCarrinho = new JButton("Carrinho");
         botaoCarrinho.setBounds(1300, 25, 150, 50);
-        container.add(botaoCarrinho);
+        cabecalho.add(botaoCarrinho);
 
+        // BOTAO CADASTRAR
+        final JButton botaoCadastrar = new JButton("Cadastrar");
         botaoCadastrar.setBounds(1100, 25, 150, 50);
-        container.add(botaoCadastrar);
+        cabecalho.add(botaoCadastrar);
 
+        // BOTAO LOGAR
+        final JButton botaoLogar = new JButton("Logar");
         botaoLogar.setBounds(900, 25, 150, 50);
-        container.add(botaoLogar);
-          
+        cabecalho.add(botaoLogar);
+        
+        container.add(cabecalho);
+        
+        // PAINEL EXIBIÇÃO MEDICAMENTOS
+        final JPanel painelMedicamentos = new JPanel();
+        painelMedicamentos.setLayout(new BoxLayout(painelMedicamentos, BoxLayout.Y_AXIS));
+        painelMedicamentos.setBackground(cinzaFundo);
+        painelMedicamentos.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        container.add(painelMedicamentos);
+
         botaoLogar.addActionListener((event) -> {
             new TelaLogin();
             tela.dispose();
@@ -82,23 +110,13 @@ public class TelaPrincipalCliente {
             tela.dispose();
         });
 
-        loadMedications(container);
+        loadMedications(painelMedicamentos);
 
         final JScrollPane jScrollPane = new JScrollPane(container);
         jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        
-        //tela.add(jScrollPane);
-        //tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //tela.setContentPane(jScrollPane);
-        //tela.pack();
-        //tela.setSize(1500, 800);
-        //tela.setLocationRelativeTo(null);
-        //tela.setVisible(true);
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // scroll mais suave
 
         tela.add(jScrollPane);
-        tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setSize(1500, 800);
-        tela.setLocationRelativeTo(null);
         tela.setVisible(true);
 
     }
@@ -124,86 +142,79 @@ public class TelaPrincipalCliente {
         try {
             
             final JSONArray jsonArray = new JSONArray(getMedicamentos());
-            
-            int firstLine = 0;
-            int lineCounter = 1;
-            int couterCopyBuffer = 0;
 
+            JPanel linhaPanel = null;
+            int contadorColuna = 0;
+            
             for(int counter = 0; counter <= jsonArray.length()-1; counter++) {
 
+                if (contadorColuna == 0) {
+                    linhaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
+                    linhaPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+                    defaultContainer.add(linhaPanel);
+                }
+
                 final JPanel jPanel = new JPanel();
+                
+                // PAINEL DE CADA ELEMENTO
                 jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
-
-                 
-                jPanel.setLayout(null);
-                if (counter > 3) firstLine = 50;
-                jPanel.setBounds(60 + (couterCopyBuffer * 350), (200 * lineCounter + firstLine), 500, 50);
-                jPanel.setSize(300, 400);
                 jPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+                jPanel.setBackground(Color.WHITE);
+                jPanel.setPreferredSize(new Dimension(320, 500));
+                jPanel.setMaximumSize(new Dimension(320, 500));
+                jPanel.setMinimumSize(new Dimension(320, 500));
+                jPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); 
 
-                JLabel jLabel = new JLabel();
-                
                 final JSONObject JSONMedication = jsonArray.getJSONObject(counter);
+                 
+                // IMAGEM DO MEDICAMENTO
+                final URL urlDaImagemDoMedicamento = new URI(JSONMedication.getString("imagemDoMedicamento")).toURL();
+                ImageIcon imageIcon = new ImageIcon(urlDaImagemDoMedicamento);
                 
-                final Iterator<String> keysOfJSONMedication = JSONMedication.keys();
+                imageIcon = new ImageIcon(
+                    imageIcon.getImage().getScaledInstance(290, 250, Image.SCALE_SMOOTH)
+                );
                 
-                int i = 0;
+                JLabel imagemLabel = new JLabel(imageIcon);
+                imagemLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 10));
+                jPanel.add(imagemLabel);
+                
+                // NOME
+                final JLabel labelNome = new JLabel(JSONMedication.getString("nome"));
+                labelNome.setFont(new Font("Helvetica", Font.PLAIN, 25));
+                labelNome.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 10));
+                jPanel.add(labelNome);
 
-                while (keysOfJSONMedication.hasNext()) {
-                    
-                    final String key = keysOfJSONMedication.next();
-                    final String text = String.valueOf(JSONMedication.get(key));
-                    
-                    // IMAGEM DO MEDICAMENTO
-                    if (String.valueOf(key).equals("imagemDoMedicamento")) {
-                        
-                        final URL urlDaImagemDoMedicamento = new URI(text).toURL();
-                        ImageIcon imageIcon = new ImageIcon(urlDaImagemDoMedicamento);
-                        
-                        imageIcon = new ImageIcon(
-                            imageIcon.getImage().getScaledInstance(290, 250, Image.SCALE_SMOOTH)
-                        );
-                        
-                        jLabel = new JLabel(imageIcon);
-                        jLabel.setBounds(5, 5, imageIcon.getIconWidth(), imageIcon.getIconHeight());
+                // DESCRIÇÃO 
+                final JLabel labelDescricao = new JLabel(JSONMedication.getString("descricao"));
+                labelDescricao.setFont(new Font("Helvetica", Font.PLAIN, 17));
+                labelDescricao.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
+                jPanel.add(labelDescricao);
 
-                    // NOME
-                    } else if (String.valueOf(key).equals("nome")) {
-                        
-                        jLabel = new JLabel(text);
-                        jLabel.setFont(new Font("Helvetica", Font.PLAIN, 30));
-                        jLabel.setBounds(20, 240+(i*20), 500, 50);
-                        
-                    // Descrição    
-                    } else if (String.valueOf(key).equals("descricao")) {
-                        
-                        jLabel = new JLabel(text);
-                        jLabel.setFont(new Font("Helvetica", Font.PLAIN, 17));
-                        jLabel.setBounds(20, 240+(i*22), 500, 50);
-                        
-                    // DOSAGEM
-                    } else if (String.valueOf(key).equals("dosagem")) {
+                // DOSAGEM
+                final JLabel labelDosagem = new JLabel(JSONMedication.getString("dosagem"));
+                labelDosagem.setFont(new Font("Helvetica", Font.PLAIN, 20));
+                labelDosagem.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
+                jPanel.add(labelDosagem);
 
-                        jLabel = new JLabel(text);
-                        jLabel.setFont(new Font("Helvetica", Font.PLAIN, 20));
-                        jLabel.setBounds(20, 240+(i*20), 500, 50);
+                // PREÇO
+                String textoPreco = String.valueOf(JSONMedication.getDouble("preco"));
+                textoPreco = textoPreco.replace(".", ",");
 
-                    }
+                final JLabel labelPreco = new JLabel("R$" + textoPreco);
+                labelPreco.setFont(new Font("Helvetica", Font.PLAIN, 20));
+                labelPreco.setBorder(BorderFactory.createEmptyBorder(5, 20, 15, 10));
+                jPanel.add(labelPreco);
 
-                    jPanel.add(jLabel);
-                    defaultContainer.add(jPanel);
-                    
-                    i++;
-                    
-                }
+                // BOTÃO ADICIONAR AO CARRINHO
+                final JButton botaoReserva = new JButton("+ ADICIONAR AO CARRINHO");
+                jPanel.add(botaoReserva);
 
-                couterCopyBuffer++;
+                linhaPanel.add(jPanel);
 
-                if ((counter + 1) % 4 == 0) {
-                    lineCounter += 2; 
-                    couterCopyBuffer= 0;
-                }
-
+                contadorColuna++;
+                if (contadorColuna == 4) contadorColuna = 0;
+                
             }
 
             defaultContainer.revalidate();

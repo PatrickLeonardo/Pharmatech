@@ -1,7 +1,6 @@
+screens/TelaLogin.class
 Main.class
+screens/JFrameComponent.class
 screens/TelaCarrinho.class
 screens/TelaCadastro.class
-screens/TelaLogin.class
-orm/DatabaseConnection.class
-screens/JFrameComponent.class
 screens/TelaPrincipalCliente.class
