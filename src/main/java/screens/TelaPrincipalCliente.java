@@ -1,11 +1,9 @@
 package screens;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URI;
@@ -175,7 +173,7 @@ public class TelaPrincipalCliente {
                     imageIcon.getImage().getScaledInstance(290, 250, Image.SCALE_SMOOTH)
                 );
                 
-                JLabel imagemLabel = new JLabel(imageIcon);
+                final JLabel imagemLabel = new JLabel(imageIcon);
                 imagemLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 10));
                 jPanel.add(imagemLabel);
                 
