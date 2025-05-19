@@ -104,9 +104,9 @@ public class TelaCadastro {
                 try {
                      
                     if(realizarCadastro(cpf, nome, telefone, endereco, senha)) {
+                        JOptionPane.showMessageDialog(tela, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                         tela.dispose();
                         new TelaPrincipalCliente();
-                        JOptionPane.showMessageDialog(tela, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(tela, "Login não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
