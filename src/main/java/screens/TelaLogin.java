@@ -2,6 +2,7 @@ package screens;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.io.IOException;
 import java.net.URI;
@@ -54,13 +55,16 @@ public class TelaLogin {
         textoSenha.setBorder(new LineBorder(Color.BLACK, 2, true));
         container.add(textoSenha);
 
-        botaoLogin.setBounds(110, 280, 120, 35);
+        botaoLogin.setBounds(110, 280, 120, 35);;
+        botaoLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         container.add(botaoLogin);
 
         botaoLinkTelaDeCadastro.setBounds(250, 280, 120, 35);
+        botaoLinkTelaDeCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         container.add(botaoLinkTelaDeCadastro);
 
         telaPrincipal.setBounds(180, 333, 120, 35);
+        telaPrincipal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         container.add(telaPrincipal);
 
         botaoLogin.addActionListener((event) -> {

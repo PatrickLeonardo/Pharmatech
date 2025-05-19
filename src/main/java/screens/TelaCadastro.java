@@ -2,6 +2,7 @@ package screens;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.io.IOException;
 import java.net.URI;
@@ -84,9 +85,11 @@ public class TelaCadastro {
         container.add(textoSenha);
 
         botaoCadastro.setBounds(100, 570, 120, 60);
+        botaoCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         container.add(botaoCadastro);
 
         botaoLinkTelaLogin.setBounds(270, 570, 120, 60);
+        botaoLinkTelaLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         container.add(botaoLinkTelaLogin);
 
         botaoCadastro.addActionListener((event) -> { 
