@@ -5,8 +5,10 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
@@ -26,11 +28,13 @@ import utils.MedicationsUtilities;
 
 public class TelaPrincipalCliente {
 
+    boolean pressedForTheFirstTime = true;
+
     public TelaPrincipalCliente() {
 
         final Color azulPharmatech = new Color(1, 0, 127);
         final Color cinzaFundo = new Color (207, 206, 206);
-
+        
         final MedicationsUtilities medicationsUtilities = new MedicationsUtilities();
         final JPanel painelMedicamentos = new JPanel();
 
@@ -85,19 +89,41 @@ public class TelaPrincipalCliente {
 
         });
 
-        // BOTÃO PESQUISA 
-        final JButton botaoPesquisa = new JButton("Q");
-        botaoPesquisa.setBounds(950, 25, 50, 50);
-        cabecalho.add(botaoPesquisa);
+        barraPesquisa.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                
+                try {
+                    
+                    //JPanel loadedMessageLabel = medicationsUtilities.loadMessageLabel("CARREGANDO MEDICAMENTOS...", painelMedicamentos);
+                    //painelMedicamentos.remove(loadedMessageLabel);
 
-        botaoPesquisa.addActionListener((event) -> {
-            try {
-                medicationsUtilities.findMedicationAndLoad(barraPesquisa.getText(), painelMedicamentos, tela);
-            } catch (Exception exception) {
-                exception.printStackTrace();
+                    medicationsUtilities.findMedicationAndLoad(barraPesquisa.getText(), painelMedicamentos);
+                    
+                } catch (final Exception exception) {
+                    exception.printStackTrace();
+                }
+                
+            } 
+
+        });
+
+        barraPesquisa.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(final KeyEvent e) {
+
+                if (pressedForTheFirstTime) {
+                    final String newText = "  " + barraPesquisa.getText().charAt(barraPesquisa.getText().length()-1);
+                    barraPesquisa.setText(newText.replace(".", ""));
+                    pressedForTheFirstTime = false;
+                }
+                
             }
-        }); 
 
+        });
+         
         // CONFIGURAÇÃO DOS BOTÕES 
         final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
         final Map<TextAttribute, Object> attributes = (Map<TextAttribute, Object>) defaultFont.getAttributes();
@@ -130,14 +156,13 @@ public class TelaPrincipalCliente {
         botaoLogar.setBorderPainted(false);
         botaoLogar.setOpaque(false);
         botaoLogar.setFont(botaoLogar.getFont().deriveFont(attributes));
-        botaoLogar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));        
+        botaoLogar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         cabecalho.add(botaoLogar);
         
         container.add(cabecalho);
         
         // PAINEL EXIBIÇÃO MEDICAMENTOS
         painelMedicamentos.setLayout(new BoxLayout(painelMedicamentos, BoxLayout.Y_AXIS));
-        painelMedicamentos.setBackground(cinzaFundo);
         painelMedicamentos.setAlignmentX(JPanel.LEFT_ALIGNMENT);
         container.add(painelMedicamentos);
 
@@ -157,7 +182,7 @@ public class TelaPrincipalCliente {
 
         try {
             medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), painelMedicamentos);
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             exception.printStackTrace();
         }
 

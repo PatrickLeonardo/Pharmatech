@@ -27,6 +27,7 @@ import org.json.JSONObject;
 public class MedicationsUtilities {
 
     String medicationsBody = null;
+    boolean defaultExhibition = true;
 
     public JSONArray getMedications() throws IOException, InterruptedException {
 
@@ -45,14 +46,15 @@ public class MedicationsUtilities {
 
     }
 
-    public void findMedicationAndLoad(String medication, final JPanel defaultContainer, final JFrame screen) throws InterruptedException, IOException {
+    public void findMedicationAndLoad(String medication, final JPanel defaultContainer) throws InterruptedException, IOException {
          
         medication = medication.strip().replace(" ", "%20");
-         
-        if (medication.equals("")) {
+        
+        if (medication.equals("") && this.defaultExhibition == false) {
             
-            JOptionPane.showMessageDialog(screen, "Digite um Medicamento para pesquisar...", "Falha na Pesquisa", JOptionPane.ERROR_MESSAGE);
-            
+            this.defaultExhibition = true;
+            loadMedications(new JSONArray(this.medicationsBody), defaultContainer);
+
         } else if (!medication.equals("") && !medication.equals("Procure%20por%20um%20Medicamento...")) {
 
             final HttpRequest request = HttpRequest.newBuilder()
@@ -66,40 +68,36 @@ public class MedicationsUtilities {
             
             if(String.valueOf("[]").equals(httpResponse.body())) {
                 
-                JPanel exibicao = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
-                exibicao.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-                exibicao.setPreferredSize(new Dimension(1500, 660));
-                
-                JLabel message = new JLabel("MEDICAMENTO NÃO ENCONTRADO !!!");
-                message.setBorder(BorderFactory.createEmptyBorder(240, 370, 10, 10));
-                message.setFont(new Font("Helvetica", Font.BOLD, 35));
-                exibicao.add(message);
+                loadMessageLabel("MEDICAMENTO NÃO ENCONTRADO !!!", defaultContainer); 
+                this.defaultExhibition = false;
 
-                defaultContainer.removeAll();
-                defaultContainer.add(exibicao);
-                defaultContainer.revalidate();
-                defaultContainer.repaint();
-                 
-            } else loadMedications(new JSONArray(httpResponse.body()), defaultContainer);
-            
+            } else {
+
+                this.defaultExhibition = false;
+                loadMedications(new JSONArray(httpResponse.body()), defaultContainer);
+                
+            }
         }
 
     }
 
-    public void loadMedications(JSONArray medicationsArray, final JPanel defaultContainer) {
+    public void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer) {
         
         try { 
 
-            JPanel linhaPanel = null;
+            JPanel linePanel = null;
             int contadorColuna = 0;
             defaultContainer.removeAll();
-            
+             
             for(int counter = 0; counter <= medicationsArray.length()-1; counter++) {
 
                 if (contadorColuna == 0) {
-                    linhaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
-                    linhaPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-                    defaultContainer.add(linhaPanel);
+                    linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
+                    linePanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+                    
+                    if(medicationsArray.length() <= 4) linePanel.setPreferredSize(new Dimension(1500, 660));
+                    
+                    defaultContainer.add(linePanel);
                 }
 
                 final JPanel jPanel = new JPanel();
@@ -161,7 +159,7 @@ public class MedicationsUtilities {
                 final JButton botaoReserva = new JButton("+ ADICIONAR AO CARRINHO");
                 jPanel.add(botaoReserva);
 
-                linhaPanel.add(jPanel);
+                linePanel.add(jPanel);
 
                 contadorColuna++;
                 if (contadorColuna == 4) contadorColuna = 0;
@@ -174,6 +172,26 @@ public class MedicationsUtilities {
         } catch(final Exception exception) {
             exception.printStackTrace();
         }
+
+    }
+
+    public JPanel loadMessageLabel(final String messageToLoad, final JPanel defaultContainer) {
+
+        final JPanel exibicao = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
+        exibicao.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        exibicao.setPreferredSize(new Dimension(1500, 660));
+         
+        final JLabel message = new JLabel(messageToLoad);
+        message.setBorder(BorderFactory.createEmptyBorder(240, 370, 10, 10));
+        message.setFont(new Font("Helvetica", Font.BOLD, 35));
+        exibicao.add(message);
+
+        defaultContainer.removeAll();
+        defaultContainer.add(exibicao);
+        defaultContainer.revalidate();
+        defaultContainer.repaint();
+        
+        return exibicao;
 
     }
 
