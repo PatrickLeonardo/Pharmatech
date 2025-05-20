@@ -1,5 +1,6 @@
-/home/patrick/Desktop/Pharmatech/src/main/java/Main.java
-/home/patrick/Desktop/Pharmatech/src/main/java/screens/TelaCadastro.java
-/home/patrick/Desktop/Pharmatech/src/main/java/screens/TelaCarrinho.java
-/home/patrick/Desktop/Pharmatech/src/main/java/screens/TelaLogin.java
-/home/patrick/Desktop/Pharmatech/src/main/java/screens/TelaPrincipalCliente.java
+/home/patrick/Pharmatech/src/main/java/Main.java
+/home/patrick/Pharmatech/src/main/java/screens/TelaCadastro.java
+/home/patrick/Pharmatech/src/main/java/screens/TelaCarrinho.java
+/home/patrick/Pharmatech/src/main/java/screens/TelaLogin.java
+/home/patrick/Pharmatech/src/main/java/screens/TelaPrincipalCliente.java
+/home/patrick/Pharmatech/src/main/java/utils/MedicationsUtilities.java
