@@ -5,6 +5,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
@@ -29,7 +31,10 @@ public class TelaPrincipalCliente {
         final Color azulPharmatech = new Color(1, 0, 127);
         final Color cinzaFundo = new Color (207, 206, 206);
 
-        // TELA  
+        final MedicationsUtilities medicationsUtilities = new MedicationsUtilities();
+        final JPanel painelMedicamentos = new JPanel();
+
+        // TELA 
         final JFrame tela = new JFrame("Tela Principal");
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tela.setSize(1500, 800);
@@ -78,6 +83,19 @@ public class TelaPrincipalCliente {
                 barraPesquisa.setText("  ");
             }
 
+        });
+
+        // BOTÃO PESQUISA 
+        final JButton botaoPesquisa = new JButton("Q");
+        botaoPesquisa.setBounds(950, 25, 50, 50);
+        cabecalho.add(botaoPesquisa);
+
+        botaoPesquisa.addActionListener((event) -> {
+            try {
+                medicationsUtilities.findMedicationAndLoad(barraPesquisa.getText(), painelMedicamentos, tela);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         }); 
 
         // CONFIGURAÇÃO DOS BOTÕES 
@@ -118,7 +136,6 @@ public class TelaPrincipalCliente {
         container.add(cabecalho);
         
         // PAINEL EXIBIÇÃO MEDICAMENTOS
-        final JPanel painelMedicamentos = new JPanel();
         painelMedicamentos.setLayout(new BoxLayout(painelMedicamentos, BoxLayout.Y_AXIS));
         painelMedicamentos.setBackground(cinzaFundo);
         painelMedicamentos.setAlignmentX(JPanel.LEFT_ALIGNMENT);
@@ -138,7 +155,11 @@ public class TelaPrincipalCliente {
             tela.dispose();
         });
 
-        MedicationsUtilities.loadMedications(painelMedicamentos);
+        try {
+            medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), painelMedicamentos);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
         final JScrollPane jScrollPane = new JScrollPane(container);
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
