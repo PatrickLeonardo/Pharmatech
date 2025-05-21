@@ -26,9 +26,18 @@ import org.json.JSONObject;
 
 public class MedicationsUtilities {
 
-    String medicationsBody = null;
-    boolean defaultExhibition = true;
+    // Medicamentos do Corpo da Resposta
+    String responseBodyMedications = null;
 
+    // Exibição Padrão (Todos os Medicamentos carregados) 
+    boolean defaultExhibition = true;
+    
+    /**
+     * Pull all API Medications
+     * @return JSONArray object with all API medications
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public JSONArray getMedications() throws IOException, InterruptedException {
 
         final HttpRequest request = HttpRequest.newBuilder()
@@ -41,36 +50,46 @@ public class MedicationsUtilities {
 
         final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        this.medicationsBody = clientHttpResponse.body();
+        this.responseBodyMedications = clientHttpResponse.body();
         return new JSONArray(clientHttpResponse.body());
 
     }
 
     public void findMedicationAndLoad(String medication, final JPanel defaultContainer) throws InterruptedException, IOException {
          
+        // Formatar nome do Medicamento pesquisado (Substitui o espaço em branco por %20) 
         medication = medication.strip().replace(" ", "%20");
         
+        // Se medicamento for "" e se exibição padrão for falsa
         if (medication.equals("") && this.defaultExhibition == false) {
             
+            // Carrega exibição Padrão novamente
             this.defaultExhibition = true;
-            loadMedications(new JSONArray(this.medicationsBody), defaultContainer);
+            loadMedications(new JSONArray(this.responseBodyMedications), defaultContainer);
 
+        // Se medicamento for diferente de "" e se for diferente do texto de exibição padrão da caixa de pesquisa  
         } else if (!medication.equals("") && !medication.equals("Procure%20por%20um%20Medicamento...")) {
 
+            // Instancia uma nova requisição com a busca do medicamento 
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .uri(URI.create("http://localhost:8080/medications/findByNome?nome=" + medication))
                 .GET()
                 .build();
 
+            // Envia a requisição 
             final HttpClient httpClient = HttpClient.newHttpClient();
+
+            // Armazena Resposta da Requisição 
             final HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
+            // Se resposta da pesquisa for vazia ([])
             if(String.valueOf("[]").equals(httpResponse.body())) {
                 
                 loadMessageLabel("MEDICAMENTO NÃO ENCONTRADO !!!", defaultContainer); 
                 this.defaultExhibition = false;
 
+            // Se não, carrega o(s) medicamento(s) encontrado na pesquisa 
             } else {
 
                 this.defaultExhibition = false;
@@ -81,17 +100,29 @@ public class MedicationsUtilities {
 
     }
 
+    /**
+     * Load all Medications passed in {@code medicationsArray} into {@code defaultContainer}
+     * @param medicationsArray
+     * @param defaultContainer
+     */
     public void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer) {
         
         try { 
-
+            
+            // JPanel para carregar a Linha com 4 Medicamentos na Horizontal
             JPanel linePanel = null;
-            int contadorColuna = 0;
+
+            // Contador para cada iteração 
+            int columnCounter = 0;
+
+            // Remove os Elementos anteriores (caso haver) 
             defaultContainer.removeAll();
              
+            // Para cada mediacamento 
             for(int counter = 0; counter <= medicationsArray.length()-1; counter++) {
 
-                if (contadorColuna == 0) {
+                // Se contador estiver zerdao, adiciona uma nova Linha Horizontal para carregar mais 4 Elementos
+                if (columnCounter == 0) {
                     linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
                     linePanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
                     
@@ -100,69 +131,74 @@ public class MedicationsUtilities {
                     defaultContainer.add(linePanel);
                 }
 
-                final JPanel jPanel = new JPanel();
+                final JPanel elementPanel = new JPanel();
                 
                 // PAINEL DE CADA ELEMENTO
-                jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
-                jPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-                jPanel.setBackground(Color.WHITE);
-                jPanel.setPreferredSize(new Dimension(320, 500));
-                jPanel.setMaximumSize(new Dimension(320, 500));
-                jPanel.setMinimumSize(new Dimension(320, 500));
-                jPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); 
+                elementPanel.setLayout(new BoxLayout(elementPanel, BoxLayout.Y_AXIS));
+                elementPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+                elementPanel.setBackground(Color.WHITE);
+                elementPanel.setPreferredSize(new Dimension(320, 500));
+                elementPanel.setMaximumSize(new Dimension(320, 500));
+                elementPanel.setMinimumSize(new Dimension(320, 500));
+                elementPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); 
 
                 final JSONObject JSONMedication = medicationsArray.getJSONObject(counter);
                  
                 // IMAGEM DO MEDICAMENTO
-                final URL urlDaImagemDoMedicamento = new URI(JSONMedication.getString("imagemDoMedicamento")).toURL();
-                ImageIcon imageIcon = new ImageIcon(urlDaImagemDoMedicamento);
+                final URL medicationImageUrl = new URI(JSONMedication.getString("imagemDoMedicamento")).toURL();
+                ImageIcon resizedImage = new ImageIcon(medicationImageUrl);
                 
-                imageIcon = new ImageIcon(
-                    imageIcon.getImage().getScaledInstance(290, 250, Image.SCALE_SMOOTH)
+                resizedImage = new ImageIcon(
+                    resizedImage.getImage().getScaledInstance(290, 250, Image.SCALE_SMOOTH)
                 );
                 
-                final JLabel imagemLabel = new JLabel(imageIcon);
-                imagemLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 10));
-                jPanel.add(imagemLabel);
+                final JLabel imageLabel = new JLabel(resizedImage);
+                imageLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 10));
+                elementPanel.add(imageLabel);
                 
                 // NOME
-                final JLabel labelNome = new JLabel(JSONMedication.getString("nome"));
-                labelNome.setFont(new Font("Helvetica", Font.BOLD, 22));
-                labelNome.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 10));
-                jPanel.add(labelNome);
+                final JLabel nameLabel = new JLabel(JSONMedication.getString("nome"));
+                nameLabel.setFont(new Font("Helvetica", Font.BOLD, 22));
+                nameLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 10));
+                elementPanel.add(nameLabel);
 
                 // DESCRIÇÃO 
-                final JLabel labelDescricao = new JLabel(JSONMedication.getString("descricao"));
-                labelDescricao.setFont(new Font("Helvetica", Font.PLAIN, 18));
-                labelDescricao.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
-                jPanel.add(labelDescricao);
+                final JLabel descriptionLabel = new JLabel(JSONMedication.getString("descricao"));
+                descriptionLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
+                descriptionLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
+                elementPanel.add(descriptionLabel);
 
-                // DOSAGEM
-                final JLabel labelDosagem = new JLabel(JSONMedication.getString("dosagem"));
-                labelDosagem.setFont(new Font("Helvetica", Font.PLAIN, 18));
-                labelDosagem.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
-                jPanel.add(labelDosagem);
+                // DOSAGEM 
+                final JLabel dosageLabel = new JLabel(JSONMedication.getString("dosagem"));
+                dosageLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
+                dosageLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
+                elementPanel.add(dosageLabel);
 
-                // PREÇO
-                String textoPreco = String.valueOf(JSONMedication.getDouble("preco")).replace(".", ",");
+                // PREÇO 
                 
-                if (Character.valueOf(',').equals(textoPreco.charAt(textoPreco.length()-2))) {
-                    textoPreco = textoPreco.concat("0");
+                // Trocar ponto por virgula no texto do preço 
+                String priceText = String.valueOf(JSONMedication.getDouble("preco")).replace(".", ",");
+                
+                // Adicionar um 0 no final do preço caso não tenha duas casas decimais depois da virgula 
+                if (Character.valueOf(',').equals(priceText.charAt(priceText.length()-2))) {
+                    priceText = priceText.concat("0");
                 }
 
-                final JLabel labelPreco = new JLabel("R$ " + textoPreco);
-                labelPreco.setFont(new Font("Helvetica", Font.BOLD, 18));
-                labelPreco.setBorder(BorderFactory.createEmptyBorder(5, 20, 15, 10));
-                jPanel.add(labelPreco);
+                final JLabel priceLabel = new JLabel("R$ " + priceText);
+                priceLabel.setFont(new Font("Helvetica", Font.BOLD, 18));
+                priceLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 15, 10));
+                elementPanel.add(priceLabel);
 
                 // BOTÃO ADICIONAR AO CARRINHO
-                final JButton botaoReserva = new JButton("+ ADICIONAR AO CARRINHO");
-                jPanel.add(botaoReserva);
+                final JButton btnReservation = new JButton("+ ADICIONAR AO CARRINHO");
+                elementPanel.add(btnReservation);
 
-                linePanel.add(jPanel);
+                linePanel.add(elementPanel);
+                
+                columnCounter++;
 
-                contadorColuna++;
-                if (contadorColuna == 4) contadorColuna = 0;
+                // Se Linha do painel tiver 4 Elementos, zera o contador
+                if (columnCounter == 4) columnCounter = 0;
                 
             }
 
@@ -175,23 +211,32 @@ public class MedicationsUtilities {
 
     }
 
+    /**
+     * Load the message passed in {@code messageToLoad} into {@code defaultContainer}
+     * @param messageToLoad
+     * @param defaultContainer
+     * @return JPanel inputed into {@code defaultContainer} 
+     */
     public JPanel loadMessageLabel(final String messageToLoad, final JPanel defaultContainer) {
-
-        final JPanel exibicao = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
-        exibicao.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-        exibicao.setPreferredSize(new Dimension(1500, 660));
+        
+        // Painel para exibição da mensagem 
+        final JPanel exhibition = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
+        exhibition.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        exhibition.setPreferredSize(new Dimension(1500, 660));
          
+        // Mensagem para exibir
         final JLabel message = new JLabel(messageToLoad);
         message.setBorder(BorderFactory.createEmptyBorder(240, 370, 10, 10));
         message.setFont(new Font("Helvetica", Font.BOLD, 35));
-        exibicao.add(message);
+        exhibition.add(message);
 
+        // Carrega o painel de exibição da mensagem no container padrão 
         defaultContainer.removeAll();
-        defaultContainer.add(exibicao);
+        defaultContainer.add(exhibition);
         defaultContainer.revalidate();
         defaultContainer.repaint();
         
-        return exibicao;
+        return exhibition;
 
     }
 

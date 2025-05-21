@@ -27,69 +27,75 @@ import javax.swing.JTextField;
 import utils.MedicationsUtilities;
 
 public class TelaPrincipalCliente {
-
-    boolean pressedForTheFirstTime = true;
+    
+    // Variavel para verificar se 
+    boolean searchBoxPressedForTheFirstTime = false;
 
     public TelaPrincipalCliente() {
-
-        final Color azulPharmatech = new Color(1, 0, 127);
-        final Color cinzaFundo = new Color (207, 206, 206);
+        
+        // Instancia das cores utilizadas na tela
+        final Color titleColor = new Color(1, 0, 127); // Variação de Azul
+        final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
         
         final MedicationsUtilities medicationsUtilities = new MedicationsUtilities();
-        final JPanel painelMedicamentos = new JPanel();
+        
+        // Painel onde serão carregados os medicamentos
+        final JPanel medicationsPanel = new JPanel();
 
         // TELA 
-        final JFrame tela = new JFrame("Tela Principal");
-        tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setSize(1500, 800);
-        tela.setLocationRelativeTo(null);
+        final JFrame mainScreen = new JFrame("Tela Principal");
+        mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainScreen.setSize(1500, 800);
+        mainScreen.setLocationRelativeTo(null);
 
         // CONTAINER PRINCIPAL
-        final JPanel container = new JPanel(); 
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        container.setBackground(cinzaFundo);
+        final JPanel mainContainer = new JPanel(); 
+        mainContainer.setLayout(new BoxLayout(mainContainer, BoxLayout.Y_AXIS));
+        mainContainer.setBackground(backgroundColor);
         
-        // CABECALHO
-        final JPanel cabecalho = new JPanel();
-        cabecalho.setLayout(null);
-        cabecalho.setPreferredSize(new Dimension(1500, 100));
-        cabecalho.setBackground(cinzaFundo);
-        cabecalho.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black));
+        // CABECALHO (header)
+        final JPanel header = new JPanel();
+        header.setLayout(null);
+        header.setPreferredSize(new Dimension(1500, 100));
+        header.setBackground(backgroundColor);
+        header.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black));
         
         // LOGO 
-        ImageIcon imagemLogo = new ImageIcon("./img/icon.png");
+        ImageIcon imageLogo = new ImageIcon("./img/icon.png");
 
-        imagemLogo = new ImageIcon(
-            imagemLogo.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH)
+        imageLogo = new ImageIcon(
+            imageLogo.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH)
         );
          
-        final JLabel labelLogo = new JLabel(imagemLogo);
+        final JLabel labelLogo = new JLabel(imageLogo);
         labelLogo.setBounds(20, 5, 80, 80);
-        cabecalho.add(labelLogo);
+        header.add(labelLogo);
 
         // TITULO 
-        final JLabel msgPharmatech = new JLabel("Pharmatech");
-        msgPharmatech.setBounds(120, 25, 500, 50);
-        msgPharmatech.setFont(new Font("Arial", Font.BOLD, 34));
-        msgPharmatech.setForeground(azulPharmatech);
-        cabecalho.add(msgPharmatech);
+        final JLabel titlePharmatech = new JLabel("Pharmatech");
+        titlePharmatech.setBounds(120, 25, 500, 50);
+        titlePharmatech.setFont(new Font("Arial", Font.BOLD, 34));
+        titlePharmatech.setForeground(titleColor);
+        header.add(titlePharmatech);
 
-        // BARRA DE PESQUISA 
-        final JTextField barraPesquisa = new JTextField("  Procure por um Medicamento...");
-        barraPesquisa.setBounds(450, 25, 500, 50); 
-        barraPesquisa.setFont(new Font("Arial", Font.PLAIN, 25));
-        cabecalho.add(barraPesquisa);
+        // CAIXA DE PESQUISA 
+        final JTextField searchBox = new JTextField("  Procure por um Medicamento...");
+        searchBox.setBounds(450, 25, 500, 50); 
+        searchBox.setFont(new Font("Arial", Font.PLAIN, 25));
+        header.add(searchBox);
 
-        barraPesquisa.addMouseListener(new MouseAdapter() {
+        // Evento que será acionado quando usuário clicar na barra de pesquisa 
+        searchBox.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(final MouseEvent mouseEvent) {
-                barraPesquisa.setText("  ");
+                searchBox.setText("  ");
             }
 
         });
 
-        barraPesquisa.addActionListener(new ActionListener() {
+        // Evento que será acionado quando o usuário apertar Enter na barra de pesquisa 
+        searchBox.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -98,8 +104,9 @@ public class TelaPrincipalCliente {
                     
                     //JPanel loadedMessageLabel = medicationsUtilities.loadMessageLabel("CARREGANDO MEDICAMENTOS...", painelMedicamentos);
                     //painelMedicamentos.remove(loadedMessageLabel);
-
-                    medicationsUtilities.findMedicationAndLoad(barraPesquisa.getText(), painelMedicamentos);
+                    
+                    // Carregar medicamento pesquisado 
+                    medicationsUtilities.findMedicationAndLoad(searchBox.getText(), medicationsPanel);
                     
                 } catch (final Exception exception) {
                     exception.printStackTrace();
@@ -109,90 +116,99 @@ public class TelaPrincipalCliente {
 
         });
 
-        barraPesquisa.addKeyListener(new KeyAdapter() {
+        // Evento que será acionado quando o usuário clicar na barra de pesquisa pela primeira vez 
+        searchBox.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyPressed(final KeyEvent e) {
 
-                if (pressedForTheFirstTime) {
-                    final String newText = "  " + barraPesquisa.getText().charAt(barraPesquisa.getText().length()-1);
-                    barraPesquisa.setText(newText.replace(".", ""));
-                    pressedForTheFirstTime = false;
+                if (!searchBoxPressedForTheFirstTime) {
+                    final String newText = "  " + searchBox.getText().charAt(searchBox.getText().length()-1);
+                    searchBox.setText(newText.replace(".", ""));
+                    searchBoxPressedForTheFirstTime = true;
                 }
                 
             }
 
         });
-         
-        // CONFIGURAÇÃO DOS BOTÕES 
+        
+        // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
         final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
-        final Map<TextAttribute, Object> attributes = (Map<TextAttribute, Object>) defaultFont.getAttributes();
-        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+
+        // Mapeando font padrão para os botões para poder adicionar o Underline (TextAttribute) e Ativa-lo (Object) 
+        final Map<TextAttribute, Object> defaultFontWithUnderline = (Map<TextAttribute, Object>) defaultFont.getAttributes();
+        defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
         // BOTAO CARRINHO 
-        final JButton botaoCarrinho = new JButton("Carrinho");
-        botaoCarrinho.setBounds(1300, 25, 140, 40);
-        botaoCarrinho.setContentAreaFilled(false);
-        botaoCarrinho.setBorderPainted(false);
-        botaoCarrinho.setOpaque(false);
-        botaoCarrinho.setFont(botaoCarrinho.getFont().deriveFont(attributes));
-        botaoCarrinho.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        cabecalho.add(botaoCarrinho);
+        final JButton btnCart = new JButton("Carrinho");
+        btnCart.setBounds(1300, 25, 140, 40);
+        btnCart.setContentAreaFilled(false);
+        btnCart.setBorderPainted(false);
+        btnCart.setOpaque(false);
+        btnCart.setFont(btnCart.getFont().deriveFont(defaultFontWithUnderline));
+        btnCart.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        header.add(btnCart);
 
         // BOTAO CADASTRAR 
-        final JButton botaoCadastrar = new JButton("Cadastrar");
-        botaoCadastrar.setBounds(1150, 25, 140, 40);
-        botaoCadastrar.setContentAreaFilled(false);
-        botaoCadastrar.setBorderPainted(false);
-        botaoCadastrar.setOpaque(false);
-        botaoCadastrar.setFont(botaoCadastrar.getFont().deriveFont(attributes));
-        botaoCadastrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));        
-        cabecalho.add(botaoCadastrar);
+        final JButton btnRegister = new JButton("Cadastrar");
+        btnRegister.setBounds(1150, 25, 140, 40);
+        btnRegister.setContentAreaFilled(false);
+        btnRegister.setBorderPainted(false);
+        btnRegister.setOpaque(false);
+        btnRegister.setFont(btnRegister.getFont().deriveFont(defaultFontWithUnderline));
+        btnRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        header.add(btnRegister);
 
         // BOTAO LOGAR 
-        final JButton botaoLogar = new JButton("Logar");
-        botaoLogar.setBounds(1000, 25, 140, 40);
-        botaoLogar.setContentAreaFilled(false);
-        botaoLogar.setBorderPainted(false);
-        botaoLogar.setOpaque(false);
-        botaoLogar.setFont(botaoLogar.getFont().deriveFont(attributes));
-        botaoLogar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        cabecalho.add(botaoLogar);
+        final JButton btnLogin = new JButton("Logar");
+        btnLogin.setBounds(1000, 25, 140, 40);
+        btnLogin.setContentAreaFilled(false);
+        btnLogin.setBorderPainted(false);
+        btnLogin.setOpaque(false);
+        btnLogin.setFont(btnLogin.getFont().deriveFont(defaultFontWithUnderline));
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        header.add(btnLogin);
         
-        container.add(cabecalho);
+        mainContainer.add(header);
         
         // PAINEL EXIBIÇÃO MEDICAMENTOS
-        painelMedicamentos.setLayout(new BoxLayout(painelMedicamentos, BoxLayout.Y_AXIS));
-        painelMedicamentos.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-        container.add(painelMedicamentos);
-
-        botaoLogar.addActionListener((event) -> {
+        medicationsPanel.setLayout(new BoxLayout(medicationsPanel, BoxLayout.Y_AXIS));
+        medicationsPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        mainContainer.add(medicationsPanel);
+        
+        // Evento que será acionado ao clicar no botão Logar
+        btnLogin.addActionListener((event) -> {
             new TelaLogin();
-            tela.dispose();
+            mainScreen.dispose();
         });
 
-        botaoCadastrar.addActionListener((event) -> {
+        // Evento que será acionado ao clicar no botão Cadastrar
+        btnRegister.addActionListener((event) -> {
             new TelaCadastro();
-            tela.dispose();
+            mainScreen.dispose();
         });
-        botaoCarrinho.addActionListener((event) -> {
+         
+        // Evento que será acionado ao clicar no botão Carrinho
+        btnCart.addActionListener((event) -> {
             new TelaCarrinho();
-            tela.dispose();
+            mainScreen.dispose();
         });
 
+        // Carregar Medicamentos ao Carregar a Tela Principal 
         try {
-            medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), painelMedicamentos);
+            medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), medicationsPanel);
         } catch (final Exception exception) {
             exception.printStackTrace();
         }
 
-        final JScrollPane jScrollPane = new JScrollPane(container);
-        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // scroll mais suave
+        // Configuranções ScrollPane (Rolagem da Tela) 
+        final JScrollPane jScrollPane = new JScrollPane(mainContainer);
+        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilitar Scrollbar Horizontal
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Habilitar Scrollbar Vertical 
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave (unidade de incremento)
 
-        tela.add(jScrollPane);
-        tela.setVisible(true);
+        mainScreen.add(jScrollPane);
+        mainScreen.setVisible(true);
 
     }    
 

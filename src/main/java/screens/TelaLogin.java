@@ -17,72 +17,92 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-public class TelaLogin {
+public class TelaLogin { 
 
     private String cpf;
-    private String senha;
+    private String password;
     
     public TelaLogin() {
         
-        final JFrame tela = new JFrame("Pharmatech Login");
-        final JLabel labelCPF = new JLabel("Insira seu CPF: ");
-        final JTextField textoCPF = new JTextField(30);         
-        final JLabel labelSenha = new JLabel("Insira sua Senha: ");
-        final JTextField textoSenha = new JTextField(30);
-        final JButton botaoLogin = new JButton("Realizar Login");
-        final JButton botaoLinkTelaDeCadastro = new JButton("Cadastrar");
-        final JButton telaPrincipal = new JButton("Tela Principal");
-        final Container container = tela.getContentPane(); 
+        // TELA
+        final JFrame mainScreen = new JFrame("Pharmatech Login");
 
-        container.setBackground(new java.awt.Color(207, 206, 206));
-        container.setLayout(null); 
+        // Container principal
+        final Container mainContainer = mainScreen.getContentPane(); 
+        mainContainer.setBackground(new java.awt.Color(207, 206, 206));
+        mainContainer.setLayout(null); 
         
-        labelCPF.setBounds(150, 60, 300, 25);
-        labelCPF.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelCPF);
+        // Label para CPF
+        final JLabel CPFLabel = new JLabel("Insira seu CPF: ");
+        CPFLabel.setBounds(150, 60, 300, 25);
+        CPFLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(CPFLabel);
         
-        textoCPF.setBounds(90, 90, 300, 35);
-        textoCPF.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoCPF.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoCPF);
+        // INPUT CPF
+        final JTextField CPFInput = new JTextField(30);
+        CPFInput.setBounds(90, 90, 300, 35);
+        CPFInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        CPFInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(CPFInput);
 
-        labelSenha.setBounds(150, 160, 300, 25);
-        labelSenha.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelSenha);
+        // Label para Sennha
+        final JLabel passwordLabel = new JLabel("Insira sua Senha: ");
+        passwordLabel.setBounds(150, 160, 300, 25);
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(passwordLabel);
 
-        textoSenha.setBounds(90, 190, 300, 35);
-        textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoSenha.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoSenha);
+        // INPUT SENHA
+        final JTextField passwordInput = new JTextField(30);
+        passwordInput.setBounds(90, 190, 300, 35);
+        passwordInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        passwordInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(passwordInput);
 
-        botaoLogin.setBounds(110, 280, 120, 35);;
-        botaoLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        container.add(botaoLogin);
+        // BOTAO LOGIN
+        final JButton btnLogin = new JButton("Realizar Login");
+        btnLogin.setBounds(110, 280, 120, 35);;
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mainContainer.add(btnLogin);
 
-        botaoLinkTelaDeCadastro.setBounds(250, 280, 120, 35);
-        botaoLinkTelaDeCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        container.add(botaoLinkTelaDeCadastro);
+        // BOTAO CADASTRO
+        final JButton btnTelaCadastro = new JButton("Cadastrar");
+        btnTelaCadastro.setBounds(250, 280, 120, 35);
+        btnTelaCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mainContainer.add(btnTelaCadastro);
 
-        telaPrincipal.setBounds(180, 333, 120, 35);
-        telaPrincipal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        container.add(telaPrincipal);
+        // BOTAO TELA PRINCIPAL
+        final JButton btnTelaPrincipal = new JButton("Tela Principal");
+        btnTelaPrincipal.setBounds(180, 333, 120, 35);
+        btnTelaPrincipal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mainContainer.add(btnTelaPrincipal);
 
-        botaoLogin.addActionListener((event) -> {
+        // Evento que será acionado quando o usuário clicar no botão Login
+        btnLogin.addActionListener((event) -> {
             
-            if (textoCPF.getText().isEmpty() || textoSenha.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(tela, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            // Verifica se os campos não estão vazios
+            if (CPFInput.getText().isEmpty() || passwordInput.getText().isEmpty()) {
+
+                // Exibir mensagem alertando que os campos estão vazios
+                JOptionPane.showMessageDialog(mainScreen, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 
-                this.cpf = textoCPF.getText();
-                this.senha = textoSenha.getText();
+                // Armazena as entradas
+                this.cpf = CPFInput.getText();
+                this.password = passwordInput.getText();
 
                 try {
                      
-                    if(realizarLogin(this.cpf, this.senha)) {
-                        tela.dispose();
+                    // Se login autenticado
+                    if(makeLogin(this.cpf, this.password)) {
+                        
+                        // Carrega Tela Principal
+                        mainScreen.dispose();
                         new TelaPrincipalCliente();
+                    
                     } else {
-                        JOptionPane.showMessageDialog(tela, "Login não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+
+                        // Exibi uma mensagem falando que o Login não foi encontrado
+                        JOptionPane.showMessageDialog(mainScreen, "Login não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                     
                 } catch(final Exception exception) {
@@ -92,32 +112,42 @@ public class TelaLogin {
 
         });
 
-        botaoLinkTelaDeCadastro.addActionListener((event) -> {
+        // Evento que será acionado quando o usuário clicar no botão Cadastro
+        btnTelaCadastro.addActionListener((event) -> {
             
-            tela.dispose();
+            mainScreen.dispose();
             new TelaCadastro();
 
         });
 
-        telaPrincipal.addActionListener(event -> {
-            tela.dispose();
+        // Evento que será acionado quando o usuário clicar no botão Tela Principal
+        btnTelaPrincipal.addActionListener(event -> {
+            mainScreen.dispose();
             new TelaPrincipalCliente();
         });
         
-        tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setContentPane(container);
-        tela.pack();
-        tela.setSize(500, 500);
-        tela.setLocationRelativeTo(null);
-        tela.setVisible(true);
+        mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainScreen.setContentPane(mainContainer);
+        mainScreen.pack();
+        mainScreen.setSize(500, 500);
+        mainScreen.setLocationRelativeTo(null);
+        mainScreen.setVisible(true);
         
     }
 
-    private boolean realizarLogin(final String cpf, final String senha) throws InterruptedException, IOException {
+    /**
+     * Make a HTTPResquest to find client
+     * @param cpf 
+     * @param password 
+     * @return boolean with result of request (authenticated = true | not authenticated = false)
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    private boolean makeLogin(final String cpf, final String password) throws InterruptedException, IOException {
         
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
-            .uri(URI.create("http://localhost:8080/client/findUserByCPFAndPassword?CPF=" + this.cpf + "&password=" + this.senha))
+            .uri(URI.create("http://localhost:8080/client/findUserByCPFAndPassword?CPF=" + this.cpf + "&password=" + this.password))
             .GET()
             .build();
 

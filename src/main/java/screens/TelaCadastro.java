@@ -21,97 +21,114 @@ public class TelaCadastro {
 
     public TelaCadastro() {
 
-        final JFrame tela = new JFrame("Tela Cadastro");
-        final JLabel labelCPF = new JLabel("Insira seu CPF: ");
-        final JTextField textoCPF = new JTextField(30);
-        final JLabel labelNome = new JLabel("Insira seu Nome: ");
-        final JTextField textoNome = new JTextField(30);
-        final JLabel labelTelefone = new JLabel("Insira sua Telefone: ");
-        final JTextField textoTelefone = new JTextField(30);
-        final JLabel labelEndereco = new JLabel("Insira seu Endereço: ");
-        final JTextField textoEndereco = new JTextField(30);
-        final JLabel labelSenha = new JLabel("Insira sua Senha: ");
-        final JTextField textoSenha = new JTextField(30);
-        final JButton botaoCadastro = new JButton("Criar Conta");
-        final JButton botaoLinkTelaLogin = new JButton("Retornar");
-        final Container container = tela.getContentPane();
+        final JFrame mainScreen = new JFrame("Tela Cadastro");
 
-        container.setLayout(null);
-        container.setBackground(new java.awt.Color(207, 206, 206));
+        final Container mainContainer = mainScreen.getContentPane();
+        mainContainer.setLayout(null);
+        mainContainer.setBackground(new java.awt.Color(207, 206, 206));
         
-        //PARTE DO CPF
-        labelCPF.setBounds(100, 60, 300, 25);
-        labelCPF.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelCPF);
-        textoCPF.setBounds(100, 90, 300, 35);
-        textoCPF.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoCPF.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoCPF);
+        // Label para CPF
+        final JLabel CPFLabel = new JLabel("Insira seu CPF: ");
+        CPFLabel.setBounds(100, 60, 300, 25);
+        CPFLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(CPFLabel);
 
-        //PARTE DO NOME
-        labelNome.setBounds(100, 160, 300, 25);
-        labelNome.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelNome);
-        textoNome.setBounds(100, 190, 300, 35);
-        textoNome.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoNome.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoNome);
+        // Input CPF
+        final JTextField CPFInput = new JTextField(30);
+        CPFInput.setBounds(100, 90, 300, 35);
+        CPFInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        CPFInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(CPFInput);
 
-        //PARTE DO TELEFONE
-        labelTelefone.setBounds(100, 260, 300, 25);
-        labelTelefone.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelTelefone);
-        textoTelefone.setBounds(100, 290, 300, 35);
-        textoTelefone.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoTelefone.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoTelefone);
+        // Label para Nome
+        final JLabel nameLabel = new JLabel("Insira seu Nome: ");
+        nameLabel.setBounds(100, 160, 300, 25);
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(nameLabel);
 
-        //PARTE DO ENDEREÇO
-        labelEndereco.setBounds(100, 360, 300, 25);
-        labelEndereco.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelEndereco);   
-        textoEndereco.setBounds(100, 390, 300, 35);
-        textoEndereco.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoEndereco.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoEndereco);
+        // Input Nome
+        final JTextField nameInput = new JTextField(30);
+        nameInput.setBounds(100, 190, 300, 35);
+        nameInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        nameInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(nameInput);
 
-        //PARTE DA SENHA
-        labelSenha.setBounds(100, 460, 300, 25);
-        labelSenha.setFont(new Font("Arial", Font.PLAIN, 25));
-        container.add(labelSenha);
-        textoSenha.setBounds(100, 490, 300, 35);
-        textoSenha.setFont(new Font("Arial", Font.PLAIN, 25));
-        textoSenha.setBorder(new LineBorder(Color.BLACK, 2, true));
-        container.add(textoSenha);
+        // Label para Telefone
+        final JLabel telephoneLabel = new JLabel("Insira sua Telefone: ");
+        telephoneLabel.setBounds(100, 260, 300, 25);
+        telephoneLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(telephoneLabel);
 
-        botaoCadastro.setBounds(100, 570, 120, 60);
-        botaoCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        container.add(botaoCadastro);
+        // Input Telefone
+        final JTextField telephoneInput = new JTextField(30);
+        telephoneInput.setBounds(100, 290, 300, 35);
+        telephoneInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        telephoneInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(telephoneInput);
 
-        botaoLinkTelaLogin.setBounds(270, 570, 120, 60);
-        botaoLinkTelaLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        container.add(botaoLinkTelaLogin);
+        // Label para Endereço
+        final JLabel addressLabel = new JLabel("Insira seu Endereço: ");
+        addressLabel.setBounds(100, 360, 300, 25);
+        addressLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(addressLabel);
 
-        botaoCadastro.addActionListener((event) -> { 
+        // Input Endereço
+        final JTextField addressInput = new JTextField(30);
+        addressInput.setBounds(100, 390, 300, 35);
+        addressInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        addressInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(addressInput);
 
-            final String cpf = textoCPF.getText();
-            final String nome = textoNome.getText();
-            final String telefone = textoTelefone.getText();
-            final String endereco = textoEndereco.getText();
-            final String senha = textoSenha.getText();
+        // Label para Senha
+        final JLabel passwordLabel = new JLabel("Insira sua Senha: ");
+        passwordLabel.setBounds(100, 460, 300, 25);
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        mainContainer.add(passwordLabel);
+
+        // Input Senha
+        final JTextField passwordInput = new JTextField(30);
+        passwordInput.setBounds(100, 490, 300, 35);
+        passwordInput.setFont(new Font("Arial", Font.PLAIN, 25));
+        passwordInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        mainContainer.add(passwordInput);
+
+        // Botão Cadastro
+        final JButton btnCadastro = new JButton("Criar Conta");
+        btnCadastro.setBounds(100, 570, 120, 60);
+        btnCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mainContainer.add(btnCadastro);
+
+        // Botão Tela Login
+        final JButton btnTelaLogin = new JButton("Retornar");
+        btnTelaLogin.setBounds(270, 570, 120, 60);
+        btnTelaLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mainContainer.add(btnTelaLogin);
+
+        // Evento que será acionado quando o usuário clicar no Botão Login
+        btnCadastro.addActionListener((event) -> { 
+
+            // Armazena as entradas
+            final String cpf = CPFInput.getText();
+            final String name = nameInput.getText();
+            final String telephone = telephoneInput.getText();
+            final String address = addressInput.getText();
+            final String password = passwordInput.getText();
             
-            if(cpf.isEmpty() || nome.isEmpty() || telefone.isEmpty() || endereco.isEmpty() || senha.isEmpty()) {
-                JOptionPane.showMessageDialog(tela, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            // Verifica se nenhuma delas está vazia
+            if(cpf.isEmpty() || name.isEmpty() || telephone.isEmpty() || address.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(mainScreen, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 
                 try {
-                     
-                    if(realizarCadastro(cpf, nome, telefone, endereco, senha)) {
-                        JOptionPane.showMessageDialog(tela, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                        tela.dispose();
+                    
+                    // Realiza o Cadastro com as entradas passadas
+                    if(makeRegister(cpf, name, telephone, address, password)) {
+                        JOptionPane.showMessageDialog(mainScreen, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                        mainScreen.dispose();
                         new TelaLogin();
                     } else {
-                        JOptionPane.showMessageDialog(tela, "Login não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        // Caso não consiga realizar o cadastro
+                        JOptionPane.showMessageDialog(mainScreen, "Falha ao realizar Cadastro... Tente novamente!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                     
                 } catch(final Exception exception) {
@@ -121,23 +138,35 @@ public class TelaCadastro {
 
         });
 
-        botaoLinkTelaLogin.addActionListener((event) -> {
+        // Evento que será acionado quando o usúario clicar no Botão Tela Login
+        btnTelaLogin.addActionListener((event) -> {
             
-            tela.dispose();
+            mainScreen.dispose();
             new TelaLogin();
 
         });
         
-        tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tela.setContentPane(container);
-        tela.pack();
-        tela.setSize(500, 700);
-        tela.setLocationRelativeTo(null);
-        tela.setVisible(true);
+        mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainScreen.setContentPane(mainContainer);
+        mainScreen.pack();
+        mainScreen.setSize(500, 700);
+        mainScreen.setLocationRelativeTo(null);
+        mainScreen.setVisible(true);
 
     }
 
-    private boolean realizarCadastro(final String cpf, final String nome, final String telefone, final String endereco, final String senha) throws InterruptedException, IOException {
+    /**
+     * Make a HTTP Request to make a new Register
+     * @param cpf
+     * @param name
+     * @param telephone
+     * @param address
+     * @param password
+     * @return boolean with status of request (true if success | false if a mistake occurs)
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    private boolean makeRegister(final String cpf, final String name, final String telephone, final String address, final String password) throws InterruptedException, IOException {
 
         final String bodyPublisher = """
         {
@@ -148,7 +177,7 @@ public class TelaCadastro {
             "endereco": "%s",
             "tipoDeUsuario": ""
         }
-        """.formatted(cpf, nome, senha, telefone, endereco);
+        """.formatted(cpf, name, password, telephone, address);
 
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
