@@ -87,7 +87,7 @@ public class TelaCarrinho {
 
         botaoTelaPrincipal.addActionListener((event) -> {
             tela.dispose();;
-            new TelaPrincipalCliente();
+            new TelaPrincipalCliente(null);
         });
 
         tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

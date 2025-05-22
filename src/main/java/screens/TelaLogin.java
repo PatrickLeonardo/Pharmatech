@@ -97,8 +97,8 @@ public class TelaLogin {
                         
                         // Carrega Tela Principal
                         mainScreen.dispose();
-                        new TelaPrincipalCliente();
-                    
+                        new TelaPrincipalCliente(this.cpf);
+                        
                     } else {
 
                         // Exibi uma mensagem falando que o Login não foi encontrado
@@ -123,7 +123,7 @@ public class TelaLogin {
         // Evento que será acionado quando o usuário clicar no botão Tela Principal
         btnTelaPrincipal.addActionListener(event -> {
             mainScreen.dispose();
-            new TelaPrincipalCliente();
+            new TelaPrincipalCliente(null);
         });
         
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

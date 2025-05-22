@@ -31,6 +31,12 @@ public class MedicationsUtilities {
 
     // Exibição Padrão (Todos os Medicamentos carregados) 
     boolean defaultExhibition = true;
+
+    String CPFOfAuthenticatedClient = null;
+
+    public MedicationsUtilities(String CPFOfAuthenticatedClient) {
+        this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
+    }
     
     /**
      * Pull all API Medications
@@ -55,7 +61,7 @@ public class MedicationsUtilities {
 
     }
 
-    public void findMedicationAndLoad(String medication, final JPanel defaultContainer) throws InterruptedException, IOException {
+    public void findMedicationAndLoad(String medication, final JPanel defaultContainer, final JFrame screen) throws InterruptedException, IOException {
          
         // Formatar nome do Medicamento pesquisado (Substitui o espaço em branco por %20) 
         medication = medication.strip().replace(" ", "%20");
@@ -65,7 +71,7 @@ public class MedicationsUtilities {
             
             // Carrega exibição Padrão novamente
             this.defaultExhibition = true;
-            loadMedications(new JSONArray(this.responseBodyMedications), defaultContainer);
+            loadMedications(new JSONArray(this.responseBodyMedications), defaultContainer, screen);
 
         // Se medicamento for diferente de "" e se for diferente do texto de exibição padrão da caixa de pesquisa  
         } else if (!medication.equals("") && !medication.equals("Procure%20por%20um%20Medicamento...")) {
@@ -93,7 +99,7 @@ public class MedicationsUtilities {
             } else {
 
                 this.defaultExhibition = false;
-                loadMedications(new JSONArray(httpResponse.body()), defaultContainer);
+                loadMedications(new JSONArray(httpResponse.body()), defaultContainer, screen);
                 
             }
         }
@@ -105,7 +111,7 @@ public class MedicationsUtilities {
      * @param medicationsArray
      * @param defaultContainer
      */
-    public void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer) {
+    public void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer, final JFrame screen) {
         
         try { 
             
@@ -192,6 +198,22 @@ public class MedicationsUtilities {
                 // BOTÃO ADICIONAR AO CARRINHO
                 final JButton btnReservation = new JButton("+ ADICIONAR AO CARRINHO");
                 elementPanel.add(btnReservation);
+
+                btnReservation.addActionListener((event) -> {
+
+                    try {
+                        
+                        if(CartUtilities.addMedication(JSONMedication.getInt("id"), CPFOfAuthenticatedClient)) {
+                            JOptionPane.showMessageDialog(screen, "Medicamento adicionado ao Carrinho !!!");
+                        } else {
+                            JOptionPane.showMessageDialog(screen, "Faça Login para adicionar items ao Carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        }
+                        
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+
+                });
 
                 linePanel.add(elementPanel);
                 

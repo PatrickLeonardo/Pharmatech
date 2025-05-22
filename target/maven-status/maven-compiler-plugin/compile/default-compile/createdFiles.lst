@@ -7,3 +7,4 @@ screens/TelaLogin.class
 utils/MedicationsUtilities.class
 screens/TelaPrincipalCliente$1.class
 screens/TelaPrincipalCliente.class
+utils/CartUtilities.class

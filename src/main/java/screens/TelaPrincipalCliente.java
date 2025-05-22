@@ -28,16 +28,16 @@ import utils.MedicationsUtilities;
 
 public class TelaPrincipalCliente {
     
-    // Variavel para verificar se 
+    // Variavel para verificar se a caixa de pesquisa já foi clicada alguma vez  
     boolean searchBoxPressedForTheFirstTime = false;
 
-    public TelaPrincipalCliente() {
+    public TelaPrincipalCliente(String CPFOfAuthenticatedClient) {
         
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
         
-        final MedicationsUtilities medicationsUtilities = new MedicationsUtilities();
+        final MedicationsUtilities medicationsUtilities = new MedicationsUtilities(CPFOfAuthenticatedClient);
         
         // Painel onde serão carregados os medicamentos
         final JPanel medicationsPanel = new JPanel();
@@ -106,7 +106,7 @@ public class TelaPrincipalCliente {
                     //painelMedicamentos.remove(loadedMessageLabel);
                     
                     // Carregar medicamento pesquisado 
-                    medicationsUtilities.findMedicationAndLoad(searchBox.getText(), medicationsPanel);
+                    medicationsUtilities.findMedicationAndLoad(searchBox.getText(), medicationsPanel, mainScreen);
                     
                 } catch (final Exception exception) {
                     exception.printStackTrace();
@@ -196,7 +196,7 @@ public class TelaPrincipalCliente {
 
         // Carregar Medicamentos ao Carregar a Tela Principal 
         try {
-            medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), medicationsPanel);
+            medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), medicationsPanel, mainScreen);
         } catch (final Exception exception) {
             exception.printStackTrace();
         }

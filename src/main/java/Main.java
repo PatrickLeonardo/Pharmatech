@@ -9,7 +9,7 @@ public class Main {
 
         // Tela Principal vai ser instanciada de forma assíncronoma 
         SwingUtilities.invokeLater(() -> {
-            new TelaPrincipalCliente();
+            new TelaPrincipalCliente(null);
         });
 
     }
