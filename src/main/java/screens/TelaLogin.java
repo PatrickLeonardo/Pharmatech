@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Image;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +28,10 @@ public class TelaLogin {
         
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
+
+        // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
+        Image imagemLogo = new ImageIcon("./img/icon.png").getImage();
+        mainScreen.setIconImage(imagemLogo);
 
         // Container principal
         final Container mainContainer = mainScreen.getContentPane(); 

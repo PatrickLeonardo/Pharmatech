@@ -222,6 +222,15 @@ public class CartUtilities {
 
     }
 
+    public boolean isCartEmpty(){
+        if(this.totalValue == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     private static int findClientIdByCPF(String CPFOfAuthenticatedClient) throws InterruptedException, IOException {
         
         if (CPFOfAuthenticatedClient == null) {

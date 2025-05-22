@@ -127,26 +127,26 @@ public class MedicationsUtilities {
             // Para cada mediacamento 
             for(int counter = 0; counter <= medicationsArray.length()-1; counter++) {
 
-                // Se contador estiver zerdao, adiciona uma nova Linha Horizontal para carregar mais 4 Elementos
-                if (columnCounter == 0) {
-                    linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
-                    linePanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-                    
-                    if(medicationsArray.length() <= 4) linePanel.setPreferredSize(new Dimension(1500, 660));
-                    
-                    defaultContainer.add(linePanel);
+                // Se contador estiver zerado, adiciona uma nova Linha Horizontal para carregar mais 4 Elementos
+                if (columnCounter == 0) { // Se for o primeiro elemento da linha
+                    linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40)); // Cria um novo JPanel com FlowLayout para alinhar elementos à esquerda e espaçamento
+                    linePanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); // Alinha o painel à esquerda
+
+                    if(medicationsArray.length() <= 4) linePanel.setPreferredSize(new Dimension(1500, 660)); // Se houver até 4 medicamentos, define tamanho fixo para o painel
+
+                    defaultContainer.add(linePanel); // Adiciona o painel da linha ao container principal
                 }
 
-                final JPanel elementPanel = new JPanel();
-                
+                final JPanel elementPanel = new JPanel(); // Cria um novo JPanel para o medicamento
+
                 // PAINEL DE CADA ELEMENTO
-                elementPanel.setLayout(new BoxLayout(elementPanel, BoxLayout.Y_AXIS));
-                elementPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-                elementPanel.setBackground(Color.WHITE);
-                elementPanel.setPreferredSize(new Dimension(320, 500));
-                elementPanel.setMaximumSize(new Dimension(320, 500));
-                elementPanel.setMinimumSize(new Dimension(320, 500));
-                elementPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); 
+                elementPanel.setLayout(new BoxLayout(elementPanel, BoxLayout.Y_AXIS)); // Define layout vertical para os componentes do medicamento
+                elementPanel.setBorder(BorderFactory.createLineBorder(Color.black)); // Adiciona borda preta ao redor do painel
+                elementPanel.setBackground(Color.WHITE); // Define fundo branco
+                elementPanel.setPreferredSize(new Dimension(320, 500)); // Define tamanho preferido do painel
+                elementPanel.setMaximumSize(new Dimension(320, 500)); // Define tamanho máximo do painel
+                elementPanel.setMinimumSize(new Dimension(320, 500)); // Define tamanho mínimo do painel
+                elementPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); // Alinha o painel à esquerda
 
                 final JSONObject JSONMedication = medicationsArray.getJSONObject(counter);
                  

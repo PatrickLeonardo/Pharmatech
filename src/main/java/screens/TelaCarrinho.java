@@ -29,7 +29,7 @@ import utils.MedicationsUtilities;
 public class TelaCarrinho {
 
     public TelaCarrinho(String CPFOfAuthenticatedClient) {
-
+        
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
@@ -39,6 +39,10 @@ public class TelaCarrinho {
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainScreen.setSize(1500, 800);
         mainScreen.setLocationRelativeTo(null);
+
+        // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
+        Image imagemLogo = new ImageIcon("./img/icon.png").getImage();
+        mainScreen.setIconImage(imagemLogo);
 
         // CONTAINER PRINCIPAL
         final JPanel mainContainer = new JPanel(); 
@@ -70,7 +74,7 @@ public class TelaCarrinho {
         titlePharmatech.setForeground(titleColor);
         header.add(titlePharmatech);
    
-        // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
+        // CONFIGURAÇÃO DOS BOTÕES 
         final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
 
         // Mapeando font padrão para os botões para poder adicionar o Underline (TextAttribute) e Ativa-lo (Object) 
@@ -78,24 +82,50 @@ public class TelaCarrinho {
         defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
         // BOTAO CADASTRAR 
+        // Cria um novo botão chamado "Cadastrar"
         final JButton btnRegister = new JButton("Cadastrar");
-        btnRegister.setBounds(1150, 25, 140, 40);
-        btnRegister.setContentAreaFilled(false);
-        btnRegister.setBorderPainted(false);
-        btnRegister.setOpaque(false);
-        btnRegister.setFont(btnRegister.getFont().deriveFont(defaultFontWithUnderline));
-        btnRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        header.add(btnRegister);
+        btnRegister.setBounds(1000, 25, 140, 40); // Define a posição e o tamanho do botão no painel (x, y, largura, altura)
+        btnRegister.setContentAreaFilled(false); // Remove o preenchimento padrão do botão para deixá-lo transparente
+        btnRegister.setBorderPainted(false); // Remove a borda padrão do botão
+        btnRegister.setOpaque(false); // Deixa o botão opaco como falso para garantir transparência
+        btnRegister.setFont(btnRegister.getFont().deriveFont(defaultFontWithUnderline)); // Define a fonte do botão com sublinhado 
+        btnRegister.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Altera o cursor para "mão" ao passar o mouse sobre o botão        
+        header.add(btnRegister); // Adiciona o botão ao painel de cabeçalho
 
         // BOTAO LOGAR 
         final JButton btnLogin = new JButton("Logar");
-        btnLogin.setBounds(1000, 25, 140, 40);
+        btnLogin.setBounds(850, 25, 140, 40);
         btnLogin.setContentAreaFilled(false);
         btnLogin.setBorderPainted(false);
         btnLogin.setOpaque(false);
         btnLogin.setFont(btnLogin.getFont().deriveFont(defaultFontWithUnderline));
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         header.add(btnLogin);
+
+        //BOTAO TELA PRINCIPAL
+        final JButton btnTelaMain = new JButton("Menu");
+        btnTelaMain.setBounds(1150, 25, 140, 40);
+        btnTelaMain.setContentAreaFilled(false);
+        btnTelaMain.setBorderPainted(false);
+        btnTelaMain.setOpaque(false);
+        btnTelaMain.setFont(btnTelaMain.getFont().deriveFont(defaultFontWithUnderline));
+        btnTelaMain.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        header.add(btnTelaMain);
+
+        // BOTAO FINALIZAR RESERVA
+        final JButton btnFinalizar = new JButton("Finalizar");
+        btnFinalizar.setBounds(1300, 25, 140, 40);
+        btnFinalizar.setContentAreaFilled(false);
+        btnFinalizar.setBorderPainted(false);
+        btnFinalizar.setOpaque(false);
+        btnFinalizar.setFont(btnFinalizar.getFont().deriveFont(defaultFontWithUnderline));
+        btnFinalizar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        header.add(btnFinalizar);
+
+        btnTelaMain.addActionListener((event) -> {
+            new TelaPrincipalCliente(null);
+            mainScreen.dispose();
+        });
 
         btnLogin.addActionListener((event) -> {
             new TelaLogin();
@@ -107,7 +137,28 @@ public class TelaCarrinho {
             new TelaCadastro();
             mainScreen.dispose();
         });
-        
+
+        btnFinalizar.addActionListener((event) -> {
+
+       // CartUtilities cartUtilities = new CartUtilities();    
+    try {
+
+        if (CPFOfAuthenticatedClient == null || CPFOfAuthenticatedClient.isEmpty()) {
+            JOptionPane.showMessageDialog(mainScreen, "Você precisa estar logado para finalizar a compra!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        } 
+        //ARRUMAR ESSA BAGAÇA AQUI DEPOIS 
+        /*if (cartUtilities.isCartEmpty() == true){
+            JOptionPane.showMessageDialog(mainScreen, "Seu carrinho está vazio!", "Aviso", JOptionPane.WARNING_MESSAGE);
+        } */
+        else {
+            JOptionPane.showMessageDialog(mainScreen, "Compra finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    } catch (Exception exception) {
+        exception.printStackTrace();
+    }
+});
         mainContainer.add(header);
         
         JPanel cartPanel = new JPanel();

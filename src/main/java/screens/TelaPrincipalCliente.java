@@ -48,6 +48,10 @@ public class TelaPrincipalCliente {
         mainScreen.setSize(1500, 800);
         mainScreen.setLocationRelativeTo(null);
 
+        // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
+        Image imagemLogo = new ImageIcon("./img/icon.png").getImage();
+        mainScreen.setIconImage(imagemLogo);
+
         // CONTAINER PRINCIPAL
         final JPanel mainContainer = new JPanel(); 
         mainContainer.setLayout(new BoxLayout(mainContainer, BoxLayout.Y_AXIS));
