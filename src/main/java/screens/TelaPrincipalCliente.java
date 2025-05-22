@@ -190,7 +190,7 @@ public class TelaPrincipalCliente {
          
         // Evento que será acionado ao clicar no botão Carrinho
         btnCart.addActionListener((event) -> {
-            new TelaCarrinho();
+            new TelaCarrinho(CPFOfAuthenticatedClient);
             mainScreen.dispose();
         });
 
