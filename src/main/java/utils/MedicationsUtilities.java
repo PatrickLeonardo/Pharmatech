@@ -160,6 +160,11 @@ public class MedicationsUtilities {
                 
                 final JLabel imageLabel = new JLabel(resizedImage);
                 imageLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 10));
+
+                if(JSONMedication.getBoolean("precisaDeReceita")) {
+                   imageLabel.setToolTipText("O Medicamento "+ JSONMedication.getString("nome") + " precisa de receita para ser retirado presencialmente!");
+                }
+
                 elementPanel.add(imageLabel);
                 
                 // NOME
@@ -203,7 +208,7 @@ public class MedicationsUtilities {
 
                     try {
                         
-                        if(CartUtilities.addMedication(JSONMedication.getInt("id"), CPFOfAuthenticatedClient)) {
+                        if(CartUtilities.addMedication(JSONMedication.getInt("id"), this.CPFOfAuthenticatedClient)) {
                             JOptionPane.showMessageDialog(screen, "Medicamento adicionado ao Carrinho !!!");
                         } else {
                             JOptionPane.showMessageDialog(screen, "Faça login para adicionar itens ao carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -260,6 +265,10 @@ public class MedicationsUtilities {
         
         return exhibition;
 
+    }
+
+    public void setCPFOfAuthenticatedClient(String cpf) {
+        this.CPFOfAuthenticatedClient = cpf;
     }
 
 }

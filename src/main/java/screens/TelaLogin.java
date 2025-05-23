@@ -24,7 +24,7 @@ public class TelaLogin {
     private String cpf;
     private String password;
     
-    public TelaLogin(String CPFOfAuthenticatedClient) {
+    public TelaLogin(String CPFOfAuthenticatedClient, JFrame jFramePrincipalCliente, TelaPrincipalCliente telaPrincipalCliente) {
 
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
@@ -103,8 +103,10 @@ public class TelaLogin {
                         
                         // Carrega Tela Principal
                         mainScreen.dispose();
-                        new TelaPrincipalCliente(this.cpf);
-                        
+                        telaPrincipalCliente.setCPFOfAuthenticatedClient(this.cpf);
+                        telaPrincipalCliente.isLogged();
+                        jFramePrincipalCliente.setVisible(true);
+                         
                     } else {
 
                         // Exibi uma mensagem falando que o Login não foi encontrado
@@ -122,14 +124,16 @@ public class TelaLogin {
         btnTelaCadastro.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaCadastro(CPFOfAuthenticatedClient); 
+            new TelaCadastro(jFramePrincipalCliente, telaPrincipalCliente); 
 
         });
 
         // Evento que será acionado quando o usuário clicar no botão Tela Principal
         btnTelaPrincipal.addActionListener(event -> {
+
             mainScreen.dispose();
-            new TelaPrincipalCliente(CPFOfAuthenticatedClient);
+            jFramePrincipalCliente.setVisible(true);
+               
         });
         
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

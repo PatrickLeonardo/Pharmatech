@@ -12,6 +12,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -24,20 +29,30 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import org.json.JSONObject;
+
 import utils.MedicationsUtilities;
 
 public class TelaPrincipalCliente {
     
     // Variavel para verificar se a caixa de pesquisa já foi clicada alguma vez  
     boolean searchBoxPressedForTheFirstTime = false;
+    MedicationsUtilities medicationsUtilities = null;
+    String CPFOfAuthenticatedClient = null;
+    JButton btnRegister = null;
+    JButton btnLogin = null;
+    JLabel welcomeLabel = null;
+    JPanel header = null;
 
     public TelaPrincipalCliente(String CPFOfAuthenticatedClient) {
         
+        this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
+
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
         
-        final MedicationsUtilities medicationsUtilities = new MedicationsUtilities(CPFOfAuthenticatedClient);
+        medicationsUtilities = new MedicationsUtilities(this.CPFOfAuthenticatedClient);
         
         // Painel onde serão carregados os medicamentos
         final JPanel medicationsPanel = new JPanel();
@@ -58,7 +73,7 @@ public class TelaPrincipalCliente {
         mainContainer.setBackground(backgroundColor);
         
         // CABECALHO (header)
-        final JPanel header = new JPanel();
+        header = new JPanel();
         header.setLayout(null);
         header.setPreferredSize(new Dimension(1500, 100));
         header.setBackground(backgroundColor);
@@ -154,7 +169,7 @@ public class TelaPrincipalCliente {
         header.add(btnCart);
 
         // BOTAO CADASTRAR 
-        final JButton btnRegister = new JButton("Cadastrar");
+        btnRegister = new JButton("Cadastrar");
         btnRegister.setBounds(1150, 25, 140, 40);
         btnRegister.setContentAreaFilled(false);
         btnRegister.setBorderPainted(false);
@@ -164,7 +179,7 @@ public class TelaPrincipalCliente {
         header.add(btnRegister);
 
         // BOTAO LOGAR 
-        final JButton btnLogin = new JButton("Logar");
+        btnLogin = new JButton("Logar");
         btnLogin.setBounds(1000, 25, 140, 40);
         btnLogin.setContentAreaFilled(false);
         btnLogin.setBorderPainted(false);
@@ -173,29 +188,36 @@ public class TelaPrincipalCliente {
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         header.add(btnLogin);
         
+        // Evento que será acionado ao clicar no botão Logar
+        btnLogin.addActionListener((event) -> {
+            new TelaLogin(CPFOfAuthenticatedClient, mainScreen, this);
+            mainScreen.setVisible(false);
+        });
+
+        // Evento que será acionado ao clicar no botão Cadastrar
+        btnRegister.addActionListener((event) -> {
+            new TelaCadastro(mainScreen, this);
+            mainScreen.dispose();
+        });    
+            
         mainContainer.add(header);
         
         // PAINEL EXIBIÇÃO MEDICAMENTOS
         medicationsPanel.setLayout(new BoxLayout(medicationsPanel, BoxLayout.Y_AXIS));
         medicationsPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
         mainContainer.add(medicationsPanel);
-        
-        // Evento que será acionado ao clicar no botão Logar
-        btnLogin.addActionListener((event) -> {
-            new TelaLogin(CPFOfAuthenticatedClient);
-            mainScreen.dispose();
-        });
 
-        // Evento que será acionado ao clicar no botão Cadastrar
-        btnRegister.addActionListener((event) -> {
-            new TelaCadastro(CPFOfAuthenticatedClient);
-            mainScreen.dispose();
-        });
          
         // Evento que será acionado ao clicar no botão Carrinho
         btnCart.addActionListener((event) -> {
-            new TelaCarrinho(CPFOfAuthenticatedClient);
+            
+            TelaCarrinho telaCarrinho= new TelaCarrinho(this.CPFOfAuthenticatedClient, mainScreen, this);
+            telaCarrinho.setCPFOfAuthenticatedClient(this.CPFOfAuthenticatedClient);
+            
+            if(this.CPFOfAuthenticatedClient != null) telaCarrinho.isLogged();
+            
             mainScreen.dispose();
+
         });
 
         // Carregar Medicamentos ao Carregar a Tela Principal 
@@ -214,6 +236,40 @@ public class TelaPrincipalCliente {
         mainScreen.add(jScrollPane);
         mainScreen.setVisible(true);
 
-    }    
+    }
+
+    public void isLogged() {
+
+        this.medicationsUtilities.setCPFOfAuthenticatedClient(this.CPFOfAuthenticatedClient);
+        this.header.remove(this.btnLogin);
+        this.header.remove(this.btnRegister);
+        
+        this.welcomeLabel = new JLabel();                
+        this.welcomeLabel.setBounds(1000, 20, 300, 50);
+        this.welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
+        try { 
+            final HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .header("Content-Type", "application/json")
+                .uri(URI.create("http://localhost:8080/user/findByCPF?CPF=" + this.CPFOfAuthenticatedClient))
+                .GET()
+                .build();
+            
+            final HttpClient httpClient = HttpClient.newHttpClient(); 
+            final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            JSONObject objectBodyClient = new JSONObject(clientHttpResponse.body()); 
+            this.welcomeLabel.setText("Bem Vindo, " + objectBodyClient.getString("nome"));
+
+        } catch(Exception exception) { exception.printStackTrace(); }
+        
+        this.header.add(this.welcomeLabel);
+         
+    }
+    
+    public void setCPFOfAuthenticatedClient(String cpf) {
+        this.CPFOfAuthenticatedClient = cpf;
+    }
 
 }

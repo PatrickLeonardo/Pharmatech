@@ -66,7 +66,7 @@ public class CartUtilities {
         defaultContainer.setPreferredSize(new Dimension(1500, 660));
 
         if (CPFOfAuthenticatedClient == null) {
-            //return false;
+            return false;
         }
         
         int clientId = findClientIdByCPF(CPFOfAuthenticatedClient);
@@ -223,7 +223,7 @@ public class CartUtilities {
     }
 
     private static int findClientIdByCPF(String CPFOfAuthenticatedClient) throws InterruptedException, IOException {
-        
+       
         if (CPFOfAuthenticatedClient == null) {
             return 0;
         }
@@ -231,7 +231,7 @@ public class CartUtilities {
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .header("Content-Type", "application/json")
-            .uri(URI.create("http://localhost:8080/client/findClientIdByCPF?CPF=" + CPFOfAuthenticatedClient))
+            .uri(URI.create("http://localhost:8080/client/findClientByCPF?CPF=" + CPFOfAuthenticatedClient))
             .GET()
             .build();
         
@@ -240,7 +240,8 @@ public class CartUtilities {
         final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         
         if(clientHttpResponse.statusCode() == 200) {
-            return Integer.parseInt(clientHttpResponse.body());
+            JSONObject objectBodyClient = new JSONObject(clientHttpResponse.body());
+            return objectBodyClient.getInt("id");
         }
         
         else return 0;
