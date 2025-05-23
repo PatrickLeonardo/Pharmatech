@@ -222,18 +222,6 @@ public class CartUtilities {
 
     }
 
-    
-       // PORQUE ESSA BOSTA NÃO FUNCIONAAAAAAAAAAAAA
-    /* public boolean isCartEmpty(){ 
-        if(this.totalValue != 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    } */
-
-
     private static int findClientIdByCPF(String CPFOfAuthenticatedClient) throws InterruptedException, IOException {
         
         if (CPFOfAuthenticatedClient == null) {
@@ -282,6 +270,13 @@ public class CartUtilities {
             .build();
 
         HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()).body();
+
+    }
+
+    public boolean isEmptyCart() {
+
+        if(this.totalValue == 0) return true;
+        else return false;
 
     }
 

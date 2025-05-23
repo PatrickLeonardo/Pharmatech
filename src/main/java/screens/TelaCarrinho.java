@@ -30,6 +30,8 @@ public class TelaCarrinho {
 
     public TelaCarrinho(String CPFOfAuthenticatedClient) {
         
+        CartUtilities cartUtilities = new CartUtilities();
+
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
@@ -138,26 +140,27 @@ public class TelaCarrinho {
             mainScreen.dispose();
         });
 
+        // Evento que será acionado ao clicar no botão Finalizar 
         btnFinalizar.addActionListener((event) -> {
+            
+            try{
+                
+                if (CPFOfAuthenticatedClient == null || CPFOfAuthenticatedClient.isEmpty()) {
+                    JOptionPane.showMessageDialog(mainScreen, "Você precisa estar logado para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                } else if (cartUtilities.isEmptyCart()) {
+                    JOptionPane.showMessageDialog(mainScreen, "Você precisa adicionar ao mesmo um item para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
 
-    try {
-        //CartUtilities cartUtilities = new CartUtilities();
-        if (CPFOfAuthenticatedClient == null || CPFOfAuthenticatedClient.isEmpty()) {
-            JOptionPane.showMessageDialog(mainScreen, "Você precisa estar logado para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        } 
-        //ARRUMAR ESSA BAGAÇA AQUI DEPOIS 
-        /*if (cartUtilities.isCartEmpty() == true){
-            JOptionPane.showMessageDialog(mainScreen, "Seu carrinho está vazio!", "Aviso", JOptionPane.WARNING_MESSAGE);
-        } */
-        else {
-            JOptionPane.showMessageDialog(mainScreen, "Reserva finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        }
+                else {
+                    JOptionPane.showMessageDialog(mainScreen, "Reserva finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                }
 
-    } catch (Exception exception) {
-        exception.printStackTrace();
-    }
-});
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        
         mainContainer.add(header);
         
         JPanel cartPanel = new JPanel();
@@ -166,22 +169,22 @@ public class TelaCarrinho {
         cartPanel.setBackground(backgroundColor);
         
         try {
-            new CartUtilities().loadCart(CPFOfAuthenticatedClient, cartPanel);
+            cartUtilities.loadCart(CPFOfAuthenticatedClient, cartPanel);
         } catch(Exception exception) {
             exception.printStackTrace();
         }
         
         mainContainer.add(cartPanel);
-
+        
         // Configuranções ScrollPane (Rolagem da Tela) 
         final JScrollPane jScrollPane = new JScrollPane(mainContainer);
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilitar Scrollbar Horizontal
         jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Habilitar Scrollbar Vertical 
         jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave (unidade de incremento)
-
+        
         mainScreen.add(jScrollPane);
         mainScreen.setVisible(true);
-
+        
     }
-
+    
 }
