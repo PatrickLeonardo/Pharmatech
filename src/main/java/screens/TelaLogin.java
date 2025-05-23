@@ -25,7 +25,7 @@ public class TelaLogin {
     private String password;
     
     public TelaLogin(String CPFOfAuthenticatedClient) {
-        
+
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
 
@@ -122,7 +122,7 @@ public class TelaLogin {
         btnTelaCadastro.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaCadastro(CPFOfAuthenticatedClient);
+            new TelaCadastro(CPFOfAuthenticatedClient); 
 
         });
 
