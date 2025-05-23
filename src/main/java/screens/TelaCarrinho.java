@@ -43,7 +43,7 @@ public class TelaCarrinho {
         mainScreen.setLocationRelativeTo(null);
 
         // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
-        Image imagemLogo = new ImageIcon("./img/icon.png").getImage();
+        Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
         mainScreen.setIconImage(imagemLogo);
 
         // CONTAINER PRINCIPAL
@@ -149,7 +149,7 @@ public class TelaCarrinho {
                     JOptionPane.showMessageDialog(mainScreen, "Você precisa estar logado para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
                     return;
                 } else if (cartUtilities.isEmptyCart()) {
-                    JOptionPane.showMessageDialog(mainScreen, "Você precisa adicionar ao mesmo um item para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(mainScreen, "Você precisa adicionar ao menos um item para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
 
                 else {

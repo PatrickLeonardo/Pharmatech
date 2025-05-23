@@ -30,7 +30,7 @@ public class TelaLogin {
         final JFrame mainScreen = new JFrame("Pharmatech Login");
 
         // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
-        Image imagemLogo = new ImageIcon("./img/icon.png").getImage();
+        Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
         mainScreen.setIconImage(imagemLogo);
 
         // Container principal

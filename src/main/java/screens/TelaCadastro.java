@@ -30,7 +30,7 @@ public class TelaCadastro {
         mainContainer.setBackground(new java.awt.Color(207, 206, 206));
 
         // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
-        Image imagemLogo = new ImageIcon("./img/icon.png").getImage();
+        Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
         mainScreen.setIconImage(imagemLogo);
         
         // Label para CPF
