@@ -24,7 +24,7 @@ public class TelaLogin {
     private String cpf;
     private String password;
     
-    public TelaLogin() {
+    public TelaLogin(String CPFOfAuthenticatedClient) {
         
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
@@ -122,14 +122,14 @@ public class TelaLogin {
         btnTelaCadastro.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaCadastro();
+            new TelaCadastro(CPFOfAuthenticatedClient);
 
         });
 
         // Evento que será acionado quando o usuário clicar no botão Tela Principal
         btnTelaPrincipal.addActionListener(event -> {
             mainScreen.dispose();
-            new TelaPrincipalCliente(null);
+            new TelaPrincipalCliente(CPFOfAuthenticatedClient);
         });
         
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

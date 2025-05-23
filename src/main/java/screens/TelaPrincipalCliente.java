@@ -182,13 +182,13 @@ public class TelaPrincipalCliente {
         
         // Evento que será acionado ao clicar no botão Logar
         btnLogin.addActionListener((event) -> {
-            new TelaLogin();
+            new TelaLogin(CPFOfAuthenticatedClient);
             mainScreen.dispose();
         });
 
         // Evento que será acionado ao clicar no botão Cadastrar
         btnRegister.addActionListener((event) -> {
-            new TelaCadastro();
+            new TelaCadastro(CPFOfAuthenticatedClient);
             mainScreen.dispose();
         });
          

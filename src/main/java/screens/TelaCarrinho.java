@@ -123,28 +123,27 @@ public class TelaCarrinho {
         header.add(btnFinalizar);
 
         btnTelaMain.addActionListener((event) -> {
-            new TelaPrincipalCliente(null);
+            new TelaPrincipalCliente(CPFOfAuthenticatedClient);
             mainScreen.dispose();
         });
 
         btnLogin.addActionListener((event) -> {
-            new TelaLogin();
+            new TelaLogin(CPFOfAuthenticatedClient);
             mainScreen.dispose();
         });
 
         // Evento que será acionado ao clicar no botão Cadastrar
         btnRegister.addActionListener((event) -> {
-            new TelaCadastro();
+            new TelaCadastro(CPFOfAuthenticatedClient);
             mainScreen.dispose();
         });
 
         btnFinalizar.addActionListener((event) -> {
 
-       // CartUtilities cartUtilities = new CartUtilities();    
     try {
-
+        //CartUtilities cartUtilities = new CartUtilities();
         if (CPFOfAuthenticatedClient == null || CPFOfAuthenticatedClient.isEmpty()) {
-            JOptionPane.showMessageDialog(mainScreen, "Você precisa estar logado para finalizar a compra!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(mainScreen, "Você precisa estar logado para finalizar a reserva!", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         } 
         //ARRUMAR ESSA BAGAÇA AQUI DEPOIS 
@@ -152,7 +151,7 @@ public class TelaCarrinho {
             JOptionPane.showMessageDialog(mainScreen, "Seu carrinho está vazio!", "Aviso", JOptionPane.WARNING_MESSAGE);
         } */
         else {
-            JOptionPane.showMessageDialog(mainScreen, "Compra finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(mainScreen, "Reserva finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         }
 
     } catch (Exception exception) {

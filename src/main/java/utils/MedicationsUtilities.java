@@ -206,7 +206,7 @@ public class MedicationsUtilities {
                         if(CartUtilities.addMedication(JSONMedication.getInt("id"), CPFOfAuthenticatedClient)) {
                             JOptionPane.showMessageDialog(screen, "Medicamento adicionado ao Carrinho !!!");
                         } else {
-                            JOptionPane.showMessageDialog(screen, "Faça Login para adicionar items ao Carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(screen, "Faça login para adicionar itens ao carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
                         
                     } catch (Exception exception) {

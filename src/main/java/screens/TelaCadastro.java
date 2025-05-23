@@ -21,7 +21,7 @@ import javax.swing.border.LineBorder;
 
 public class TelaCadastro {
 
-    public TelaCadastro() {
+    public TelaCadastro(String CPFOfAuthenticatedClient) {
 
         final JFrame mainScreen = new JFrame("Tela Cadastro");
 
@@ -131,7 +131,7 @@ public class TelaCadastro {
                     if(makeRegister(cpf, name, telephone, address, password)) {
                         JOptionPane.showMessageDialog(mainScreen, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                         mainScreen.dispose();
-                        new TelaLogin();
+                        new TelaLogin(null);
                     } else {
                         // Caso não consiga realizar o cadastro
                         JOptionPane.showMessageDialog(mainScreen, "Falha ao realizar Cadastro... Tente novamente!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -148,7 +148,7 @@ public class TelaCadastro {
         btnTelaLogin.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaLogin();
+            new TelaLogin(CPFOfAuthenticatedClient);
 
         });
         

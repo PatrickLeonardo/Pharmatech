@@ -222,14 +222,17 @@ public class CartUtilities {
 
     }
 
-    public boolean isCartEmpty(){
-        if(this.totalValue == 0) {
-            return true;
-        }
-        else {
+    
+       // PORQUE ESSA BOSTA NÃO FUNCIONAAAAAAAAAAAAA
+    /* public boolean isCartEmpty(){ 
+        if(this.totalValue != 0) {
             return false;
         }
-    }
+        else {
+            return true;
+        }
+    } */
+
 
     private static int findClientIdByCPF(String CPFOfAuthenticatedClient) throws InterruptedException, IOException {
         
