@@ -1,6 +1,7 @@
 package screens;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -15,6 +16,7 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,11 +35,11 @@ import utils.MedicationsUtilities;
 
 public class TelaCarrinho {
 
-    String CPFOfAuthenticatedClient = null;
-    JButton btnRegister = null;
-    JButton btnLogin = null;
-    JLabel welcomeLabel = null;
-    JPanel header = null;
+    private String CPFOfAuthenticatedClient = null;
+    private JButton btnRegister = null;
+    private JButton btnLogin = null;
+    private JLabel welcomeLabel = null;
+    private JPanel header = null;
 
     public TelaCarrinho(String CPFOfAuthenticatedClient, JFrame jFramePrincipalCliente, TelaPrincipalCliente telaPrincipalCliente) {
         
@@ -66,7 +68,10 @@ public class TelaCarrinho {
         // CABECALHO (header)
         header = new JPanel();
         header.setLayout(null);
+        header.setAlignmentX(Component.LEFT_ALIGNMENT);
         header.setPreferredSize(new Dimension(1500, 100));
+        header.setMaximumSize(new Dimension(1500, 100));
+        header.setMinimumSize(new Dimension(1500, 100));
         header.setBackground(backgroundColor);
         header.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black));
         
@@ -87,7 +92,7 @@ public class TelaCarrinho {
         titlePharmatech.setFont(new Font("Arial", Font.BOLD, 34));
         titlePharmatech.setForeground(titleColor);
         header.add(titlePharmatech);
-   
+         
         // CONFIGURAÇÃO DOS BOTÕES 
         final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
 
@@ -96,7 +101,6 @@ public class TelaCarrinho {
         defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
         // BOTAO CADASTRAR 
-        // Cria um novo botão chamado "Cadastrar"
         btnRegister = new JButton("Cadastrar");
         btnRegister.setBounds(1000, 25, 140, 40); // Define a posição e o tamanho do botão no painel (x, y, largura, altura)
         btnRegister.setContentAreaFilled(false); // Remove o preenchimento padrão do botão para deixá-lo transparente
@@ -190,6 +194,8 @@ public class TelaCarrinho {
         }
         
         mainContainer.add(cartPanel);
+
+        mainContainer.add(Box.createVerticalGlue()); // Adiciona um espaço flexível
         
         // Configuranções ScrollPane (Rolagem da Tela) 
         final JScrollPane jScrollPane = new JScrollPane(mainContainer);

@@ -24,27 +24,17 @@ import javax.swing.JPanel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import screens.TelaPrincipalCliente;
+
 public class MedicationsUtilities {
 
-    // Medicamentos do Corpo da Resposta
-    String responseBodyMedications = null;
-
-    // Exibição Padrão (Todos os Medicamentos carregados) 
-    boolean defaultExhibition = true;
-
-    String CPFOfAuthenticatedClient = null;
-
-    public MedicationsUtilities(String CPFOfAuthenticatedClient) {
-        this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
-    }
-    
     /**
      * Pull all API Medications
      * @return JSONArray object with all API medications
      * @throws IOException
      * @throws InterruptedException
      */
-    public JSONArray getMedications() throws IOException, InterruptedException {
+    public static JSONArray getMedications() throws IOException, InterruptedException {
 
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
@@ -56,53 +46,31 @@ public class MedicationsUtilities {
 
         final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        this.responseBodyMedications = clientHttpResponse.body();
+        //this.responseBodyMedications = clientHttpResponse.body();
         return new JSONArray(clientHttpResponse.body());
 
     }
 
-    public void findMedicationAndLoad(String medication, final JPanel defaultContainer, final JFrame screen) throws InterruptedException, IOException {
+    public static JSONArray findMedications(String medicationName) throws InterruptedException, IOException {
          
         // Formatar nome do Medicamento pesquisado (Substitui o espaço em branco por %20) 
-        medication = medication.strip().replace(" ", "%20");
+        medicationName = medicationName.strip().replace(" ", "%20");
         
-        // Se medicamento for "" e se exibição padrão for falsa
-        if (medication.equals("") && this.defaultExhibition == false) {
-            
-            // Carrega exibição Padrão novamente
-            this.defaultExhibition = true;
-            loadMedications(new JSONArray(this.responseBodyMedications), defaultContainer, screen);
-
         // Se medicamento for diferente de "" e se for diferente do texto de exibição padrão da caixa de pesquisa  
-        } else if (!medication.equals("") && !medication.equals("Procure%20por%20um%20Medicamento...")) {
-
-            // Instancia uma nova requisição com a busca do medicamento 
+        if (!medicationName.equals("") && !medicationName.equals("Procure%20por%20um%20Medicamento...")) {
+             
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
-                .uri(URI.create("http://localhost:8080/medications/findByNome?nome=" + medication))
+                .uri(URI.create("http://localhost:8080/medications/findByNome?nome=" + medicationName))
                 .GET()
                 .build();
 
-            // Envia a requisição 
             final HttpClient httpClient = HttpClient.newHttpClient();
-
-            // Armazena Resposta da Requisição 
             final HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
-            // Se resposta da pesquisa for vazia ([])
-            if(String.valueOf("[]").equals(httpResponse.body())) {
-                
-                loadMessageLabel("MEDICAMENTO NÃO ENCONTRADO !!!", defaultContainer); 
-                this.defaultExhibition = false;
-
-            // Se não, carrega o(s) medicamento(s) encontrado na pesquisa 
-            } else {
-
-                this.defaultExhibition = false;
-                loadMedications(new JSONArray(httpResponse.body()), defaultContainer, screen);
-                
-            }
-        }
+            return new JSONArray(httpResponse.body());
+            
+        } else return new JSONArray("[]");
 
     }
 
@@ -111,9 +79,9 @@ public class MedicationsUtilities {
      * @param medicationsArray
      * @param defaultContainer
      */
-    public void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer, final JFrame screen) {
+    public static void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer, final JFrame screenJFrame, String CPFOfAuthenticatedClient, TelaPrincipalCliente telaPrincipalCliente) {
         
-        try { 
+        try {
             
             // JPanel para carregar a Linha com 4 Medicamentos na Horizontal
             JPanel linePanel = null;
@@ -207,11 +175,11 @@ public class MedicationsUtilities {
                 btnReservation.addActionListener((event) -> {
 
                     try {
-                        
-                        if(CartUtilities.addMedication(JSONMedication.getInt("id"), this.CPFOfAuthenticatedClient)) {
-                            JOptionPane.showMessageDialog(screen, "Medicamento adicionado ao Carrinho !!!");
+
+                        if(CartUtilities.addMedicationOnCart(JSONMedication.getInt("id"), telaPrincipalCliente.getCPFOfAuthenticatedClient())) {
+                            JOptionPane.showMessageDialog(screenJFrame, "Medicamento adicionado ao Carrinho !!!");
                         } else {
-                            JOptionPane.showMessageDialog(screen, "Faça login para adicionar itens ao carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(screenJFrame, "Faça login para adicionar itens ao carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
                         
                     } catch (Exception exception) {
@@ -236,39 +204,6 @@ public class MedicationsUtilities {
             exception.printStackTrace();
         }
 
-    }
-
-    /**
-     * Load the message passed in {@code messageToLoad} into {@code defaultContainer}
-     * @param messageToLoad
-     * @param defaultContainer
-     * @return JPanel inputed into {@code defaultContainer} 
-     */
-    public JPanel loadMessageLabel(final String messageToLoad, final JPanel defaultContainer) {
-        
-        // Painel para exibição da mensagem 
-        final JPanel exhibition = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
-        exhibition.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-        exhibition.setPreferredSize(new Dimension(1500, 660));
-         
-        // Mensagem para exibir
-        final JLabel message = new JLabel(messageToLoad);
-        message.setBorder(BorderFactory.createEmptyBorder(240, 370, 10, 10));
-        message.setFont(new Font("Helvetica", Font.BOLD, 35));
-        exhibition.add(message);
-
-        // Carrega o painel de exibição da mensagem no container padrão 
-        defaultContainer.removeAll();
-        defaultContainer.add(exhibition);
-        defaultContainer.revalidate();
-        defaultContainer.repaint();
-        
-        return exhibition;
-
-    }
-
-    public void setCPFOfAuthenticatedClient(String cpf) {
-        this.CPFOfAuthenticatedClient = cpf;
     }
 
 }

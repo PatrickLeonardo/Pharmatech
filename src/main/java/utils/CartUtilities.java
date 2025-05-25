@@ -20,9 +20,9 @@ import org.json.JSONObject;
 
 public class CartUtilities {
 
-    double totalValue = 0;
+    private double totalValueOfCart = 0;
 
-    public static boolean addMedication(int medicationId, String CPFOfAuthenticatedClient) throws InterruptedException, IOException {
+    public static boolean addMedicationOnCart(int medicationId, String CPFOfAuthenticatedClient) throws InterruptedException, IOException {
 
         int clientId = 0;
 
@@ -61,12 +61,12 @@ public class CartUtilities {
 
     public boolean loadCart(String CPFOfAuthenticatedClient, JPanel defaultContainer) throws InterruptedException, IOException {
 
-        this.totalValue = 0;
+        this.totalValueOfCart = 0;
         defaultContainer.removeAll();
-        defaultContainer.setPreferredSize(new Dimension(1500, 660));
+        //defaultContainer.setPreferredSize(new Dimension(1500, 660));
 
         if (CPFOfAuthenticatedClient == null) {
-            return false;
+            //return false;
         }
         
         int clientId = findClientIdByCPF(CPFOfAuthenticatedClient);
@@ -116,7 +116,7 @@ public class CartUtilities {
             medicationLine.add(medicationDosage);
 
             // PREÇO
-            this.totalValue += medicationJSONObject.getDouble("preco") * cartObject.getInt("quantidade");
+            this.totalValueOfCart += medicationJSONObject.getDouble("preco") * cartObject.getInt("quantidade");
             String priceText = "R$ " + String.valueOf(medicationJSONObject.getDouble("preco")).replace(".", ",");
              
             if (Character.valueOf(',').equals(priceText.charAt(priceText.length()-2))) {
@@ -130,10 +130,9 @@ public class CartUtilities {
             JPanel line = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40));
             line.setAlignmentX(JPanel.LEFT_ALIGNMENT);
             line.setBackground(new Color(207, 206, 206));
-            line.setPreferredSize(new Dimension(1500, 108));
+            line.setPreferredSize(new Dimension(1420, 108));
             line.setMaximumSize(new Dimension(1420, 108));
             line.setMinimumSize(new Dimension(1420, 108));
-            line.setAlignmentX(JPanel.LEFT_ALIGNMENT);
 
             line.add(medicationLine);
             
@@ -201,7 +200,7 @@ public class CartUtilities {
         }
         
         // VALOR TOTAL DO CARRINHO
-        String textToLabelTotalValue = String.format("%.2f", this.totalValue);
+        String textToLabelTotalValue = String.format("%.2f", this.totalValueOfCart);
         textToLabelTotalValue = "VALOR TOTAL DO CARRINHO:  R$ " + textToLabelTotalValue.replace(".", ",");
         
         JLabel totalValueLabel = new JLabel();
@@ -248,7 +247,7 @@ public class CartUtilities {
         
     }
 
-    private static String increaseOrDecreaseItemOnCart(int cartId, int quantity) throws InterruptedException, IOException {
+    private static void increaseOrDecreaseItemOnCart(int cartId, int quantity) throws InterruptedException, IOException {
          
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
@@ -257,7 +256,7 @@ public class CartUtilities {
             .PUT(HttpRequest.BodyPublishers.ofString(""))
             .build();
 
-        return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()).body();
+        HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
     }
 
@@ -270,13 +269,13 @@ public class CartUtilities {
             .DELETE()
             .build();
 
-        HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()).body();
+        HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
     }
 
     public boolean isEmptyCart() {
 
-        if(this.totalValue == 0) return true;
+        if(this.totalValueOfCart == 0) return true;
         else return false;
 
     }
