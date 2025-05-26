@@ -16,69 +16,83 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+
+import utils.CPFUtilities;
 
 public class TelaLogin { 
 
     private String cpf;
-    private String password;
+    private char[] password;
     
-    public TelaLogin(String CPFOfAuthenticatedClient, JFrame jFramePrincipalCliente, TelaPrincipalCliente telaPrincipalCliente) {
+    public TelaLogin(final String CPFOfAuthenticatedClient, final JFrame jFramePrincipalCliente, final TelaPrincipalCliente telaPrincipalCliente) {
 
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
 
         // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
-        Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
+        final Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
         mainScreen.setIconImage(imagemLogo);
 
         // Container principal
         final Container mainContainer = mainScreen.getContentPane(); 
-        mainContainer.setBackground(new java.awt.Color(207, 206, 206));
+        mainContainer.setBackground(new Color(207, 206, 206));
         mainContainer.setLayout(null); 
         
+        Font labelsFont = new Font("Arial", Font.BOLD, 25);
+        Font inputsFont = new Font("Arial", Font.PLAIN, 25);
+        LineBorder inputsLineBorder = new LineBorder(Color.BLACK, 2, true);
+
         // Label para CPF
         final JLabel CPFLabel = new JLabel("Insira seu CPF: ");
         CPFLabel.setBounds(150, 60, 300, 25);
-        CPFLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        CPFLabel.setFont(labelsFont);
         mainContainer.add(CPFLabel);
         
         // INPUT CPF
         final JTextField CPFInput = new JTextField(30);
         CPFInput.setBounds(90, 90, 300, 35);
-        CPFInput.setFont(new Font("Arial", Font.PLAIN, 25));
-        CPFInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        CPFInput.setFont(inputsFont);
+        CPFInput.setBorder(inputsLineBorder);
         mainContainer.add(CPFInput);
 
         // Label para Sennha
         final JLabel passwordLabel = new JLabel("Insira sua Senha: ");
         passwordLabel.setBounds(150, 160, 300, 25);
-        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 25));
+        passwordLabel.setFont(labelsFont);
         mainContainer.add(passwordLabel);
 
         // INPUT SENHA
-        final JTextField passwordInput = new JTextField(30);
+        final JPasswordField passwordInput = new JPasswordField(30);
+        passwordInput.setEchoChar('*');
         passwordInput.setBounds(90, 190, 300, 35);
-        passwordInput.setFont(new Font("Arial", Font.PLAIN, 25));
-        passwordInput.setBorder(new LineBorder(Color.BLACK, 2, true));
+        passwordInput.setFont(inputsFont);
+        passwordInput.setBorder(inputsLineBorder);
         mainContainer.add(passwordInput);
 
+        // FONTE BOTÃO 
+        final Font btnFont = new Font("Helvetica", Font.BOLD, 20);
+
         // BOTAO LOGIN
-        final JButton btnLogin = new JButton("Realizar Login");
-        btnLogin.setBounds(110, 280, 120, 35);;
+        final JButton btnLogin = new JButton("Entrar");
+        btnLogin.setBounds(70, 280, 150, 35);;
+        btnLogin.setFont(btnFont);
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mainContainer.add(btnLogin);
 
         // BOTAO CADASTRO
         final JButton btnTelaCadastro = new JButton("Cadastrar");
-        btnTelaCadastro.setBounds(250, 280, 120, 35);
+        btnTelaCadastro.setBounds(260, 280, 150, 35);
+        btnTelaCadastro.setFont(btnFont);
         btnTelaCadastro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mainContainer.add(btnTelaCadastro);
 
         // BOTAO TELA PRINCIPAL
         final JButton btnTelaPrincipal = new JButton("Tela Principal");
-        btnTelaPrincipal.setBounds(180, 333, 120, 35);
+        btnTelaPrincipal.setBounds(145, 330, 200, 35);
+        btnTelaPrincipal.setFont(btnFont);
         btnTelaPrincipal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mainContainer.add(btnTelaPrincipal);
 
@@ -86,15 +100,15 @@ public class TelaLogin {
         btnLogin.addActionListener((event) -> {
             
             // Verifica se os campos não estão vazios
-            if (CPFInput.getText().isEmpty() || passwordInput.getText().isEmpty()) {
+            if (CPFInput.getText().isEmpty() || passwordInput.getPassword().length == 0) {
 
                 // Exibir mensagem alertando que os campos estão vazios
                 JOptionPane.showMessageDialog(mainScreen, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 
                 // Armazena as entradas
-                this.cpf = CPFInput.getText();
-                this.password = passwordInput.getText();
+                this.cpf = CPFUtilities.format(CPFInput.getText());
+                this.password = passwordInput.getPassword();
 
                 try {
                      
@@ -153,11 +167,11 @@ public class TelaLogin {
      * @throws InterruptedException
      * @throws IOException
      */
-    private boolean makeLogin(final String cpf, final String password) throws InterruptedException, IOException {
+    private boolean makeLogin(final String cpf, final char[] password) throws InterruptedException, IOException {
         
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
-            .uri(URI.create("http://localhost:8080/client/findUserByCPFAndPassword?CPF=" + this.cpf + "&password=" + this.password))
+            .uri(URI.create("http://localhost:8080/client/findUserByCPFAndPassword?CPF=" + this.cpf + "&password=" + new String(this.password)))
             .GET()
             .build();
 

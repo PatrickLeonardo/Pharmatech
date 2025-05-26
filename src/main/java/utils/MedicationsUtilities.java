@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,6 +84,25 @@ public class MedicationsUtilities {
         
         try {
             
+            JPanel elementPanel = new JPanel();
+            
+            Dimension linePanelDimension = new Dimension(1500, 660);
+            FlowLayout linePanelFlowLayout = new FlowLayout(FlowLayout.LEFT, 40, 40);
+            
+            Dimension elementPanelDimension = new Dimension(320, 500);
+            Border elementPanelBorder = BorderFactory.createLineBorder(Color.BLACK);
+
+            Border imageBorder = BorderFactory.createEmptyBorder(20, 0, 0, 10);
+
+            Font nameFont = new Font("Helvetica", Font.BOLD, 22);
+            Border nameBorder = BorderFactory.createEmptyBorder(20, 20, 0, 10);
+
+            Font descriptionFont = new Font("Helvetica", Font.PLAIN, 18);
+            Border descriptionBorder = BorderFactory.createEmptyBorder(5, 20, 0, 10);
+
+            Font priceFont = new Font("Helvetica", Font.BOLD, 18);
+            Border priceBorder = BorderFactory.createEmptyBorder(5, 20, 15, 10);
+
             // JPanel para carregar a Linha com 4 Medicamentos na Horizontal
             JPanel linePanel = null;
 
@@ -97,23 +117,23 @@ public class MedicationsUtilities {
 
                 // Se contador estiver zerado, adiciona uma nova Linha Horizontal para carregar mais 4 Elementos
                 if (columnCounter == 0) { // Se for o primeiro elemento da linha
-                    linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 40)); // Cria um novo JPanel com FlowLayout para alinhar elementos à esquerda e espaçamento
+                    linePanel = new JPanel(linePanelFlowLayout); // Cria um novo JPanel com FlowLayout para alinhar elementos à esquerda e espaçamento
                     linePanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); // Alinha o painel à esquerda
 
-                    if(medicationsArray.length() <= 4) linePanel.setPreferredSize(new Dimension(1500, 660)); // Se houver até 4 medicamentos, define tamanho fixo para o painel
+                    if(medicationsArray.length() <= 4) linePanel.setPreferredSize(linePanelDimension); // Se houver até 4 medicamentos, define tamanho fixo para o painel
 
                     defaultContainer.add(linePanel); // Adiciona o painel da linha ao container principal
                 }
 
-                final JPanel elementPanel = new JPanel(); // Cria um novo JPanel para o medicamento
+                elementPanel = new JPanel(); // Cria um novo JPanel para o medicamento
 
                 // PAINEL DE CADA ELEMENTO
                 elementPanel.setLayout(new BoxLayout(elementPanel, BoxLayout.Y_AXIS)); // Define layout vertical para os componentes do medicamento
-                elementPanel.setBorder(BorderFactory.createLineBorder(Color.black)); // Adiciona borda preta ao redor do painel
+                elementPanel.setBorder(elementPanelBorder); // Adiciona borda preta ao redor do painel
                 elementPanel.setBackground(Color.WHITE); // Define fundo branco
-                elementPanel.setPreferredSize(new Dimension(320, 500)); // Define tamanho preferido do painel
-                elementPanel.setMaximumSize(new Dimension(320, 500)); // Define tamanho máximo do painel
-                elementPanel.setMinimumSize(new Dimension(320, 500)); // Define tamanho mínimo do painel
+                elementPanel.setPreferredSize(elementPanelDimension); // Define tamanho preferido do painel
+                elementPanel.setMaximumSize(elementPanelDimension); // Define tamanho máximo do painel
+                elementPanel.setMinimumSize(elementPanelDimension); // Define tamanho mínimo do painel
                 elementPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT); // Alinha o painel à esquerda
 
                 final JSONObject JSONMedication = medicationsArray.getJSONObject(counter);
@@ -127,7 +147,7 @@ public class MedicationsUtilities {
                 );
                 
                 final JLabel imageLabel = new JLabel(resizedImage);
-                imageLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 10));
+                imageLabel.setBorder(imageBorder);
 
                 if(JSONMedication.getBoolean("precisaDeReceita")) {
                    imageLabel.setToolTipText("O Medicamento "+ JSONMedication.getString("nome") + " precisa de receita para ser retirado presencialmente!");
@@ -137,20 +157,20 @@ public class MedicationsUtilities {
                 
                 // NOME
                 final JLabel nameLabel = new JLabel(JSONMedication.getString("nome"));
-                nameLabel.setFont(new Font("Helvetica", Font.BOLD, 22));
-                nameLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 10));
+                nameLabel.setFont(nameFont);
+                nameLabel.setBorder(nameBorder);
                 elementPanel.add(nameLabel);
 
                 // DESCRIÇÃO 
                 final JLabel descriptionLabel = new JLabel(JSONMedication.getString("descricao"));
-                descriptionLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
-                descriptionLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
+                descriptionLabel.setFont(descriptionFont);
+                descriptionLabel.setBorder(descriptionBorder);
                 elementPanel.add(descriptionLabel);
 
                 // DOSAGEM 
                 final JLabel dosageLabel = new JLabel(JSONMedication.getString("dosagem"));
-                dosageLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
-                dosageLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 10));
+                dosageLabel.setFont(descriptionFont);
+                dosageLabel.setBorder(descriptionBorder);
                 elementPanel.add(dosageLabel);
 
                 // PREÇO 
@@ -164,8 +184,8 @@ public class MedicationsUtilities {
                 }
 
                 final JLabel priceLabel = new JLabel("R$ " + priceText);
-                priceLabel.setFont(new Font("Helvetica", Font.BOLD, 18));
-                priceLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 15, 10));
+                priceLabel.setFont(priceFont);
+                priceLabel.setBorder(priceBorder);
                 elementPanel.add(priceLabel);
 
                 // BOTÃO ADICIONAR AO CARRINHO
@@ -194,6 +214,8 @@ public class MedicationsUtilities {
 
                 // Se Linha do painel tiver 4 Elementos, zera o contador
                 if (columnCounter == 4) columnCounter = 0;
+
+                System.gc();
                 
             }
 

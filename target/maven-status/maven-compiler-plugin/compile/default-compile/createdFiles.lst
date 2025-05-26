@@ -1,8 +1,11 @@
-Main.class
 screens/TelaPrincipalCliente$2.class
-screens/TelaCarrinho.class
 screens/TelaCadastro.class
 screens/TelaPrincipalCliente$3.class
+screens/TelaPrincipalCliente$4.class
+utils/CPFUtilities.class
+Main.class
+screens/TelaCarrinho.class
+screens/TelaPrincipalCliente$5.class
 screens/TelaLogin.class
 utils/MedicationsUtilities.class
 screens/TelaPrincipalCliente$1.class

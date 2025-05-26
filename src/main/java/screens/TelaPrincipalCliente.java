@@ -6,8 +6,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -105,6 +108,57 @@ public class TelaPrincipalCliente {
         final JTextField searchBox = new JTextField("  Procure por um Medicamento...");
         searchBox.setBounds(450, 25, 500, 50); 
         searchBox.setFont(new Font("Arial", Font.PLAIN, 25));
+        
+        searchBox.addFocusListener(new FocusAdapter() {
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+
+                if(searchBox.getText().equals("  Procure por um Medicamento...") && searchBoxPressedForTheFirstTime) {
+                    searchBox.setText("  ");
+                } else if(searchBox.getText().strip().equals("")) {
+                    searchBox.setText("  Procure por um Medicamento");
+                    searchBoxPressedForTheFirstTime = false;
+                }
+            
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(searchBox.getText().strip().equals("")) {
+                    searchBox.setText("  Procure por um Medicamento");
+                    searchBoxPressedForTheFirstTime = false;
+                }
+            }
+
+        });
+
+        // Evento que será acionado quando o usuário clicar na barra de pesquisa pela primeira vez 
+        searchBox.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(final KeyEvent e) {
+
+                if (!searchBoxPressedForTheFirstTime) {
+                    final String newText = "  " + searchBox.getText().charAt(searchBox.getText().length()-1);
+                    searchBox.setText(newText.replace("o", ""));
+                    searchBoxPressedForTheFirstTime = true;
+                }
+                
+            }
+
+        });
+
+        mainContainer.addMouseListener(new MouseAdapter() {
+            
+            public void mouseClicked(MouseEvent e) {
+                searchBox.setFocusable(false);
+                searchBox.setFocusable(true);
+                searchBox.requestFocus();
+            }
+            
+        });
+ 
         header.add(searchBox);
 
         // Evento que será acionado quando usuário clicar na barra de pesquisa 
@@ -153,9 +207,14 @@ public class TelaPrincipalCliente {
                     } else {
                         
                         TelaPrincipalCliente.loadMessageLabel("  CARREGANDO MEDICAMENTOS...", medicationsPanel);
+                        System.gc();
+                        
                         SwingUtilities.invokeLater(() -> {
                             MedicationsUtilities.loadMedications(findedMedications, medicationsPanel, mainScreen, CPFOfAuthenticatedClient, bufferedThis);
                         });
+
+                        System.gc();
+
                     }
                     
                 } catch (final Exception exception) {
@@ -166,21 +225,7 @@ public class TelaPrincipalCliente {
 
         });
 
-        // Evento que será acionado quando o usuário clicar na barra de pesquisa pela primeira vez 
-        searchBox.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyPressed(final KeyEvent e) {
-
-                if (!searchBoxPressedForTheFirstTime) {
-                    final String newText = "  " + searchBox.getText().charAt(searchBox.getText().length()-1);
-                    searchBox.setText(newText.replace(".", ""));
-                    searchBoxPressedForTheFirstTime = true;
-                }
-                
-            }
-
-        });
+ 
         
         // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
         final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
@@ -249,9 +294,11 @@ public class TelaPrincipalCliente {
 
         // Carregar Medicamentos ao Carregar a Tela Principal 
         try {
-            //medicationsUtilities.loadMedications(medicationsUtilities.getMedications(), medicationsPanel, mainScreen);
+
+            System.gc();
             MedicationsUtilities.loadMedications(new JSONArray(MedicationsUtilities.getMedications()), medicationsPanel, mainScreen, CPFOfAuthenticatedClient, this);
-            
+            System.gc();
+
         } catch (final Exception exception) {
             exception.printStackTrace();
         }
