@@ -3,6 +3,7 @@ package screens;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
@@ -43,11 +44,13 @@ public class TelaPrincipalCliente {
     // Variavel para verificar se a caixa de pesquisa já foi clicada alguma vez  
     private boolean searchBoxPressedForTheFirstTime = false;
 
-    private String CPFOfAuthenticatedClient           = null;
-    private JPanel header                             = null;
-    private JLabel welcomeLabel                       = null;
-    private JButton btnRegister                       = null;
-    private JButton btnLogin                          = null;
+    private String  CPFOfAuthenticatedClient = null;
+    private JFrame  mainScreen               = null;
+    private JPanel  header                   = null;
+    private JLabel  welcomeLabel             = null;
+    private JButton linkToProfileScreen      = null;
+    private JButton btnRegister              = null;
+    private JButton btnLogin                 = null;
 
     public TelaPrincipalCliente(final String CPFOfAuthenticatedClient) {
         
@@ -59,7 +62,7 @@ public class TelaPrincipalCliente {
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
          
         // TELA 
-        final JFrame mainScreen = new JFrame("Tela Principal");
+        mainScreen = new JFrame("Tela Principal");
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainScreen.setSize(1500, 800);
         mainScreen.setLocationRelativeTo(null);
@@ -225,8 +228,6 @@ public class TelaPrincipalCliente {
 
         });
 
- 
-        
         // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
         final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
 
@@ -320,9 +321,14 @@ public class TelaPrincipalCliente {
         this.header.remove(this.btnLogin);
         this.header.remove(this.btnRegister);
         
-        this.welcomeLabel = new JLabel();                
-        this.welcomeLabel.setBounds(1000, 20, 300, 50);
-        this.welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        if(this.linkToProfileScreen != null) 
+            this.header.remove(this.linkToProfileScreen);
+        
+        if(this.welcomeLabel == null) {
+            this.welcomeLabel = new JLabel();                
+            this.welcomeLabel.setBounds(1000, 20, 140, 50);
+            this.welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        }
 
         try { 
 
@@ -337,12 +343,43 @@ public class TelaPrincipalCliente {
             final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
             final JSONObject objectBodyClient = new JSONObject(clientHttpResponse.body()); 
-            this.welcomeLabel.setText("Bem Vindo, " + objectBodyClient.getString("nome"));
+            this.welcomeLabel.setText("Bem Vindo,");
+
+            // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
+            final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
+
+            // Mapeando font padrão para os botões para poder adicionar o Underline (TextAttribute) e Ativa-lo (Object)
+            final Map<TextAttribute, Object> defaultFontWithUnderline = (Map<TextAttribute, Object>) defaultFont.getAttributes();
+            defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+
+            this.linkToProfileScreen = new JButton(objectBodyClient.getString("nome"));
+            linkToProfileScreen.setBounds(1070, 20, 200, 50);
+            linkToProfileScreen.setContentAreaFilled(false);
+            linkToProfileScreen.setBorderPainted(false);
+            linkToProfileScreen.setOpaque(false);
+            linkToProfileScreen.setFont(linkToProfileScreen.getFont().deriveFont(defaultFontWithUnderline));
+            linkToProfileScreen.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            header.add(this.linkToProfileScreen);
+
+            linkToProfileScreen.addActionListener((event) -> {
+                
+                new TelaPerfilCliente(mainScreen, this, this.CPFOfAuthenticatedClient);
+                this.mainScreen.dispose(); 
+
+            });
 
         } catch(final Exception exception) { exception.printStackTrace(); }
         
         this.header.add(this.welcomeLabel);
          
+    }
+
+    public void isLogoff() {
+        this.header.remove(this.welcomeLabel);
+        this.header.remove(this.linkToProfileScreen);
+        this.header.add(this.btnLogin);
+        this.header.add(this.btnRegister);
+        this.CPFOfAuthenticatedClient = null;
     }
     
     /**

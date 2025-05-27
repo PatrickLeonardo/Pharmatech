@@ -1,6 +1,7 @@
 screens/TelaPrincipalCliente$2.class
 screens/TelaCadastro.class
 screens/TelaPrincipalCliente$3.class
+screens/TelaPerfilCliente.class
 screens/TelaPrincipalCliente$4.class
 utils/CPFUtilities.class
 Main.class
