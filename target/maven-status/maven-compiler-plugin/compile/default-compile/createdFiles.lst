@@ -3,6 +3,7 @@ screens/TelaCadastro.class
 screens/TelaPrincipal.class
 screens/TelaPerfilCliente.class
 screens/TelaPrincipal$1.class
+screens/TelaPrincipalFarmaceutico.class
 screens/TelaPrincipal$2.class
 utils/CPFUtilities.class
 Main.class
