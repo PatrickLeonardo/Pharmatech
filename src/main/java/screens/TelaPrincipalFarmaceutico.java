@@ -54,12 +54,13 @@ public class TelaPrincipalFarmaceutico {
 
         // CONTAINER PRINCIPAL
         final JPanel mainContainer = new JPanel(); 
-        mainContainer.setLayout(new BoxLayout(mainContainer, BoxLayout.Y_AXIS));
+        mainContainer.setLayout(null);
         mainContainer.setBackground(backgroundColor);
         
         // CABECALHO (header)
         JPanel header = new JPanel();
         header.setLayout(null);
+        header.setBounds(0, 0, 1500, 100);
         header.setAlignmentX(Component.LEFT_ALIGNMENT);
         header.setPreferredSize(new Dimension(1500, 100));
         header.setMaximumSize(new Dimension(1500, 100));
@@ -138,12 +139,12 @@ public class TelaPrincipalFarmaceutico {
 
         // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
         JScrollPane scrollPane = new JScrollPane(tabela);
-        scrollPane.setBounds(50, 350, 400, 400);
+        scrollPane.setBounds(35, 150, 1400, 500);
         mainContainer.add(scrollPane);
 
-        tabela.setBounds(50, 350, 400, 200);
+        tabela.setBounds(35, 150, 1400, 500);
          
-        mainContainer.add(Box.createVerticalGlue()); // Adiciona um espaço flexível
+        //mainContainer.add(Box.createVerticalGlue()); // Adiciona um espaço flexível
         
         // Configuranções ScrollPane (Rolagem da Tela) 
         final JScrollPane jScrollPane = new JScrollPane(mainContainer);
