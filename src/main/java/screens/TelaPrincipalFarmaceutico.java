@@ -10,18 +10,29 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class TelaPrincipalFarmaceutico {
 
@@ -82,6 +93,56 @@ public class TelaPrincipalFarmaceutico {
         defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         
         mainContainer.add(header);
+
+        List<Object> cartList = new ArrayList<>();
+
+        for (int i = 0; i < getCarts().length()-1; i++) {
+           JSONObject cart = getCarts().getJSONObject(i);
+
+           String cpf = cart.getString("CPF");
+           String cliente = cart.getString("Cliente");
+           String medicamento = cart.getString("Medicamento");
+           int quantidade = cart.getInt("Quantidade");
+           
+           Object[] rowCart = {cpf, cliente, medicamento, quantidade, "Remover"};
+              cartList.add(rowCart);
+        }
+
+        Object [][] dados = {
+            cartList.toArray(new Object[0][0])
+        };
+
+        String[] colunas = {"CPF", "Cliente", "Medicamento", "Quantidade", "Remover"};
+
+        DefaultTableModel modelo = new DefaultTableModel(dados, colunas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 4; 
+            }
+        };
+
+        JTable tabela = new JTable(modelo);
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
+        tabela.setRowSorter(sorter);
+        sorter.toggleSortOrder(0); 
+        sorter.toggleSortOrder(1); 
+        sorter.toggleSortOrder(2); 
+        sorter.toggleSortOrder(3);
+
+        // Configura a largura das colunas
+        tabela.getColumn("Remover").setPreferredWidth(10); 
+
+        // Define o renderizador e o editor para a coluna "Ação" (botão)
+        tabela.getColumn("Remover").setCellRenderer(new ButtonRenderer());
+        tabela.getColumn("Remover").setCellEditor(new ButtonEditor(new JCheckBox(), tabela));
+
+        // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
+        JScrollPane scrollPane = new JScrollPane(tabela);
+        scrollPane.setBounds(50, 350, 400, 400);
+        mainContainer.add(scrollPane);
+
+        tabela.setBounds(50, 350, 400, 200);
          
         mainContainer.add(Box.createVerticalGlue()); // Adiciona um espaço flexível
         
@@ -94,6 +155,53 @@ public class TelaPrincipalFarmaceutico {
         mainScreen.add(jScrollPane);
         mainScreen.setVisible(true);
 
+    }
+
+    static class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setText(" X ");
+        }
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            return this;
+        }
+    }
+
+    static class ButtonEditor extends DefaultCellEditor {
+        protected JButton button;
+        private boolean isPushed;
+        private JTable tabelaRef;
+
+        public ButtonEditor(JCheckBox checkBox, JTable tabela) {
+            super(checkBox);
+            this.tabelaRef = tabela;
+            button = new JButton(" X ");
+            button.setOpaque(true);
+            button.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            isPushed = true;
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                // Remove a linha selecionada ao clicar no botão
+                int selectedRow = tabelaRef.getSelectedRow();
+                if (selectedRow != -1) {
+                    ((DefaultTableModel) tabelaRef.getModel()).removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(tabelaRef, "Linha removida com sucesso!", "Removido!", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            isPushed = false;
+            return "Ação";
+        }
     }
 
     private JSONArray getCarts() {
