@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -97,7 +97,7 @@ public class TelaPrincipalFarmaceutico {
 
         List<Object> cartList = new ArrayList<>();
 
-        for (int i = 0; i < getCarts().length()-1; i++) {
+        for (int i = 0; i < getCarts().length(); i++) {
             
             JSONObject cart = getCarts().getJSONObject(i);
 
@@ -122,6 +122,8 @@ public class TelaPrincipalFarmaceutico {
         };
 
         JTable tabela = new JTable(modelo);
+        tabela.setFont(new Font("Helvetica", Font.BOLD, 16));
+        tabela.setRowHeight(35);
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
         tabela.setRowSorter(sorter);
@@ -143,7 +145,16 @@ public class TelaPrincipalFarmaceutico {
         mainContainer.add(scrollPane);
 
         tabela.setBounds(35, 150, 1400, 500);
-         
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
+        centerRenderer.setVerticalAlignment(SwingConstants.CENTER);   // centraliza verticalmente
+        
+        // Aplica o renderizador para todas as colunas
+        for (int i = 0; i < tabela.getColumnCount(); i++) {
+            tabela.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
         //mainContainer.add(Box.createVerticalGlue()); // Adiciona um espaço flexível
         
         // Configuranções ScrollPane (Rolagem da Tela) 
