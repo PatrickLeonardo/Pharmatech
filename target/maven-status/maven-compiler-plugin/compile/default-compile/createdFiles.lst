@@ -3,12 +3,16 @@ screens/TelaCadastro.class
 screens/TelaPrincipal.class
 screens/TelaPerfilCliente.class
 screens/TelaPrincipal$1.class
+screens/TelaPrincipalFarmaceutico$ButtonEditor$1.class
+screens/TelaPrincipalFarmaceutico$ButtonRenderer.class
+screens/TelaPrincipalFarmaceutico$ButtonEditor.class
 screens/TelaPrincipalFarmaceutico.class
 screens/TelaPrincipal$2.class
 utils/CPFUtilities.class
 Main.class
 screens/TelaPrincipal$5.class
 screens/TelaCarrinho.class
+screens/TelaPrincipalFarmaceutico$1.class
 screens/TelaLogin.class
 utils/MedicationsUtilities.class
 screens/TelaPrincipal$4.class

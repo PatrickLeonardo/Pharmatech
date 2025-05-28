@@ -97,20 +97,19 @@ public class TelaPrincipalFarmaceutico {
         List<Object> cartList = new ArrayList<>();
 
         for (int i = 0; i < getCarts().length()-1; i++) {
-           JSONObject cart = getCarts().getJSONObject(i);
+            
+            JSONObject cart = getCarts().getJSONObject(i);
 
-           String cpf = cart.getString("CPF");
-           String cliente = cart.getString("Cliente");
-           String medicamento = cart.getString("Medicamento");
-           int quantidade = cart.getInt("Quantidade");
-           
-           Object[] rowCart = {cpf, cliente, medicamento, quantidade, "Remover"};
-              cartList.add(rowCart);
+            String cpf = cart.getString("CPF");
+            String cliente = cart.getString("Cliente");
+            String medicamento = cart.getString("Medicamento");
+            int quantidade = cart.getInt("Quantidade");
+            
+            cartList.add(new Object[]{cpf, cliente, medicamento, quantidade, "Remover"});
+
         }
 
-        Object [][] dados = {
-            cartList.toArray(new Object[0][0])
-        };
+        Object[][] dados = cartList.toArray(new Object[0][0]);
 
         String[] colunas = {"CPF", "Cliente", "Medicamento", "Quantidade", "Remover"};
 
