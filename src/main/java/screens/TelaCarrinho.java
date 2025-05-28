@@ -41,7 +41,7 @@ public class TelaCarrinho {
     private JLabel welcomeLabel = null;
     private JPanel header = null;
 
-    public TelaCarrinho(String CPFOfAuthenticatedClient, JFrame jFramePrincipalCliente, TelaPrincipalCliente telaPrincipalCliente) {
+    public TelaCarrinho(String CPFOfAuthenticatedClient, JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
         
         this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
         CartUtilities cartUtilities = new CartUtilities();
@@ -143,19 +143,19 @@ public class TelaCarrinho {
         btnTelaMain.addActionListener((event) -> { 
             
             mainScreen.dispose();
-            telaPrincipalCliente.setCPFOfAuthenticatedClient(CPFOfAuthenticatedClient);
+            telaPrincipal.setCPFOfAuthenticatedClient(CPFOfAuthenticatedClient);
             jFramePrincipalCliente.setVisible(true);
             
         });
 
         btnLogin.addActionListener((event) -> {
-            new TelaLogin(CPFOfAuthenticatedClient, jFramePrincipalCliente, telaPrincipalCliente);
+            new TelaLogin(CPFOfAuthenticatedClient, jFramePrincipalCliente, telaPrincipal);
             mainScreen.dispose();
         });
 
         // Evento que será acionado ao clicar no botão Cadastrar
         btnRegister.addActionListener((event) -> {
-            new TelaCadastro(jFramePrincipalCliente, telaPrincipalCliente);
+            new TelaCadastro(jFramePrincipalCliente, telaPrincipal);
             mainScreen.dispose();
         });
 

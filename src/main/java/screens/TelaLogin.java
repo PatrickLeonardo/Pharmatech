@@ -27,7 +27,7 @@ public class TelaLogin {
     private String cpf;
     private char[] password;
     
-    public TelaLogin(final String CPFOfAuthenticatedClient, final JFrame jFramePrincipalCliente, final TelaPrincipalCliente telaPrincipalCliente) {
+    public TelaLogin(final String CPFOfAuthenticatedClient, final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal) {
 
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
@@ -117,8 +117,9 @@ public class TelaLogin {
                         
                         // Carrega Tela Principal
                         mainScreen.dispose();
-                        telaPrincipalCliente.setCPFOfAuthenticatedClient(this.cpf);
-                        telaPrincipalCliente.isLogged();
+                        telaPrincipal.setCPFOfAuthenticatedClient(this.cpf);
+                        telaPrincipal.setPasswordOfAuthenticatedClient(new String(this.password));
+                        telaPrincipal.isLogged();
                         jFramePrincipalCliente.setVisible(true);
                          
                     } else {
@@ -138,7 +139,7 @@ public class TelaLogin {
         btnTelaCadastro.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaCadastro(jFramePrincipalCliente, telaPrincipalCliente); 
+            new TelaCadastro(jFramePrincipalCliente, telaPrincipal); 
 
         });
 
@@ -171,7 +172,7 @@ public class TelaLogin {
         
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
-            .uri(URI.create("http://localhost:8080/client/findUserByCPFAndPassword?CPF=" + this.cpf + "&password=" + new String(this.password)))
+            .uri(URI.create("http://localhost:8080/user/find/" + this.cpf + "/" + new String(this.password)))
             .GET()
             .build();
 

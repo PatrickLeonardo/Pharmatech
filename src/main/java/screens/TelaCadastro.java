@@ -24,7 +24,7 @@ import utils.CPFUtilities;
 
 public class TelaCadastro {
 
-    public TelaCadastro(JFrame jFramePrincipalCliente, TelaPrincipalCliente telaPrincipalCliente) {
+    public TelaCadastro(JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
 
         final JFrame mainScreen = new JFrame("Tela Cadastro");
 
@@ -160,7 +160,7 @@ public class TelaCadastro {
                             
                             JOptionPane.showMessageDialog(mainScreen, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                             mainScreen.dispose();
-                            new TelaLogin(null, jFramePrincipalCliente, telaPrincipalCliente);
+                            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
                             
                         } else {
                             // Caso não consiga realizar o cadastro
@@ -180,7 +180,7 @@ public class TelaCadastro {
         btnLogin.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaLogin(null, jFramePrincipalCliente, telaPrincipalCliente);
+            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
 
         });
 

@@ -28,13 +28,13 @@ import javax.swing.JTextField;
 import org.json.JSONObject;
 
 import screens.TelaLogin;
-import screens.TelaPrincipalCliente;
+import screens.TelaPrincipal;
 
 public class TelaPerfilCliente {
 
     private JPanel header = null;
 
-    public TelaPerfilCliente(JFrame jFramePrincipalCliente, TelaPrincipalCliente telaPrincipalCliente, String CPFOfAuthenticatedClient) {
+    public TelaPerfilCliente(JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal, String CPFOfAuthenticatedClient, String passwordOfAuthenticatedClient) {
         
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
@@ -102,8 +102,8 @@ public class TelaPerfilCliente {
         btnLogout.addActionListener((event) -> {
 
             mainScreen.dispose();
-            telaPrincipalCliente.isLogoff();
-            new TelaLogin(null, jFramePrincipalCliente, telaPrincipalCliente);
+            telaPrincipal.isLogoff();
+            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
 
         });
 
@@ -120,7 +120,7 @@ public class TelaPerfilCliente {
         btnTelaMain.addActionListener((event) -> { 
             
             mainScreen.dispose();
-            telaPrincipalCliente.isLogged();
+            telaPrincipal.isLogged();
             jFramePrincipalCliente.setVisible(true);
             
         });
@@ -138,7 +138,7 @@ public class TelaPerfilCliente {
         
         try {
             
-            JSONObject jsonOfClient =  new JSONObject(findClientByCPF(CPFOfAuthenticatedClient));
+            JSONObject jsonOfClient =  new JSONObject(findClientByCPF(CPFOfAuthenticatedClient, passwordOfAuthenticatedClient));
 
             Font fontForLabels = new Font("Helvetica", Font.BOLD, 28);
             Font fontForInputs = new Font("Helvetiica", Font.PLAIN, 20);
@@ -247,12 +247,12 @@ public class TelaPerfilCliente {
 
     }
 
-    private String findClientByCPF(String CPF) throws InterruptedException, IOException {
+    private String findClientByCPF(final String CPF, final String password) throws InterruptedException, IOException {
 
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .header("Content-Type", "application/json")
-            .uri(URI.create("http://localhost:8080/user/findByCPF?CPF=" + CPF))
+            .uri(URI.create("http://localhost:8080/user/getUser/%s/%s".formatted(CPF, password)))
             .GET()
             .build();
         
@@ -260,7 +260,10 @@ public class TelaPerfilCliente {
         
         final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         
-        if(clientHttpResponse.statusCode() == 200) {
+        System.out.println(clientHttpResponse.statusCode());
+        System.out.println(clientHttpResponse.body());
+
+        if(clientHttpResponse.statusCode() == 302) {
             return clientHttpResponse.body();
         }
 

@@ -3,11 +3,9 @@ package screens;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -35,27 +33,28 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import utils.MedicationsUtilities;
 
-public class TelaPrincipalCliente {
+public class TelaPrincipal {
     
     // Variavel para verificar se a caixa de pesquisa já foi clicada alguma vez  
     private boolean searchBoxPressedForTheFirstTime = false;
 
-    private String  CPFOfAuthenticatedClient = null;
-    private JFrame  mainScreen               = null;
-    private JPanel  header                   = null;
-    private JLabel  welcomeLabel             = null;
-    private JButton linkToProfileScreen      = null;
-    private JButton btnRegister              = null;
-    private JButton btnLogin                 = null;
+    private String  CPFOfAuthenticatedClient      = null;
+    private String  passwordOfAuthenticatedClient = null; 
+    
+    private JFrame  mainScreen                    = null;
+    private JPanel  header                        = null;
+    private JLabel  welcomeLabel                  = null;
+    private JButton linkToProfileScreen           = null;
+    private JButton btnRegister                   = null;
+    private JButton btnLogin                      = null;
 
-    public TelaPrincipalCliente(final String CPFOfAuthenticatedClient) {
+    public TelaPrincipal(final String CPFOfAuthenticatedClient) {
         
         this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
-        TelaPrincipalCliente bufferedThis = this;
+        TelaPrincipal bufferedThis = this;
 
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
@@ -188,7 +187,7 @@ public class TelaPrincipalCliente {
                      
                     if (searchBox.getText().replace(" ", "").equals("") && medicationsPanel.getComponents().length != 13) {
                         
-                        TelaPrincipalCliente.loadMessageLabel("  CARREGANDO MEDICAMENTOS...", medicationsPanel);
+                        TelaPrincipal.loadMessageLabel("  CARREGANDO MEDICAMENTOS...", medicationsPanel);
                         SwingUtilities.invokeLater(() -> {
                             
                             try {
@@ -205,11 +204,11 @@ public class TelaPrincipalCliente {
                         
                     } else if(String.valueOf("[]").equals(findedMedications.toString())) {
                         
-                        TelaPrincipalCliente.loadMessageLabel("MEDICAMENTO NÃO ENCONTRADO !!!", medicationsPanel);    
+                        TelaPrincipal.loadMessageLabel("MEDICAMENTO NÃO ENCONTRADO !!!", medicationsPanel);    
                         
                     } else {
                         
-                        TelaPrincipalCliente.loadMessageLabel("  CARREGANDO MEDICAMENTOS...", medicationsPanel);
+                        TelaPrincipal.loadMessageLabel("  CARREGANDO MEDICAMENTOS...", medicationsPanel);
                         System.gc();
                         
                         SwingUtilities.invokeLater(() -> {
@@ -335,14 +334,14 @@ public class TelaPrincipalCliente {
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
-                .uri(URI.create("http://localhost:8080/user/findByCPF?CPF=" + this.CPFOfAuthenticatedClient))
+                .uri(URI.create("http://localhost:8080/user/findName/%s".formatted(this.CPFOfAuthenticatedClient)))
                 .GET()
                 .build();
             
             final HttpClient httpClient = HttpClient.newHttpClient(); 
             final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
-            final JSONObject objectBodyClient = new JSONObject(clientHttpResponse.body()); 
+            final String nameOfUser = clientHttpResponse.body(); 
             this.welcomeLabel.setText("Bem Vindo,");
 
             // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
@@ -352,7 +351,7 @@ public class TelaPrincipalCliente {
             final Map<TextAttribute, Object> defaultFontWithUnderline = (Map<TextAttribute, Object>) defaultFont.getAttributes();
             defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
-            this.linkToProfileScreen = new JButton(objectBodyClient.getString("nome"));
+            this.linkToProfileScreen = new JButton(nameOfUser);
             linkToProfileScreen.setBounds(1070, 20, 200, 50);
             linkToProfileScreen.setContentAreaFilled(false);
             linkToProfileScreen.setBorderPainted(false);
@@ -363,7 +362,7 @@ public class TelaPrincipalCliente {
 
             linkToProfileScreen.addActionListener((event) -> {
                 
-                new TelaPerfilCliente(mainScreen, this, this.CPFOfAuthenticatedClient);
+                new TelaPerfilCliente(mainScreen, this, this.CPFOfAuthenticatedClient, this.passwordOfAuthenticatedClient);
                 this.mainScreen.dispose(); 
 
             });
@@ -414,8 +413,12 @@ public class TelaPrincipalCliente {
         this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
     }
 
+    public void setPasswordOfAuthenticatedClient(final String passwordOfAuthenticatedClient) {
+        this.passwordOfAuthenticatedClient = passwordOfAuthenticatedClient;
+    }
+
     public String getCPFOfAuthenticatedClient() {
         return this.CPFOfAuthenticatedClient;
     }
-    
+
 }

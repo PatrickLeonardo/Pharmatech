@@ -25,7 +25,7 @@ import javax.swing.border.Border;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import screens.TelaPrincipalCliente;
+import screens.TelaPrincipal;
 
 public class MedicationsUtilities {
 
@@ -80,7 +80,7 @@ public class MedicationsUtilities {
      * @param medicationsArray
      * @param defaultContainer
      */
-    public static void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer, final JFrame screenJFrame, String CPFOfAuthenticatedClient, TelaPrincipalCliente telaPrincipalCliente) {
+    public static void loadMedications(final JSONArray medicationsArray, final JPanel defaultContainer, final JFrame screenJFrame, String CPFOfAuthenticatedClient, TelaPrincipal telaPrincipal) {
         
         try {
             
@@ -196,7 +196,7 @@ public class MedicationsUtilities {
 
                     try {
 
-                        if(CartUtilities.addMedicationOnCart(JSONMedication.getInt("id"), telaPrincipalCliente.getCPFOfAuthenticatedClient())) {
+                        if(CartUtilities.addMedicationOnCart(JSONMedication.getInt("id"), telaPrincipal.getCPFOfAuthenticatedClient())) {
                             JOptionPane.showMessageDialog(screenJFrame, "Medicamento adicionado ao Carrinho !!!");
                         } else {
                             JOptionPane.showMessageDialog(screenJFrame, "Faça login para adicionar itens ao carrinho !!!", "Erro", JOptionPane.ERROR_MESSAGE);
