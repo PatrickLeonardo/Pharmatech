@@ -20,6 +20,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import org.json.JSONObject;
+
 import utils.CPFUtilities;
 
 public class TelaLogin { 
@@ -41,9 +43,9 @@ public class TelaLogin {
         mainContainer.setBackground(new Color(207, 206, 206));
         mainContainer.setLayout(null); 
         
-        Font labelsFont = new Font("Arial", Font.BOLD, 25);
-        Font inputsFont = new Font("Arial", Font.PLAIN, 25);
-        LineBorder inputsLineBorder = new LineBorder(Color.BLACK, 2, true);
+        final Font labelsFont = new Font("Arial", Font.BOLD, 25);
+        final Font inputsFont = new Font("Arial", Font.PLAIN, 25);
+        final LineBorder inputsLineBorder = new LineBorder(Color.BLACK, 2, true);
 
         // Label para CPF
         final JLabel CPFLabel = new JLabel("Insira seu CPF: ");
@@ -117,11 +119,25 @@ public class TelaLogin {
                         
                         // Carrega Tela Principal
                         mainScreen.dispose();
-                        telaPrincipal.setCPFOfAuthenticatedClient(this.cpf);
-                        telaPrincipal.setPasswordOfAuthenticatedClient(new String(this.password));
-                        telaPrincipal.isLogged();
-                        jFramePrincipalCliente.setVisible(true);
-                         
+                        final String tipoDeUsuario = getTipoDeUsuario(cpf, password);
+                        
+                        switch(tipoDeUsuario) {
+                            
+                            case("Cliente"):
+                                telaPrincipal.setCPFOfAuthenticatedClient(this.cpf);
+                                telaPrincipal.setPasswordOfAuthenticatedClient(new String(this.password));
+                                telaPrincipal.isLogged();
+                                jFramePrincipalCliente.setVisible(true);
+                            
+                            case("Farmaceutico"):
+                                new TelaPrincipalFarmaceutico(this.cpf, jFramePrincipalCliente, telaPrincipal);    
+
+                            case("Almoxerife"):
+
+                            case("Gerente"):
+
+                        }
+                        
                     } else {
 
                         // Exibi uma mensagem falando que o Login não foi encontrado
@@ -172,7 +188,7 @@ public class TelaLogin {
         
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
-            .uri(URI.create("http://localhost:8080/user/find/" + this.cpf + "/" + new String(this.password)))
+            .uri(URI.create("http://localhost:8080/user/find/" + cpf + "/" + new String(password)))
             .GET()
             .build();
 
@@ -184,6 +200,21 @@ public class TelaLogin {
         else if(clientHttpResponse.statusCode() == 404) return false;
         
         return false;
+
+    }
+
+    private String getTipoDeUsuario(final String cpf, final char[] password) throws InterruptedException, IOException {
+
+        final HttpRequest request = HttpRequest.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .uri(URI.create("http://localhost:8080/user/getUser/" + cpf + "/" + new String(password)))
+            .GET()
+            .build();
+
+        final HttpClient httpClient = HttpClient.newHttpClient();
+
+        final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return new JSONObject(clientHttpResponse.body()).getString("tipoDeUsuario");
 
     }
     

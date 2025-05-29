@@ -2,6 +2,7 @@ package screens;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -25,6 +26,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -34,16 +37,18 @@ import javax.swing.table.TableRowSorter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import utils.CartUtilities;
+
 public class TelaPrincipalFarmaceutico {
 
-    public TelaPrincipalFarmaceutico() {
+    public TelaPrincipalFarmaceutico(final String CPFOfAuthenticatedUser, final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal) {
 
          // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
         
         // TELA 
-        final JFrame mainScreen = new JFrame("Carrinho");
+        final JFrame mainScreen = new JFrame("Reservas");
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainScreen.setSize(1500, 800);
         mainScreen.setLocationRelativeTo(null);
@@ -58,7 +63,7 @@ public class TelaPrincipalFarmaceutico {
         mainContainer.setBackground(backgroundColor);
         
         // CABECALHO (header)
-        JPanel header = new JPanel();
+        final JPanel header = new JPanel();
         header.setLayout(null);
         header.setBounds(0, 0, 1500, 100);
         header.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -93,44 +98,95 @@ public class TelaPrincipalFarmaceutico {
         final Map<TextAttribute, Object> defaultFontWithUnderline = (Map<TextAttribute, Object>) defaultFont.getAttributes();
         defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
         
+        String nameOfUser = null;
+
+        try {
+
+            final HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .header("Content-Type", "application/json")
+                .uri(URI.create("http://localhost:8080/user/findName/%s".formatted(CPFOfAuthenticatedUser)))
+                .GET()
+                .build();
+            
+            final HttpClient httpClient = HttpClient.newHttpClient(); 
+            final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            nameOfUser = clientHttpResponse.body();
+
+        } catch(final Exception exception) {
+            exception.printStackTrace();
+        }
+
+        final JLabel welcomeLabel = new JLabel("Bem Vindo(a) de volta, " + nameOfUser);
+        welcomeLabel.setBounds(700, 20, 700, 50);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+
+        header.add(welcomeLabel);
+
+        //BOTAO LOGOUT 
+        final JButton btnLogout = new JButton("Logout");
+        btnLogout.setBounds(1250, 25, 140, 40);
+        btnLogout.setContentAreaFilled(false);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setOpaque(false);
+        btnLogout.setFont(btnLogout.getFont().deriveFont(defaultFontWithUnderline));
+        btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        header.add(btnLogout);
+
+        btnLogout.addActionListener((event) -> {
+
+            mainScreen.dispose();
+            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
+
+        });
+
         mainContainer.add(header);
 
-        List<Object> cartList = new ArrayList<>();
+        final List<Object> cartList = new ArrayList<>();
 
         for (int i = 0; i < getCarts().length(); i++) {
             
-            JSONObject cart = getCarts().getJSONObject(i);
+            final JSONObject cart = getCarts().getJSONObject(i);
 
-            String cpf = cart.getString("CPF");
-            String cliente = cart.getString("Cliente");
-            String medicamento = cart.getString("Medicamento");
-            int quantidade = cart.getInt("Quantidade");
+            final int id = cart.getInt("id");
+            final String cpf = cart.getString("CPF");
+            final String cliente = cart.getString("Cliente");
+            final String medicamento = cart.getString("Medicamento");
+            final int quantidade = cart.getInt("Quantidade");
             
-            cartList.add(new Object[]{cpf, cliente, medicamento, quantidade, "Remover"});
+            cartList.add(new Object[]{id, cpf, cliente, medicamento, quantidade, "Remover"});
 
         }
 
-        Object[][] dados = cartList.toArray(new Object[0][0]);
+        final Object[][] dados = cartList.toArray(new Object[0][0]);
 
-        String[] colunas = {"CPF", "Cliente", "Medicamento", "Quantidade", "Remover"};
+        final String[] colunas = {"ID", "CPF", "Cliente", "Medicamento", "Quantidade", "Remover"};
 
-        DefaultTableModel modelo = new DefaultTableModel(dados, colunas) {
+        final DefaultTableModel modelo = new DefaultTableModel(dados, colunas) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return column == 4; 
+            public boolean isCellEditable(final int row, final int column) {
+                return column == 5; 
             }
         };
 
-        JTable tabela = new JTable(modelo);
+        final JTable tabela = new JTable(modelo);
         tabela.setFont(new Font("Helvetica", Font.BOLD, 16));
         tabela.setRowHeight(35);
 
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
+        final TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
         tabela.setRowSorter(sorter);
         sorter.toggleSortOrder(0); 
         sorter.toggleSortOrder(1); 
         sorter.toggleSortOrder(2); 
         sorter.toggleSortOrder(3);
+        sorter.toggleSortOrder(4);
+
+        // Configura a ordenação inicial pela coluna "ID" (índice 0)
+        sorter.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
+
+        tabela.getColumn("ID").setPreferredWidth(80);
+        tabela.getColumn("ID").setMaxWidth(80);
 
         // Configura a largura das colunas
         tabela.getColumn("Remover").setPreferredWidth(10); 
@@ -140,13 +196,13 @@ public class TelaPrincipalFarmaceutico {
         tabela.getColumn("Remover").setCellEditor(new ButtonEditor(new JCheckBox(), tabela));
 
         // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
-        JScrollPane scrollPane = new JScrollPane(tabela);
+        final JScrollPane scrollPane = new JScrollPane(tabela);
         scrollPane.setBounds(35, 150, 1400, 500);
         mainContainer.add(scrollPane);
 
         tabela.setBounds(35, 150, 1400, 500);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
         centerRenderer.setVerticalAlignment(SwingConstants.CENTER);   // centraliza verticalmente
         
@@ -154,8 +210,6 @@ public class TelaPrincipalFarmaceutico {
         for (int i = 0; i < tabela.getColumnCount(); i++) {
             tabela.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-
-        //mainContainer.add(Box.createVerticalGlue()); // Adiciona um espaço flexível
         
         // Configuranções ScrollPane (Rolagem da Tela) 
         final JScrollPane jScrollPane = new JScrollPane(mainContainer);
@@ -169,50 +223,75 @@ public class TelaPrincipalFarmaceutico {
     }
 
     static class ButtonRenderer extends JButton implements TableCellRenderer {
+        
         public ButtonRenderer() {
-            setText(" X ");
+            setText(" Remover ");
         }
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        public Component getTableCellRendererComponent(final JTable table, final Object value,
+            final boolean isSelected, final boolean hasFocus, final int row, final int column) {
             return this;
         }
+        
     }
 
     static class ButtonEditor extends DefaultCellEditor {
+
         protected JButton button;
         private boolean isPushed;
-        private JTable tabelaRef;
+        private final JTable tabelaRef;
 
-        public ButtonEditor(JCheckBox checkBox, JTable tabela) {
+        public ButtonEditor(final JCheckBox checkBox, final JTable tabela) {
+            
             super(checkBox);
             this.tabelaRef = tabela;
-            button = new JButton(" X ");
+            
+            button = new JButton("Remover");
             button.setOpaque(true);
+            
             button.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+                public void actionPerformed(final java.awt.event.ActionEvent e) {
                     fireEditingStopped();
                 }
             });
+        
         }
 
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(final JTable table, final Object value,
+            
+            final boolean isSelected, final int row, final int column) {
             isPushed = true;
             return button;
+            
         }
 
         public Object getCellEditorValue() {
+            
             if (isPushed) {
+                
                 // Remove a linha selecionada ao clicar no botão
-                int selectedRow = tabelaRef.getSelectedRow();
+                final int selectedRow = tabelaRef.getSelectedRow();
+                
                 if (selectedRow != -1) {
+                    final Object idMedicamento = tabelaRef.getValueAt(selectedRow, 0);
+
+                    try {
+                        CartUtilities.deleteItemOnCartById((int)idMedicamento);
+                    } catch(final Exception exception) {
+                        exception.printStackTrace();
+                    } 
+
                     ((DefaultTableModel) tabelaRef.getModel()).removeRow(selectedRow);
                     JOptionPane.showMessageDialog(tabelaRef, "Linha removida com sucesso!", "Removido!", JOptionPane.INFORMATION_MESSAGE);
                 }
+                
             }
+            
             isPushed = false;
-            return "Ação";
+            return "Remover";
+            
         }
+
     }
 
     private JSONArray getCarts() {
@@ -230,7 +309,7 @@ public class TelaPrincipalFarmaceutico {
             final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return new JSONArray(clientHttpResponse.body());
 
-        } catch(Exception exception) {
+        } catch(final Exception exception) {
             exception.printStackTrace();
         }
 

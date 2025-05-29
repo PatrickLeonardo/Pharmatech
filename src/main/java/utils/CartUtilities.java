@@ -260,7 +260,7 @@ public class CartUtilities {
 
     }
 
-    private static void deleteItemOnCartById(int cartId) throws InterruptedException, IOException {
+    public static void deleteItemOnCartById(int cartId) throws InterruptedException, IOException {
 
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)

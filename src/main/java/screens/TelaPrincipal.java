@@ -54,7 +54,7 @@ public class TelaPrincipal {
     public TelaPrincipal(final String CPFOfAuthenticatedClient) {
         
         this.CPFOfAuthenticatedClient = CPFOfAuthenticatedClient;
-        TelaPrincipal bufferedThis = this;
+        final TelaPrincipal bufferedThis = this;
 
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
@@ -114,7 +114,7 @@ public class TelaPrincipal {
         searchBox.addFocusListener(new FocusAdapter() {
             
             @Override
-            public void focusGained(FocusEvent e) {
+            public void focusGained(final FocusEvent e) {
 
                 if(searchBox.getText().equals("  Procure por um Medicamento...") && searchBoxPressedForTheFirstTime) {
                     searchBox.setText("  ");
@@ -126,7 +126,7 @@ public class TelaPrincipal {
             }
 
             @Override
-            public void focusLost(FocusEvent e) {
+            public void focusLost(final FocusEvent e) {
                 if(searchBox.getText().strip().equals("")) {
                     searchBox.setText("  Procure por um Medicamento");
                     searchBoxPressedForTheFirstTime = false;
@@ -153,7 +153,7 @@ public class TelaPrincipal {
 
         mainContainer.addMouseListener(new MouseAdapter() {
             
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked(final MouseEvent e) {
                 searchBox.setFocusable(false);
                 searchBox.setFocusable(true);
                 searchBox.requestFocus();
@@ -183,7 +183,7 @@ public class TelaPrincipal {
                 try {
                     
                     // Carregar medicamento pesquisado 
-                    JSONArray findedMedications = MedicationsUtilities.findMedications(searchBox.getText());
+                    final JSONArray findedMedications = MedicationsUtilities.findMedications(searchBox.getText());
                      
                     if (searchBox.getText().replace(" ", "").equals("") && medicationsPanel.getComponents().length != 13) {
                         
@@ -192,7 +192,7 @@ public class TelaPrincipal {
                             
                             try {
                                 MedicationsUtilities.loadMedications(MedicationsUtilities.getMedications(), medicationsPanel, mainScreen, CPFOfAuthenticatedClient, bufferedThis);
-                            } catch(Exception exception) {
+                            } catch(final Exception exception) {
                                 exception.printStackTrace();
                             }
                             

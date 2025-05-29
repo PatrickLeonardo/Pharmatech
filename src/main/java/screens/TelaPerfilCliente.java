@@ -27,14 +27,11 @@ import javax.swing.JTextField;
 
 import org.json.JSONObject;
 
-import screens.TelaLogin;
-import screens.TelaPrincipal;
-
 public class TelaPerfilCliente {
 
     private JPanel header = null;
 
-    public TelaPerfilCliente(JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal, String CPFOfAuthenticatedClient, String passwordOfAuthenticatedClient) {
+    public TelaPerfilCliente(final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal, final String CPFOfAuthenticatedClient, final String passwordOfAuthenticatedClient) {
         
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
@@ -46,7 +43,7 @@ public class TelaPerfilCliente {
         mainScreen.setLocationRelativeTo(null);
 
         // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
-        Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
+        final Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
         mainScreen.setIconImage(imagemLogo);
 
         // CONTAINER PRINCIPAL
@@ -127,10 +124,10 @@ public class TelaPerfilCliente {
 
         mainContainer.add(header);
 
-        JPanel containerInfo = new JPanel();
+        final JPanel containerInfo = new JPanel();
         containerInfo.setLayout(null);
 
-        JLabel editLabel = new JLabel("Atualize suas informações: ");
+        final JLabel editLabel = new JLabel("Atualize suas informações: ");
         editLabel.setFont(new Font("Helvetica", Font.BOLD, 35));
         editLabel.setBounds(120, 50, 500, 100);
         
@@ -138,69 +135,69 @@ public class TelaPerfilCliente {
         
         try {
             
-            JSONObject jsonOfClient =  new JSONObject(findClientByCPF(CPFOfAuthenticatedClient, passwordOfAuthenticatedClient));
+            final JSONObject jsonOfClient =  new JSONObject(findClientByCPF(CPFOfAuthenticatedClient, passwordOfAuthenticatedClient));
 
-            Font fontForLabels = new Font("Helvetica", Font.BOLD, 28);
-            Font fontForInputs = new Font("Helvetiica", Font.PLAIN, 20);
+            final Font fontForLabels = new Font("Helvetica", Font.BOLD, 28);
+            final Font fontForInputs = new Font("Helvetiica", Font.PLAIN, 20);
 
-            JLabel webcomeLabel = new JLabel("Olá, " + jsonOfClient.getString("nome") + " :)");
+            final JLabel webcomeLabel = new JLabel("Olá, " + jsonOfClient.getString("nome") + " :)");
             webcomeLabel.setFont(new Font("Helvetica", Font.BOLD, 35));
             webcomeLabel.setBounds(120, 0, 700, 100);
             containerInfo.add(webcomeLabel);
 
-            JLabel nameLabel = new JLabel("Nome: ");
+            final JLabel nameLabel = new JLabel("Nome: ");
             nameLabel.setFont(fontForLabels);
             nameLabel.setBounds(120, 150, 150, 100);
             containerInfo.add(nameLabel);
 
-            JTextField nameInput = new JTextField();
+            final JTextField nameInput = new JTextField();
             nameInput.setText(jsonOfClient.getString("nome"));
             nameInput.setFont(fontForInputs);
             nameInput.setBounds(300, 180, 200, 40);
             containerInfo.add(nameInput);
 
-            JLabel telephoneLabel = new JLabel("Telefone: ");
+            final JLabel telephoneLabel = new JLabel("Telefone: ");
             telephoneLabel.setFont(fontForLabels);
             telephoneLabel.setBounds(120, 220, 150, 100);
             containerInfo.add(telephoneLabel);
 
-            JTextField telephoneInput = new JTextField();
+            final JTextField telephoneInput = new JTextField();
             telephoneInput.setText(jsonOfClient.getString("telefone"));
             telephoneInput.setFont(fontForInputs);
             telephoneInput.setBounds(300, 250, 200, 40);
             containerInfo.add(telephoneInput);
 
-            JLabel addressLabel = new JLabel("Endereço: ");
+            final JLabel addressLabel = new JLabel("Endereço: ");
             addressLabel.setFont(fontForLabels);
             addressLabel.setBounds(120, 290, 150, 100);
             containerInfo.add(addressLabel);
 
-            JTextField addressInput = new JTextField();
+            final JTextField addressInput = new JTextField();
             addressInput.setText(jsonOfClient.getString("endereco"));
             addressInput.setFont(fontForInputs);
             addressInput.setBounds(300, 320, 200, 40);
             containerInfo.add(addressInput);
 
-            JLabel passwordLabel = new JLabel("Senha: ");
+            final JLabel passwordLabel = new JLabel("Senha: ");
             passwordLabel.setFont(fontForLabels);
             passwordLabel.setBounds(120, 360, 150, 100);
             containerInfo.add(passwordLabel);
 
-            JPasswordField passwordInput = new JPasswordField();
+            final JPasswordField passwordInput = new JPasswordField();
             passwordInput.setFont(fontForInputs);
             passwordInput.setText(jsonOfClient.getString("senha"));
             passwordInput.setBounds(300, 390, 200, 40);
             passwordInput.setEchoChar('*');
             containerInfo.add(passwordInput);
 
-            JButton updateButton = new JButton("Atualizar Informações");
+            final JButton updateButton = new JButton("Atualizar Informações");
             updateButton.setFont(new Font("Helvetica", Font.BOLD, 20));
             updateButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             updateButton.setBounds(160, 500, 300, 50);
 
             updateButton.addActionListener((event) -> {
 
-                String bodyPublisher = """
+                final String bodyPublisher = """
                 {
                     "nome": "%s",
                     "senha": "%s",
@@ -226,7 +223,7 @@ public class TelaPerfilCliente {
                         JOptionPane.showMessageDialog(mainScreen, "Dados Atualizados!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     }
 
-                } catch(Exception exception) {
+                } catch(final Exception exception) {
                     exception.printStackTrace();
                 }
 
@@ -236,7 +233,7 @@ public class TelaPerfilCliente {
 
             containerInfo.add(updateButton);
 
-        } catch(Exception exception) {
+        } catch(final Exception exception) {
             exception.printStackTrace();
         }
 
