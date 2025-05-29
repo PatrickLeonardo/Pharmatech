@@ -133,6 +133,7 @@ public class TelaLogin {
                                 new TelaPrincipalFarmaceutico(this.cpf, jFramePrincipalCliente, telaPrincipal);    
 
                             case("Almoxerife"):
+                                new TelaPrincipalAlmoxerife(this.cpf, jFramePrincipalCliente, telaPrincipal);
 
                             case("Gerente"):
 

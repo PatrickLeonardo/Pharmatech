@@ -119,7 +119,7 @@ public class TelaPrincipal {
                 if(searchBox.getText().equals("  Procure por um Medicamento...") && searchBoxPressedForTheFirstTime) {
                     searchBox.setText("  ");
                 } else if(searchBox.getText().strip().equals("")) {
-                    searchBox.setText("  Procure por um Medicamento");
+                    searchBox.setText("  Procure por um Medicamento...");
                     searchBoxPressedForTheFirstTime = false;
                 }
             
@@ -128,7 +128,7 @@ public class TelaPrincipal {
             @Override
             public void focusLost(final FocusEvent e) {
                 if(searchBox.getText().strip().equals("")) {
-                    searchBox.setText("  Procure por um Medicamento");
+                    searchBox.setText("  Procure por um Medicamento...");
                     searchBoxPressedForTheFirstTime = false;
                 }
             }
@@ -143,7 +143,7 @@ public class TelaPrincipal {
 
                 if (!searchBoxPressedForTheFirstTime) {
                     final String newText = "  " + searchBox.getText().charAt(searchBox.getText().length()-1);
-                    searchBox.setText(newText.replace("o", ""));
+                    searchBox.setText(newText.replace(".", ""));
                     searchBoxPressedForTheFirstTime = true;
                 }
                 
