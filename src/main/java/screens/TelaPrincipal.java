@@ -342,7 +342,6 @@ public class TelaPrincipal {
             final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
             final String nameOfUser = clientHttpResponse.body(); 
-            this.welcomeLabel.setText("Bem Vindo,");
 
             // CONFIGURAÇÃO DOS BOTÕES (Carrinho, Cadastrar e Logar) 
             final Font defaultFont = new Font("Helvetica", Font.BOLD, 20);
@@ -352,7 +351,7 @@ public class TelaPrincipal {
             defaultFontWithUnderline.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
             this.linkToProfileScreen = new JButton(nameOfUser);
-            linkToProfileScreen.setBounds(1070, 20, 200, 50);
+            linkToProfileScreen.setBounds(1030, 20, 200, 50);
             linkToProfileScreen.setContentAreaFilled(false);
             linkToProfileScreen.setBorderPainted(false);
             linkToProfileScreen.setOpaque(false);
@@ -368,8 +367,6 @@ public class TelaPrincipal {
             });
 
         } catch(final Exception exception) { exception.printStackTrace(); }
-        
-        this.header.add(this.welcomeLabel);
          
     }
 

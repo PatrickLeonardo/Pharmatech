@@ -221,15 +221,15 @@ public class TelaCarrinho {
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
-                .uri(URI.create("http://localhost:8080/user/findByCPF?CPF=" + this.CPFOfAuthenticatedClient))
+                .uri(URI.create("http://localhost:8080/user/findName/%s".formatted(this.CPFOfAuthenticatedClient)))
                 .GET()
                 .build();
             
             final HttpClient httpClient = HttpClient.newHttpClient(); 
             final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             
-            JSONObject objectBodyClient = new JSONObject(clientHttpResponse.body()); 
-            this.welcomeLabel.setText("Bem Vindo, " + objectBodyClient.getString("nome"));
+            String name = clientHttpResponse.body();
+            this.welcomeLabel.setText("Bem Vindo, " + name);
 
         } catch(Exception exception) { exception.printStackTrace(); }
         

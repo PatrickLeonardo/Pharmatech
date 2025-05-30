@@ -20,12 +20,14 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
@@ -37,18 +39,19 @@ import javax.swing.table.TableRowSorter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import utils.CartUtilities;
+import utils.CPFUtilities;
 
-public class TelaPrincipalFarmaceutico {
+public class TelaPrincipalGerente {
+    
+    JScrollPane scrollPane;
 
-    public TelaPrincipalFarmaceutico(final String CPFOfAuthenticatedUser, final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal) {
-
-         // Instancia das cores utilizadas na tela
+    public TelaPrincipalGerente(final String CPFOfAuthenticatedUser, JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
+        // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
         
         // TELA 
-        final JFrame mainScreen = new JFrame("Reservas");
+        final JFrame mainScreen = new JFrame("Gerenciamento");
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainScreen.setSize(1500, 800);
         mainScreen.setLocationRelativeTo(null);
@@ -139,34 +142,181 @@ public class TelaPrincipalFarmaceutico {
             mainScreen.dispose();
             new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
 
-        });
+        }); 
+        
+        Font labelFont = new Font("Helvetica", Font.BOLD, 25);
+        Font inputFont = new Font("Helvetica", Font.PLAIN, 20); 
+
+        JLabel cpfLabel = new JLabel("CPF: ");
+        cpfLabel.setFont(labelFont);
+        cpfLabel.setBounds(100, 150, 70, 40);
+        mainContainer.add(cpfLabel);
+        
+        JTextField cpfInput = new JTextField();
+        cpfInput.setFont(inputFont);
+        cpfInput.setBounds(170, 155, 200, 35);
+        mainContainer.add(cpfInput);
+
+        JLabel nameLabel = new JLabel("Nome: ");
+        nameLabel.setFont(labelFont);
+        nameLabel.setBounds(430, 155, 100, 35);
+        mainContainer.add(nameLabel);
+
+        JTextField nameInput = new JTextField();
+        nameInput.setFont(inputFont);
+        nameInput.setBounds(535, 155, 200, 35);
+        mainContainer.add(nameInput);
+
+        JLabel passwordLabel = new JLabel("Senha: ");
+        passwordLabel.setBounds(800, 155, 100, 35);
+        passwordLabel.setFont(labelFont);
+        mainContainer.add(passwordLabel);
+
+        JTextField passwordInput = new JTextField();
+        passwordInput.setFont(inputFont);
+        passwordInput.setBounds(900, 155, 180, 35);
+        mainContainer.add(passwordInput);
+
+        JLabel telephoneLabel = new JLabel("Telefone: ");
+        telephoneLabel.setFont(labelFont);
+        telephoneLabel.setBounds(35, 220, 150, 35);
+        mainContainer.add(telephoneLabel);
+
+        JTextField telephoneInput = new JTextField();
+        telephoneInput.setFont(inputFont);
+        telephoneInput.setBounds(170, 220, 200, 35);
+        mainContainer.add(telephoneInput);
+
+        JLabel addressLabel = new JLabel("Endereço: ");
+        addressLabel.setFont(labelFont);
+        addressLabel.setBounds(390, 220, 150, 35);
+        mainContainer.add(addressLabel);
+        
+        JTextField addressInput = new JTextField();
+        addressInput.setFont(inputFont);
+        addressInput.setBounds(535, 220, 200, 35);
+        mainContainer.add(addressInput);
+
+        JLabel funcitonLabel = new JLabel("Cargo: ");
+        funcitonLabel.setFont(labelFont);
+        funcitonLabel.setBounds(800, 220, 100, 35);
+        mainContainer.add(funcitonLabel);
+
+        String[] options = {"Farmaceutico", "Almoxerife"};
+        JComboBox<String> employeeTypeInput = new JComboBox<String>(options);
+        employeeTypeInput.setBounds(900, 220, 180, 40);
+        employeeTypeInput.setFont(inputFont);
+        mainContainer.add(employeeTypeInput);
 
         mainContainer.add(header);
+        scrollPane = loadEmployeeTable();
 
-        final List<Object> cartList = new ArrayList<>();
+        JButton sendButton = new JButton("Cadastrar Funcionário");
+        sendButton.setBounds(1140, 185, 270, 40);
+        sendButton.setFont(new Font("Helvetica", Font.BOLD, 20));
+        mainContainer.add(sendButton);
 
-        for (int i = 0; i < getCarts().length(); i++) {
+        sendButton.addActionListener((event) -> {
             
-            final JSONObject cart = getCarts().getJSONObject(i);
+            try {
+                
+                cpfInput.setText(CPFUtilities.format(cpfInput.getText()));
+                
+                if(!CPFUtilities.validate(cpfInput.getText())) {
+                       
+                    JOptionPane.showMessageDialog(mainScreen, "Insira um CPF válido...", "Erro", JOptionPane.ERROR_MESSAGE);
+                    
+                } else {
+                    
+                    final String bodyPublisher = """
+                    {
+                        "cpf": "%s",
+                        "nome": "%s",
+                        "senha": "%s",
+                        "telefone": "%s",
+                        "endereco": "%s",
+                        "tipoDeUsuario": "%s"
+                    }
+                    """.formatted(cpfInput.getText(), nameInput.getText(), passwordInput.getText(), telephoneInput.getText(), addressInput.getText(), employeeTypeInput.getSelectedItem());
+                    
+                    final HttpRequest request = HttpRequest.newBuilder()
+                        .version(HttpClient.Version.HTTP_2)
+                        .header("Content-Type", "application/json")
+                        .uri(URI.create("http://localhost:8080/user/newEmployee"))
+                        .POST(HttpRequest.BodyPublishers.ofString(bodyPublisher))
+                        .build();
+                    
+                    final HttpClient httpClient = HttpClient.newHttpClient();
+                    
+                    final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                    
+                    if(clientHttpResponse.statusCode() == 302) {
+                        
+                        mainContainer.remove(scrollPane);
+                        scrollPane = loadEmployeeTable();
+                        mainContainer.add(scrollPane);
+                        
+                        cpfInput.setText("");
+                        nameInput.setText("");
+                        passwordInput.setText("");
+                        telephoneInput.setText("");
+                        addressInput.setText("");
 
-            final int id = cart.getInt("id");
-            final String cpf = cart.getString("CPF");
-            final String cliente = cart.getString("Cliente");
-            final String medicamento = cart.getString("Medicamento");
-            final int quantidade = cart.getInt("Quantidade");
+                        JOptionPane.showMessageDialog(mainScreen, "Funcionário cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                        
+
+
+                    }
+
+                }
+
+
+            } catch(Exception exception) {
+                exception.printStackTrace();
+            }
+             
+        });
+
+        mainContainer.add(scrollPane);
+
+        // Configuranções ScrollPane (Rolagem da Tela) 
+        final JScrollPane jScrollPane = new JScrollPane(mainContainer);
+        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilitar Scrollbar Horizontal
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Habilitar Scrollbar Vertical 
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave (unidade de incremento)
+        
+        mainScreen.add(jScrollPane);
+        mainScreen.setVisible(true);
+
+    }
+
+    private static JScrollPane loadEmployeeTable() {
+        
+        final List<Object> employeeList = new ArrayList<>();
+
+        for (int i = 0; i < getEmployees().length(); i++) {
             
-            cartList.add(new Object[]{id, cpf, cliente, medicamento, quantidade, "Remover"});
+            final JSONObject employee = getEmployees().getJSONObject(i);
+
+            final String cpf = employee.getString("cpf");
+            final String name = employee.getString("nome");
+            final String password = employee.getString("senha");
+            final String telephone = employee.getString("telefone");
+            final String address = employee.getString("endereco");
+            final String typeOfEmployee = employee.getString("tipoDeUsuario"); 
+            
+            employeeList.add(new Object[]{cpf, name, password, telephone, address, typeOfEmployee, "Remover"});
 
         }
 
-        final Object[][] dados = cartList.toArray(new Object[0][0]);
+        final Object[][] dados = employeeList.toArray(new Object[0][]);
 
-        final String[] colunas = {"ID", "CPF", "Cliente", "Medicamento", "Quantidade", "Remover"};
+        final String[] colunas = {"CPF", "Nome", "Senha", "Telefone", "Endereço", "Cargo", "Remover"};
 
         final DefaultTableModel modelo = new DefaultTableModel(dados, colunas) {
             @Override
             public boolean isCellEditable(final int row, final int column) {
-                return column == 5; 
+                return column == 0 || column == 1 || column == 2 || column == 3 || column == 4 || column == 5 || column == 6; 
             }
         };
 
@@ -183,13 +333,27 @@ public class TelaPrincipalFarmaceutico {
         sorter.toggleSortOrder(4);
 
         // Configura a ordenação inicial pela coluna "ID" (índice 0)
-        sorter.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
-
-        tabela.getColumn("ID").setPreferredWidth(80);
-        tabela.getColumn("ID").setMaxWidth(80);
+        sorter.setSortKeys(List.of(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
 
         // Configura a largura das colunas
-        tabela.getColumn("Remover").setPreferredWidth(10); 
+        
+        tabela.getColumn("CPF").setPreferredWidth(200);
+        tabela.getColumn("CPF").setMaxWidth(200);
+
+        tabela.getColumn("Nome").setPreferredWidth(240);
+        tabela.getColumn("Nome").setMaxWidth(240);
+
+        tabela.getColumn("Senha").setPreferredWidth(140);
+        tabela.getColumn("Senha").setMaxWidth(140);
+
+        tabela.getColumn("Telefone").setPreferredWidth(200);
+        tabela.getColumn("Telefone").setMaxWidth(200);
+        
+        tabela.getColumn("Cargo").setPreferredWidth(160);
+        tabela.getColumn("Cargo").setMaxWidth(160);
+
+        tabela.getColumn("Remover").setPreferredWidth(140);
+        tabela.getColumn("Remover").setMaxWidth(140);
 
         // Define o renderizador e o editor para a coluna "Ação" (botão)
         tabela.getColumn("Remover").setCellRenderer(new ButtonRenderer());
@@ -197,10 +361,9 @@ public class TelaPrincipalFarmaceutico {
 
         // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
         final JScrollPane scrollPane = new JScrollPane(tabela);
-        scrollPane.setBounds(35, 150, 1400, 500);
-        mainContainer.add(scrollPane);
+        scrollPane.setBounds(35, 300, 1400, 400);    
 
-        tabela.setBounds(35, 150, 1400, 500);
+        tabela.setBounds(35, 300, 1400, 400);
 
         final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
@@ -211,14 +374,7 @@ public class TelaPrincipalFarmaceutico {
             tabela.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
         
-        // Configuranções ScrollPane (Rolagem da Tela) 
-        final JScrollPane jScrollPane = new JScrollPane(mainContainer);
-        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilitar Scrollbar Horizontal
-        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Habilitar Scrollbar Vertical 
-        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave (unidade de incremento)
-        
-        mainScreen.add(jScrollPane);
-        mainScreen.setVisible(true);
+        return scrollPane;
 
     }
 
@@ -273,16 +429,26 @@ public class TelaPrincipalFarmaceutico {
                 final int selectedRow = tabelaRef.getSelectedRow();
                 
                 if (selectedRow != -1) {
-                    final Object idMedicamento = tabelaRef.getValueAt(selectedRow, 0);
+                    final String cpf = (String) tabelaRef.getValueAt(selectedRow, 0);
 
                     try {
-                        CartUtilities.deleteItemOnCartById((int)idMedicamento);
+                        
+                        final HttpRequest request = HttpRequest.newBuilder()
+                            .version(HttpClient.Version.HTTP_2)
+                            .header("Content-Type", "application/json")
+                            .uri(URI.create("http://localhost:8080/user/deleteUser/%s".formatted(cpf)))
+                            .DELETE()
+                            .build();
+                        
+                        final HttpClient httpClient = HttpClient.newHttpClient();
+                        httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
                     } catch(final Exception exception) {
                         exception.printStackTrace();
-                    } 
+                    }
 
                     ((DefaultTableModel) tabelaRef.getModel()).removeRow(selectedRow);
-                    JOptionPane.showMessageDialog(tabelaRef, "Reserva removida com sucesso!", "Removido!", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(tabelaRef, "Funcionário removido com sucesso!", "Removido!", JOptionPane.INFORMATION_MESSAGE);
                 }
                 
             }
@@ -294,14 +460,14 @@ public class TelaPrincipalFarmaceutico {
 
     }
 
-    private JSONArray getCarts() {
+    private static JSONArray getEmployees() {
 
         try {
             
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
-                .uri(URI.create("http://localhost:8080/cart/findAll"))
+                .uri(URI.create("http://localhost:8080/user/findEmployees"))
                 .GET()
                 .build();
             

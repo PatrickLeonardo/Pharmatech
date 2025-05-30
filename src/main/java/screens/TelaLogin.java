@@ -120,7 +120,8 @@ public class TelaLogin {
                         // Carrega Tela Principal
                         mainScreen.dispose();
                         final String tipoDeUsuario = getTipoDeUsuario(cpf, password);
-                        
+                        System.out.println(tipoDeUsuario);
+
                         switch(tipoDeUsuario) {
                             
                             case("Cliente"):
@@ -128,14 +129,19 @@ public class TelaLogin {
                                 telaPrincipal.setPasswordOfAuthenticatedClient(new String(this.password));
                                 telaPrincipal.isLogged();
                                 jFramePrincipalCliente.setVisible(true);
+                                break;
                             
                             case("Farmaceutico"):
-                                new TelaPrincipalFarmaceutico(this.cpf, jFramePrincipalCliente, telaPrincipal);    
+                                new TelaPrincipalFarmaceutico(this.cpf, jFramePrincipalCliente, telaPrincipal);
+                                break;
 
                             case("Almoxerife"):
                                 new TelaPrincipalAlmoxerife(this.cpf, jFramePrincipalCliente, telaPrincipal);
+                                break;
 
                             case("Gerente"):
+                                new TelaPrincipalGerente(this.cpf, jFramePrincipalCliente, telaPrincipal);
+                                break;
 
                         }
                         
