@@ -27,6 +27,7 @@ public class TelaCadastro {
     public TelaCadastro(JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
 
         final JFrame mainScreen = new JFrame("Tela Cadastro");
+        mainScreen.setResizable(false);
 
         final Container mainContainer = mainScreen.getContentPane();
         mainContainer.setLayout(null);

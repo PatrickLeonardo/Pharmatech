@@ -33,6 +33,7 @@ public class TelaLogin {
 
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
+        mainScreen.setResizable(false);
 
         // IMAGEM DO JFRAME (CANTO SUPERIOR ESQUERDO)
         final Image imagemLogo = new ImageIcon("./img/logoComFundo.png").getImage();
@@ -120,7 +121,6 @@ public class TelaLogin {
                         // Carrega Tela Principal
                         mainScreen.dispose();
                         final String tipoDeUsuario = getTipoDeUsuario(cpf, password);
-                        System.out.println(tipoDeUsuario);
 
                         switch(tipoDeUsuario) {
                             
