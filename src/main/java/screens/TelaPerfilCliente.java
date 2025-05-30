@@ -153,7 +153,7 @@ public class TelaPerfilCliente {
             final JTextField nameInput = new JTextField();
             nameInput.setText(jsonOfClient.getString("nome"));
             nameInput.setFont(fontForInputs);
-            nameInput.setBounds(300, 180, 200, 40);
+            nameInput.setBounds(300, 180, 250, 40);
             containerInfo.add(nameInput);
 
             final JLabel telephoneLabel = new JLabel("Telefone: ");
@@ -164,7 +164,7 @@ public class TelaPerfilCliente {
             final JTextField telephoneInput = new JTextField();
             telephoneInput.setText(jsonOfClient.getString("telefone"));
             telephoneInput.setFont(fontForInputs);
-            telephoneInput.setBounds(300, 250, 200, 40);
+            telephoneInput.setBounds(300, 250, 250, 40);
             containerInfo.add(telephoneInput);
 
             final JLabel addressLabel = new JLabel("Endereço: ");
@@ -175,7 +175,7 @@ public class TelaPerfilCliente {
             final JTextField addressInput = new JTextField();
             addressInput.setText(jsonOfClient.getString("endereco"));
             addressInput.setFont(fontForInputs);
-            addressInput.setBounds(300, 320, 200, 40);
+            addressInput.setBounds(300, 320, 250, 40);
             containerInfo.add(addressInput);
 
             final JLabel passwordLabel = new JLabel("Senha: ");
@@ -183,11 +183,10 @@ public class TelaPerfilCliente {
             passwordLabel.setBounds(120, 360, 150, 100);
             containerInfo.add(passwordLabel);
 
-            final JPasswordField passwordInput = new JPasswordField();
+            final JTextField passwordInput = new JTextField();
             passwordInput.setFont(fontForInputs);
             passwordInput.setText(jsonOfClient.getString("senha"));
-            passwordInput.setBounds(300, 390, 200, 40);
-            passwordInput.setEchoChar('*');
+            passwordInput.setBounds(300, 390, 250, 40);
             containerInfo.add(passwordInput);
 
             final JButton updateButton = new JButton("Atualizar Informações");
@@ -204,7 +203,7 @@ public class TelaPerfilCliente {
                     "telefone": "%s",
                     "endereco": "%s"
                 }
-                """.formatted(nameInput.getText(), new String(passwordInput.getPassword()), telephoneInput.getText(), addressInput.getText());
+                """.formatted(nameInput.getText(),passwordInput.getText(), telephoneInput.getText(), addressInput.getText());
                 
                 try {
                     
