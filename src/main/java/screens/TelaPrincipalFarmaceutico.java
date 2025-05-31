@@ -145,70 +145,132 @@ public class TelaPrincipalFarmaceutico {
 
         final List<Object> cartList = new ArrayList<>();
 
-        for (int i = 0; i < getCarts().length(); i++) {
+        for (int i = 0; i < getReservations().length(); i++) {
             
-            final JSONObject cart = getCarts().getJSONObject(i);
+            final JSONObject reservation = getReservations().getJSONObject(i);
 
-            final int id = cart.getInt("id");
-            final String cpf = cart.getString("CPF");
-            final String cliente = cart.getString("Cliente");
-            final String medicamento = cart.getString("Medicamento");
-            final int quantidade = cart.getInt("Quantidade");
+            final String protocolo = reservation.getString("protocolo");
             
-            cartList.add(new Object[]{id, cpf, cliente, medicamento, quantidade, "Remover"});
+            JSONArray medications = new JSONArray(reservation.getJSONArray("medicamentos"));
+            
+            final List<Object> medicationList = new ArrayList<>();
 
-        }
+            for(Object medication : medications) {
+                
+                final JSONObject medicationObject = new JSONObject("" + medication);
+                
+                final String name = medicationObject.getString("nome");
+                final String dosage = medicationObject.getString("dosagem");
+                final Double price = medicationObject.getDouble("preco");
+                final Boolean precisaDeReceita = medicationObject.getBoolean("precisaDeReceita");
+                final Integer quantidadeReservada = medicationObject.getInt("quantidadeReservada");
+                
+                medicationList.add(new Object[]{name, dosage, price, precisaDeReceita, quantidadeReservada});
 
+            }
+
+            final Object[][] medicationsData = medicationList.toArray(new Object[0][]);
+            final String[] collumns = {"Medicamento", "Dosagem", "Preço", "Receita", "Quantidade Reservada"};
+            
+            final DefaultTableModel modelo = new DefaultTableModel(medicationsData, collumns);
+
+            final JTable tabela = new JTable(modelo);
+
+            tabela.setFont(new Font("Helvetica", Font.BOLD, 12));
+            tabela.setRowHeight(25);
+
+            final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
+            centerRenderer.setVerticalAlignment(SwingConstants.CENTER);   // centraliza verticalmente
+            
+            // Aplica o renderizador para todas as colunas
+            for (int index = 0; index < tabela.getColumnCount(); index++) {
+                tabela.getColumnModel().getColumn(index).setCellRenderer(centerRenderer);
+            }
+
+            final JScrollPane scrollPane = new JScrollPane(tabela);
+
+            cartList.add(new Object[]{protocolo, scrollPane, "Dar Baixa"});
+            
+        } 
+        
         final Object[][] dados = cartList.toArray(new Object[0][0]);
 
-        final String[] colunas = {"ID", "CPF", "Cliente", "Medicamento", "Quantidade", "Remover"};
+        final String[] colunas = {"Protocolo", "Medicamentos", "Baixa"};
 
         final DefaultTableModel modelo = new DefaultTableModel(dados, colunas) {
+            
             @Override
             public boolean isCellEditable(final int row, final int column) {
-                return column == 5; 
+                return column == 1 || column == 2; // Apenas a coluna "Remover" é editável
             }
+            
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                
+                if (columnIndex == 1) {
+                    return JScrollPane.class; // Define a coluna de medicamentos como JScrollPane
+                }
+                
+                return super.getColumnClass(columnIndex);
+            }
+
         };
 
-        final JTable tabela = new JTable(modelo);
-        tabela.setFont(new Font("Helvetica", Font.BOLD, 16));
-        tabela.setRowHeight(35);
+        final JTable tabelaPrincipal = new JTable(modelo) {
+            
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                
+                Component component = super.prepareRenderer(renderer, row, column);
+                
+                if (column == 1) {
+                    // Retorna o JScrollPane para a célula
+                    return (Component) getValueAt(row, column);
+                }
+
+                return component;
+                
+            }
+             
+        };
+
+        tabelaPrincipal.setFont(new Font("Helvetica", Font.BOLD, 16));
+        tabelaPrincipal.setBounds(35, 150, 1400, 500);
+        tabelaPrincipal.setRowHeight(100);
 
         final TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
-        tabela.setRowSorter(sorter);
+        tabelaPrincipal.setRowSorter(sorter);
         sorter.toggleSortOrder(0); 
         sorter.toggleSortOrder(1); 
         sorter.toggleSortOrder(2); 
-        sorter.toggleSortOrder(3);
-        sorter.toggleSortOrder(4);
 
         // Configura a ordenação inicial pela coluna "ID" (índice 0)
         sorter.setSortKeys(List.of(new RowSorter.SortKey(0, SortOrder.ASCENDING)));
 
-        tabela.getColumn("ID").setPreferredWidth(80);
-        tabela.getColumn("ID").setMaxWidth(80);
-
         // Configura a largura das colunas
-        tabela.getColumn("Remover").setPreferredWidth(10); 
+        tabelaPrincipal.getColumn("Protocolo").setPreferredWidth(200);
+        tabelaPrincipal.getColumn("Protocolo").setMaxWidth(200);
+
+        tabelaPrincipal.getColumn("Baixa").setPreferredWidth(200);
+        tabelaPrincipal.getColumn("Baixa").setMaxWidth(200);
 
         // Define o renderizador e o editor para a coluna "Ação" (botão)
-        tabela.getColumn("Remover").setCellRenderer(new ButtonRenderer());
-        tabela.getColumn("Remover").setCellEditor(new ButtonEditor(new JCheckBox(), tabela));
+        tabelaPrincipal.getColumn("Baixa").setCellRenderer(new ButtonRenderer());
+        tabelaPrincipal.getColumn("Baixa").setCellEditor(new ButtonEditor(new JCheckBox(), tabelaPrincipal));
 
         // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
-        final JScrollPane scrollPane = new JScrollPane(tabela);
+        final JScrollPane scrollPane = new JScrollPane(tabelaPrincipal);
         scrollPane.setBounds(35, 150, 1400, 500);
         mainContainer.add(scrollPane);
-
-        tabela.setBounds(35, 150, 1400, 500);
 
         final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
         centerRenderer.setVerticalAlignment(SwingConstants.CENTER);   // centraliza verticalmente
         
         // Aplica o renderizador para todas as colunas
-        for (int i = 0; i < tabela.getColumnCount(); i++) {
-            tabela.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        for (int i = 0; i < tabelaPrincipal.getColumnCount(); i++) {
+            tabelaPrincipal.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
         
         // Configuranções ScrollPane (Rolagem da Tela) 
@@ -225,7 +287,7 @@ public class TelaPrincipalFarmaceutico {
     static class ButtonRenderer extends JButton implements TableCellRenderer {
         
         public ButtonRenderer() {
-            setText(" Remover ");
+            setText("Dar Baixa");
         }
         
         public Component getTableCellRendererComponent(final JTable table, final Object value,
@@ -246,7 +308,7 @@ public class TelaPrincipalFarmaceutico {
             super(checkBox);
             this.tabelaRef = tabela;
             
-            button = new JButton("Remover");
+            button = new JButton("Dar Baixa");
             button.setOpaque(true);
             
             button.addActionListener(new java.awt.event.ActionListener() {
@@ -273,16 +335,16 @@ public class TelaPrincipalFarmaceutico {
                 final int selectedRow = tabelaRef.getSelectedRow();
                 
                 if (selectedRow != -1) {
-                    final Object idMedicamento = tabelaRef.getValueAt(selectedRow, 0);
+                    final Object protocolo = tabelaRef.getValueAt(selectedRow, 0);
 
                     try {
-                        CartUtilities.deleteItemOnCartById((int)idMedicamento);
+                        deleteReservation("" + protocolo);
                     } catch(final Exception exception) {
                         exception.printStackTrace();
                     } 
 
                     ((DefaultTableModel) tabelaRef.getModel()).removeRow(selectedRow);
-                    JOptionPane.showMessageDialog(tabelaRef, "Reserva removida com sucesso!", "Removido!", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(tabelaRef, "Baixa concluida com sucesso!", "Removido!", JOptionPane.INFORMATION_MESSAGE);
                 }
                 
             }
@@ -294,14 +356,14 @@ public class TelaPrincipalFarmaceutico {
 
     }
 
-    private JSONArray getCarts() {
+    private JSONArray getReservations() {
 
         try {
             
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
-                .uri(URI.create("http://localhost:8080/cart/findAll"))
+                .uri(URI.create("http://localhost:8080/reservations"))
                 .GET()
                 .build();
             
@@ -313,7 +375,27 @@ public class TelaPrincipalFarmaceutico {
             exception.printStackTrace();
         }
 
-        return new JSONArray();
+        return new JSONArray("[]");
+
+    }
+
+    private static void deleteReservation(final String protocolo) {
+
+        try {
+            
+            final HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .header("Content-Type", "application/json")
+                .uri(URI.create("http://localhost:8080/reservations/delete/%s".formatted(protocolo)))
+                .DELETE()
+                .build();
+            
+            final HttpClient httpClient = HttpClient.newHttpClient(); 
+            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch(final Exception exception) {
+            exception.printStackTrace();
+        }
 
     }
 

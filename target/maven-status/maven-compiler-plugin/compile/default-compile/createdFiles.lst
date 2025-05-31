@@ -8,6 +8,7 @@ screens/TelaPrincipalGerente.class
 Main.class
 utils/MedicationsUtilities.class
 screens/TelaPrincipal$4.class
+screens/TelaPrincipalFarmaceutico$2.class
 screens/TelaPrincipalGerente$ButtonEditor$1.class
 screens/TelaCadastro.class
 screens/TelaPrincipal.class

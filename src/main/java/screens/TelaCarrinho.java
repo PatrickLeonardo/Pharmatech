@@ -172,6 +172,9 @@ public class TelaCarrinho {
                 }
 
                 else {
+                    
+
+
                     JOptionPane.showMessageDialog(mainScreen, "Reserva finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 }
 
@@ -206,6 +209,26 @@ public class TelaCarrinho {
         mainScreen.add(jScrollPane);
         mainScreen.setVisible(true);
         
+    }
+
+    private static void newReservation(final String protocolo) {
+
+        try {
+            
+            final HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .header("Content-Type", "application/json")
+                .uri(URI.create("http://localhost:8080/reservations/delete/%s".formatted(protocolo)))
+                .DELETE()
+                .build();
+            
+            final HttpClient httpClient = HttpClient.newHttpClient(); 
+            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch(final Exception exception) {
+            exception.printStackTrace();
+        }
+
     }
 
     public void isLogged() {

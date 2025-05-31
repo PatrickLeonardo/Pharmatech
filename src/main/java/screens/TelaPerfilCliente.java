@@ -256,9 +256,6 @@ public class TelaPerfilCliente {
         
         final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         
-        System.out.println(clientHttpResponse.statusCode());
-        System.out.println(clientHttpResponse.body());
-
         if(clientHttpResponse.statusCode() == 302) {
             return clientHttpResponse.body();
         }
