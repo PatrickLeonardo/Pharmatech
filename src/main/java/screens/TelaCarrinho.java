@@ -27,6 +27,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import java.util.Random;
+
 import org.json.JSONObject;
 import org.w3c.dom.events.MouseEvent;
 
@@ -159,6 +164,8 @@ public class TelaCarrinho {
             mainScreen.dispose();
         });
 
+        JPanel cartPanel = new JPanel();
+
         // Evento que será acionado ao clicar no botão Finalizar 
         btnFinalizar.addActionListener((event) -> {
             
@@ -172,10 +179,14 @@ public class TelaCarrinho {
                 }
 
                 else {
-                    
+                       
+                    final Random randomValue = new Random();
+                    final String protocolo = "" + (randomValue.nextInt(1000) * 10240);
 
+                    newReservation(CPFOfAuthenticatedClient, protocolo);
+                    cartUtilities.loadCart(CPFOfAuthenticatedClient, cartPanel);
 
-                    JOptionPane.showMessageDialog(mainScreen, "Reserva finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(mainScreen, "Reserva finalizada com sucesso!\nSeu protocolo é: " + protocolo, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 }
 
             } catch (Exception exception) {
@@ -185,7 +196,6 @@ public class TelaCarrinho {
         
         mainContainer.add(header);
         
-        JPanel cartPanel = new JPanel();
         cartPanel.setLayout(new BoxLayout(cartPanel, BoxLayout.Y_AXIS));
         cartPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
         cartPanel.setBackground(backgroundColor);
@@ -211,15 +221,15 @@ public class TelaCarrinho {
         
     }
 
-    private static void newReservation(final String protocolo) {
+    private static void newReservation(final String cpf, final String protocolo) {
 
         try {
             
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
-                .uri(URI.create("http://localhost:8080/reservations/delete/%s".formatted(protocolo)))
-                .DELETE()
+                .uri(URI.create("http://localhost:8080/reservations/newReservation?cpf=%s&protocolo=%s".formatted(cpf, protocolo)))
+                .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
             
             final HttpClient httpClient = HttpClient.newHttpClient(); 

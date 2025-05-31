@@ -3,6 +3,7 @@ screens/TelaPrincipalGerente$ButtonEditor.class
 screens/TelaPerfilCliente.class
 screens/TelaPrincipalGerente$1.class
 screens/TelaPrincipal$1.class
+screens/TelaPrincipalFarmaceutico$ScrollPaneEditor.class
 screens/TelaPrincipalFarmaceutico$ButtonEditor.class
 screens/TelaPrincipalGerente.class
 Main.class
@@ -24,4 +25,5 @@ screens/TelaPrincipal$5.class
 screens/TelaCarrinho.class
 screens/TelaPrincipalFarmaceutico$1.class
 screens/TelaLogin.class
+screens/TelaPrincipalFarmaceutico$ScrollPaneRenderer.class
 utils/CartUtilities.class

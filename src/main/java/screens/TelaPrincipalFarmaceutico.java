@@ -1,5 +1,6 @@
 package screens;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
@@ -31,13 +33,12 @@ import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import utils.CartUtilities;
 
 public class TelaPrincipalFarmaceutico {
 
@@ -161,11 +162,17 @@ public class TelaPrincipalFarmaceutico {
                 
                 final String name = medicationObject.getString("nome");
                 final String dosage = medicationObject.getString("dosagem");
+                
                 final Double price = medicationObject.getDouble("preco");
-                final Boolean precisaDeReceita = medicationObject.getBoolean("precisaDeReceita");
+                String formattedPrice = "R$ " + price.toString().replace(".", ",");
+                formattedPrice = formattedPrice.concat((Character.valueOf(',').equals(formattedPrice.charAt(formattedPrice.length() - 2))) ? "0" : "");
+
+                final Boolean precisaDeReceitaBoolean = medicationObject.getBoolean("precisaDeReceita");
+                final String precisaDeReceita = (precisaDeReceitaBoolean ? "Sim" : "Não");
+
                 final Integer quantidadeReservada = medicationObject.getInt("quantidadeReservada");
                 
-                medicationList.add(new Object[]{name, dosage, price, precisaDeReceita, quantidadeReservada});
+                medicationList.add(new Object[]{name, dosage, formattedPrice, precisaDeReceita, quantidadeReservada});
 
             }
 
@@ -176,8 +183,10 @@ public class TelaPrincipalFarmaceutico {
 
             final JTable tabela = new JTable(modelo);
 
-            tabela.setFont(new Font("Helvetica", Font.BOLD, 12));
             tabela.setRowHeight(25);
+            tabela.setFont(new Font("Helvetica", Font.BOLD, 14)); 
+            tabela.setPreferredScrollableViewportSize(new Dimension(500, 100));
+            tabela.setFillsViewportHeight(true);
 
             final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
@@ -190,19 +199,23 @@ public class TelaPrincipalFarmaceutico {
 
             final JScrollPane scrollPane = new JScrollPane(tabela);
 
-            cartList.add(new Object[]{protocolo, scrollPane, "Dar Baixa"});
+            final Double totalValue = reservation.getDouble("valorTotal");
+            String formattedTotalValue = "R$ " + totalValue.toString().replace(".", ",");
+            formattedTotalValue = formattedTotalValue.concat((Character.valueOf(',').equals(formattedTotalValue.charAt(formattedTotalValue.length() - 2))) ? "0" : "");
+
+            cartList.add(new Object[]{protocolo, scrollPane, formattedTotalValue, "Dar Baixa"});
             
         } 
         
         final Object[][] dados = cartList.toArray(new Object[0][0]);
 
-        final String[] colunas = {"Protocolo", "Medicamentos", "Baixa"};
+        final String[] colunas = {"Protocolo", "Medicamentos", "Valor Total", "Baixa"};
 
         final DefaultTableModel modelo = new DefaultTableModel(dados, colunas) {
             
             @Override
             public boolean isCellEditable(final int row, final int column) {
-                return column == 1 || column == 2; // Apenas a coluna "Remover" é editável
+                return column == 1 || column == 3; // Apenas a coluna "Remover" é editável
             }
             
             @Override
@@ -225,19 +238,27 @@ public class TelaPrincipalFarmaceutico {
                 Component component = super.prepareRenderer(renderer, row, column);
                 
                 if (column == 1) {
-                    // Retorna o JScrollPane para a célula
-                    return (Component) getValueAt(row, column);
+                    
+                    JScrollPane scrollPane = (JScrollPane) getValueAt(row, column);
+                    scrollPane.setPreferredSize(new Dimension(400, 100)); // Defina um tamanho preferido
+                    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    
+                    JPanel panel = new JPanel(new BorderLayout());
+                    panel.add(scrollPane, BorderLayout.CENTER);
+                    return panel;
                 }
-
-                return component;
                 
+                return component;
             }
-             
+            
         };
 
         tabelaPrincipal.setFont(new Font("Helvetica", Font.BOLD, 16));
         tabelaPrincipal.setBounds(35, 150, 1400, 500);
         tabelaPrincipal.setRowHeight(100);
+        tabelaPrincipal.setPreferredScrollableViewportSize(new Dimension(500, 300));
+        tabelaPrincipal.setFillsViewportHeight(true);
 
         final TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
         tabelaPrincipal.setRowSorter(sorter);
@@ -252,12 +273,18 @@ public class TelaPrincipalFarmaceutico {
         tabelaPrincipal.getColumn("Protocolo").setPreferredWidth(200);
         tabelaPrincipal.getColumn("Protocolo").setMaxWidth(200);
 
+        tabelaPrincipal.getColumn("Valor Total").setPreferredWidth(140);
+        tabelaPrincipal.getColumn("Valor Total").setMaxWidth(140);
+
         tabelaPrincipal.getColumn("Baixa").setPreferredWidth(200);
         tabelaPrincipal.getColumn("Baixa").setMaxWidth(200);
 
         // Define o renderizador e o editor para a coluna "Ação" (botão)
         tabelaPrincipal.getColumn("Baixa").setCellRenderer(new ButtonRenderer());
         tabelaPrincipal.getColumn("Baixa").setCellEditor(new ButtonEditor(new JCheckBox(), tabelaPrincipal));
+
+        tabelaPrincipal.getColumn("Medicamentos").setCellRenderer(new ScrollPaneRenderer());
+        tabelaPrincipal.getColumn("Medicamentos").setCellEditor(new ScrollPaneEditor());
 
         // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
         final JScrollPane scrollPane = new JScrollPane(tabelaPrincipal);
@@ -281,6 +308,29 @@ public class TelaPrincipalFarmaceutico {
         
         mainScreen.add(jScrollPane);
         mainScreen.setVisible(true);
+
+    }
+
+    class ScrollPaneRenderer implements TableCellRenderer {
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            return (JScrollPane) value;
+        }
+        
+    }
+
+    class ScrollPaneEditor extends AbstractCellEditor implements TableCellEditor {        
+        
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            return (JScrollPane) value;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return null;
+        }
 
     }
 
