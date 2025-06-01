@@ -16,4 +16,9 @@ Pharmatech é uma ideia de uma interface gráfica feita para reserva de medicame
 
 ```jpackage --name Pharmatech --input target --main-jar pharmatech-1.0-SNAPSHOT-jar-with-dependencies.jar --main-class Main```
 
+<hr>
+
 ## [Servidor](https://github.com/PatrickLeonardo/Pharmatech-Server)
+```git clone https://github.com/PatrickLeonardo/Pharmatech-Server```
+
+<hr>
