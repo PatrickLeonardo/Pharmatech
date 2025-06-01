@@ -18,11 +18,14 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -34,7 +37,9 @@ import org.json.JSONObject;
 
 public class TelaPrincipalAlmoxerife {
 
-    public TelaPrincipalAlmoxerife(final String CPFOfAuthenticatedUser, final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal) {
+    JScrollPane scrollPane;
+
+    public TelaPrincipalAlmoxerife(final String CPFOfAuthenticatedUser, JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
 
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
@@ -136,6 +141,160 @@ public class TelaPrincipalAlmoxerife {
 
         mainContainer.add(header);
 
+        scrollPane = loadMedicationsTable();
+         
+        Font labelFont = new Font("Helvetica", Font.BOLD, 25);
+        Font inputFont = new Font("Helvetica", Font.PLAIN, 20); 
+
+        JLabel nameLabel = new JLabel("Nome: ");
+        nameLabel.setFont(labelFont);
+        nameLabel.setBounds(70, 150, 100, 35);
+        mainContainer.add(nameLabel);
+        
+        JTextField nameInput = new JTextField();
+        nameInput.setFont(inputFont);
+        nameInput.setBounds(170, 155, 200, 35);
+        mainContainer.add(nameInput);
+
+        JLabel dosageLabel = new JLabel("Dosagem: ");
+        dosageLabel.setFont(labelFont);
+        dosageLabel.setBounds(450, 155, 150, 35);
+        mainContainer.add(dosageLabel);
+
+        JTextField dosageInput = new JTextField();
+        dosageInput.setFont(inputFont);
+        dosageInput.setBounds(590, 155, 200, 35);
+        mainContainer.add(dosageInput);
+
+        JLabel urlLabel = new JLabel("URL da Imagem: ");
+        urlLabel.setFont(labelFont);
+        urlLabel.setBounds(900, 155, 250, 35);
+        mainContainer.add(urlLabel);
+
+        JTextField urlInput = new JTextField();
+        urlInput.setFont(inputFont);
+        urlInput.setBounds(1140, 155, 260, 35);
+        mainContainer.add(urlInput);
+
+        JLabel quantityLabel = new JLabel("Quantidade: ");
+        quantityLabel.setBounds(70, 220, 170, 35);
+        quantityLabel.setFont(labelFont);
+        mainContainer.add(quantityLabel);
+
+        JTextField quantityInput = new JTextField();
+        quantityInput.setFont(inputFont);
+        quantityInput.setBounds(250, 220, 120, 35);
+        mainContainer.add(quantityInput);
+
+        JLabel descriptionLabel = new JLabel("Descrição: ");
+        descriptionLabel.setBounds(450, 220, 140, 35);
+        descriptionLabel.setFont(labelFont);
+        mainContainer.add(descriptionLabel);
+
+        JTextField descriptionInput = new JTextField();
+        descriptionInput.setFont(inputFont);
+        descriptionInput.setBounds(590, 220, 200, 35);
+        mainContainer.add(descriptionInput);
+
+        JLabel revenueLabel = new JLabel("Precisa de Receita Receita ? ");
+        revenueLabel.setFont(labelFont);
+        revenueLabel.setBounds(900, 220, 400, 35);
+        mainContainer.add(revenueLabel);
+
+        String[] options = {"Não", "Sim"};
+        JComboBox<String> revenueInput = new JComboBox<String>(options);
+        revenueInput.setBounds(1300, 220, 100, 40);
+        revenueInput.setFont(inputFont);
+        mainContainer.add(revenueInput);
+
+        JLabel priceLabel = new JLabel("Preço Unitário: ");
+        priceLabel.setFont(labelFont);
+        priceLabel.setBounds(70, 285, 300, 35);
+        mainContainer.add(priceLabel);
+        
+        JTextField priceInput = new JTextField();
+        priceInput.setFont(inputFont);
+        priceInput.setBounds(280, 285, 90, 35);
+        mainContainer.add(priceInput);
+
+        mainContainer.add(header);
+
+        JButton sendButton = new JButton("Cadastrar Medicamento");
+        sendButton.setBounds(1085, 330, 350, 40);
+        sendButton.setFont(new Font("Helvetica", Font.BOLD, 20));
+        mainContainer.add(sendButton);
+
+        sendButton.addActionListener((event) -> {
+            
+            try {
+                
+                final boolean revenue = ((revenueInput.getSelectedItem().equals("Sim") ? true : false));
+
+                final String bodyPublisher = """
+                {
+                    "nome": "%s",
+                    "dosagem": "%s",
+                    "descricao": "%s",
+                    "imagemDoMedicamento": "%s",
+                    "preco": "%s",
+                    "quantidadeDisponivel": "%s",
+                    "precisaDeReceita": "%s"
+                }
+                """.formatted(nameInput.getText(), dosageInput.getText(), descriptionInput.getText(), urlInput.getText(), priceInput.getText(), quantityInput.getText(), revenue);
+                    
+                final HttpRequest request = HttpRequest.newBuilder()
+                    .version(HttpClient.Version.HTTP_2)
+                    .header("Content-Type", "application/json")
+                    .uri(URI.create("http://localhost:8080/medications/newMedication"))
+                    .POST(HttpRequest.BodyPublishers.ofString(bodyPublisher))
+                    .build();
+                
+                final HttpClient httpClient = HttpClient.newHttpClient();
+                
+                final HttpResponse<String> clientHttpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                 
+                if(clientHttpResponse.statusCode() == 202) {
+                    
+                    mainContainer.remove(scrollPane);
+                    scrollPane = loadMedicationsTable();
+                    mainContainer.add(scrollPane);
+                    
+                    nameInput.setText("");
+                    dosageInput.setText("");
+                    descriptionInput.setText("");
+                    urlInput.setText("");
+                    quantityInput.setText("");
+                    priceInput.setText("");
+
+                    JOptionPane.showMessageDialog(mainScreen, "Medicamento cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    
+                } else {
+
+                    JOptionPane.showMessageDialog(mainScreen, "Erro ao cadastrar Medicamento, tente novamente...!", "Erro", JOptionPane.ERROR_MESSAGE);
+
+                }
+
+            } catch(Exception exception) {
+                exception.printStackTrace();
+            }
+             
+        });
+
+        mainContainer.add(scrollPane);
+
+        // Configuranções ScrollPane (Rolagem da Tela) 
+        final JScrollPane jScrollPane = new JScrollPane(mainContainer);
+        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilitar Scrollbar Horizontal
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Habilitar Scrollbar Vertical 
+        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave (unidade de incremento)
+        
+        mainScreen.add(jScrollPane);
+        mainScreen.setVisible(true);
+
+    }
+
+    private JScrollPane loadMedicationsTable() {
+
         final List<Object> medicationsList = new ArrayList<>();
 
         for (int i = 0; i < getMedications().length(); i++) {
@@ -235,10 +394,9 @@ public class TelaPrincipalAlmoxerife {
 
         // Adiciona a tabela em um JScrollPane para exibir o cabeçalho
         final JScrollPane scrollPane = new JScrollPane(tabela);
-        scrollPane.setBounds(35, 150, 1400, 500);
-        mainContainer.add(scrollPane);
+        scrollPane.setBounds(35, 400, 1400, 300);
 
-        tabela.setBounds(35, 150, 1400, 500);
+        tabela.setBounds(35, 400, 1400, 300);
 
         final DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER); // centraliza horizontalmente
@@ -250,15 +408,8 @@ public class TelaPrincipalAlmoxerife {
             tabela.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
             
         }
-
-        // Configuranções ScrollPane (Rolagem da Tela) 
-        final JScrollPane jScrollPane = new JScrollPane(mainContainer);
-        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Desabilitar Scrollbar Horizontal
-        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Habilitar Scrollbar Vertical 
-        jScrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll mais suave (unidade de incremento)
         
-        mainScreen.add(jScrollPane);
-        mainScreen.setVisible(true);
+        return scrollPane;
 
     }
 
