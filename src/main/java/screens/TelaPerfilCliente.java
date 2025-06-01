@@ -31,7 +31,7 @@ public class TelaPerfilCliente {
 
     private JPanel header = null;
 
-    public TelaPerfilCliente(final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal, final String CPFOfAuthenticatedClient, final String passwordOfAuthenticatedClient) {
+    public TelaPerfilCliente(final JFrame jFrameTelaPrincipal, final TelaPrincipal telaPrincipal, final String CPFOfAuthenticatedClient, final String passwordOfAuthenticatedClient) {
         
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
@@ -100,7 +100,7 @@ public class TelaPerfilCliente {
 
             mainScreen.dispose();
             telaPrincipal.isLogoff();
-            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
+            new TelaLogin(null, jFrameTelaPrincipal, telaPrincipal);
 
         });
 
@@ -118,7 +118,7 @@ public class TelaPerfilCliente {
             
             mainScreen.dispose();
             telaPrincipal.isLogged();
-            jFramePrincipalCliente.setVisible(true);
+            jFrameTelaPrincipal.setVisible(true);
             
         });
 

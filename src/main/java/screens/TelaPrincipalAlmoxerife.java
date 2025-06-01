@@ -39,7 +39,7 @@ public class TelaPrincipalAlmoxerife {
 
     JScrollPane scrollPane;
 
-    public TelaPrincipalAlmoxerife(final String CPFOfAuthenticatedUser, JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
+    public TelaPrincipalAlmoxerife(final String CPFOfAuthenticatedUser, JFrame jFrameTelaPrincipal, TelaPrincipal telaPrincipal) {
 
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
@@ -135,7 +135,7 @@ public class TelaPrincipalAlmoxerife {
         btnLogout.addActionListener((event) -> {
 
             mainScreen.dispose();
-            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
+            new TelaLogin(null, jFrameTelaPrincipal, telaPrincipal);
 
         });
 

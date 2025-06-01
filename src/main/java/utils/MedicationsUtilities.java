@@ -62,7 +62,7 @@ public class MedicationsUtilities {
              
             final HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
-                .uri(URI.create("http://localhost:8080/medications/findByNome?nome=" + medicationName))
+                .uri(URI.create("http://localhost:8080/medications/findByNome/%s".formatted(medicationName)))
                 .GET()
                 .build();
 

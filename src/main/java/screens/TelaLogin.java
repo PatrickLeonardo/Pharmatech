@@ -29,7 +29,7 @@ public class TelaLogin {
     private String cpf;
     private char[] password;
     
-    public TelaLogin(final String CPFOfAuthenticatedClient, final JFrame jFramePrincipalCliente, final TelaPrincipal telaPrincipal) {
+    public TelaLogin(final String CPFOfAuthenticatedClient, final JFrame jFrameTelaPrincipal, final TelaPrincipal telaPrincipal) {
 
         // TELA
         final JFrame mainScreen = new JFrame("Pharmatech Login");
@@ -128,19 +128,19 @@ public class TelaLogin {
                                 telaPrincipal.setCPFOfAuthenticatedClient(this.cpf);
                                 telaPrincipal.setPasswordOfAuthenticatedClient(new String(this.password));
                                 telaPrincipal.isLogged();
-                                jFramePrincipalCliente.setVisible(true);
+                                jFrameTelaPrincipal.setVisible(true);
                                 break;
                             
                             case("Farmaceutico"):
-                                new TelaPrincipalFarmaceutico(this.cpf, jFramePrincipalCliente, telaPrincipal);
+                                new TelaPrincipalFarmaceutico(this.cpf, jFrameTelaPrincipal, telaPrincipal);
                                 break;
 
                             case("Almoxerife"):
-                                new TelaPrincipalAlmoxerife(this.cpf, jFramePrincipalCliente, telaPrincipal);
+                                new TelaPrincipalAlmoxerife(this.cpf, jFrameTelaPrincipal, telaPrincipal);
                                 break;
 
                             case("Gerente"):
-                                new TelaPrincipalGerente(this.cpf, jFramePrincipalCliente, telaPrincipal);
+                                new TelaPrincipalGerente(this.cpf, jFrameTelaPrincipal, telaPrincipal);
                                 break;
 
                         }
@@ -162,7 +162,7 @@ public class TelaLogin {
         btnTelaCadastro.addActionListener((event) -> {
             
             mainScreen.dispose();
-            new TelaCadastro(jFramePrincipalCliente, telaPrincipal); 
+            new TelaCadastro(jFrameTelaPrincipal, telaPrincipal); 
 
         });
 
@@ -170,7 +170,7 @@ public class TelaLogin {
         btnTelaPrincipal.addActionListener(event -> {
 
             mainScreen.dispose();
-            jFramePrincipalCliente.setVisible(true);
+            jFrameTelaPrincipal.setVisible(true);
                
         });
         

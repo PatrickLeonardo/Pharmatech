@@ -74,7 +74,7 @@ public class CartUtilities {
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .header("Content-Type", "application/json")
-            .uri(URI.create("http://localhost:8080/cart/findByClientId?clientId=" + clientId))
+            .uri(URI.create("http://localhost:8080/cart/findByClientId/%s".formatted(clientId)))
             .GET()
             .build();
         
@@ -90,7 +90,7 @@ public class CartUtilities {
             final HttpRequest medicationRequest = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
-                .uri(URI.create("http://localhost:8080/medications/findById?id=" + cartObject.getInt("idMedicamento")))
+                .uri(URI.create("http://localhost:8080/medications/findById/%s".formatted(cartObject.getInt("idMedicamento"))))
                 .GET()
                 .build();
             
@@ -230,7 +230,7 @@ public class CartUtilities {
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .header("Content-Type", "application/json")
-            .uri(URI.create("http://localhost:8080/client/findClientByCPF?CPF=" + CPFOfAuthenticatedClient))
+            .uri(URI.create("http://localhost:8080/client/findClientByCPF/%s".formatted(CPFOfAuthenticatedClient)))
             .GET()
             .build();
         
@@ -265,7 +265,7 @@ public class CartUtilities {
         final HttpRequest request = HttpRequest.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .header("Content-Type", "application/json")
-            .uri(URI.create("http://localhost:8080/cart/deleteItemInCartById?cartId=" + cartId))
+            .uri(URI.create("http://localhost:8080/cart/deleteItemInCartById/%s".formatted(cartId)))
             .DELETE()
             .build();
 

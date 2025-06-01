@@ -45,7 +45,7 @@ public class TelaPrincipalGerente {
     
     JScrollPane scrollPane;
 
-    public TelaPrincipalGerente(final String CPFOfAuthenticatedUser, JFrame jFramePrincipalCliente, TelaPrincipal telaPrincipal) {
+    public TelaPrincipalGerente(final String CPFOfAuthenticatedUser, JFrame jFrameTelaPrincipal, TelaPrincipal telaPrincipal) {
         // Instancia das cores utilizadas na tela
         final Color titleColor = new Color(1, 0, 127); // Variação de Azul
         final Color backgroundColor = new Color (207, 206, 206); // Variação de Cinza
@@ -140,7 +140,7 @@ public class TelaPrincipalGerente {
         btnLogout.addActionListener((event) -> {
 
             mainScreen.dispose();
-            new TelaLogin(null, jFramePrincipalCliente, telaPrincipal);
+            new TelaLogin(null, jFrameTelaPrincipal, telaPrincipal);
 
         }); 
         
